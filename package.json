@@ -1,0 +1,36 @@
+{
+  "name": "dappas",
+  "version": "0.1.0",
+  "description": "",
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yarey-Tech/dappas.git"
+  },
+  "keywords": [
+    "dappas"
+  ],
+  "author": "Yarey Tech",
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "commitizen": "^4.3.1",
+    "husky": "^9.1.7",
+    "nx": "^20.5.0"
+  },
+  "dependencies": {
+    "@nx-go/nx-go": "^3.3.1"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "commit": "git add --all && git cz",
+    "serve": "nx run dappas-api:serve",
+    "test": "nx run dappas-api:test"
+  },
+  "nx": {},
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

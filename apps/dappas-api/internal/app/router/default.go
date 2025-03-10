@@ -13,11 +13,16 @@ import (
 
 func ProvideRouter() fx.Option {
 	return fx.Options(
+		fx.Invoke(healthCheck),
 		fx.Invoke(swaggerRoutes),
 	)
 }
 
-// infrastructure
+func healthCheck(router *gin.Engine) {
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+}
 
 func swaggerRoutes(router *gin.Engine, s security.ILoginUseCase) {
 	router.GET("/swagger/*any", basicAuth(s), ginSwagger.WrapHandler(swaggerFiles.Handler))

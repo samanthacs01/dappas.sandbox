@@ -11,8 +11,8 @@ COPY . .
 RUN go mod download
 
 # Generate Swagger docs
-#RUN go install github.com/swaggo/swag/cmd/swag@v1.8.12
-#RUN swag init .
+RUN go install github.com/swaggo/swag/cmd/swag@v1.8.12
+RUN swag init -g ./cmd/api/main.go ./..
 
 # Build the Go applications with static linking
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dappas-api ./cmd/api/main.go

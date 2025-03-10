@@ -8,9 +8,9 @@ import (
 	"{{.Package}}/internal/modules/{{.Module}}/model"
 )
 
-//go:generate mockery --name=I{{.Name}}UseCase --output=mocks --outpkg=mocks --filename={{.Endpoint}}_usecase_mock.go
+//go:generate mockgen -destination=../mocks/mock_{{.Endpoint}}_usecase.go -package=mocks {{.Package}}/usecases I{{.Name}}UseCase
 type I{{.Name}}UseCase interface {
-	Do(input *model.{{.Name}}Request) (*model.{{.Name}}Response, error)
+	Run(input *model.{{.Name}}Input) (*model.{{.Name}}Output, error)
 }
 
 type {{.InternalName}}UseCase struct {
@@ -23,7 +23,7 @@ func New{{.Name}}UseCase(repository *repository.{{.Feature}}Repository) I{{.Name
 	}
 }
 
-func (u *{{.InternalName}}UseCase) Do(input *model.{{.Name}}Request) (*model.{{.Name}}Response, error) {
+func (u *{{.InternalName}}UseCase) Run(input *model.{{.Name}}Input) (*model.{{.Name}}Output, error) {
 	return nil, errors.New("not implemented")
 }
 	

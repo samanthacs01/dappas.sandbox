@@ -6,6 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
+	"selector.dev/dappas/internal/app/config"
+	"selector.dev/dappas/internal/app/database"
+	"selector.dev/dappas/internal/app/router"
+	"selector.dev/dappas/internal/modules/users"
 	security "selector.dev/security/providers"
 )
 
@@ -18,8 +22,13 @@ func BuildApp() *fx.App {
 			return gin.Default()
 		}),
 		fx.Provide(zap.NewDevelopment),
-		fx.Invoke(startServer),
+		fx.Provide(config.NewSecurityConfig),
+		fx.Provide(config.NewAppConfig),
+		database.ProvidePostgresDatabase(),
 		security.SecurityModule(),
+		users.ProvideUsers(),
+		router.ProvideRouter(),
+		fx.Invoke(startServer),
 	)
 }
 func startServer(lc fx.Lifecycle, g *gin.Engine) {

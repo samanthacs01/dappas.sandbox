@@ -3,15 +3,12 @@ package templates
 var ProviderTmpl = `package {{.ModuleName}}
 
 import (
+	"go.uber.org/fx"
 	"{{.Package}}/internal/app/config"
 	"{{.Package}}/internal/modules/{{.ModuleName}}/router"
-	"github.com/gofiber/fiber/v2"
-	"github.com/jmoiron/sqlx"
 )
 
-func Provide(app *fiber.App, db *sqlx.DB, validator *config.Validator) {
-	router.Route(
-		app,
-	)
+func Provide{{.Name}}() fx.Option {
+	return fx.Module("{{.Name}}", fx.Invoke(router.Route))
 }
 `

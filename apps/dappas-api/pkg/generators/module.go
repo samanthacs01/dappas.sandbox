@@ -35,6 +35,7 @@ func CreateModule(module string) error {
 	}
 
 	for _, directory := range directories {
+		fmt.Printf("Creating directory %s\n", directory)
 		err := os.MkdirAll(directory, os.ModePerm)
 		if err != nil {
 			fmt.Printf("Failed to create directory %s: %v\n", directory, err)

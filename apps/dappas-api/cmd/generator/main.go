@@ -14,6 +14,7 @@ var moduleCmd = &cobra.Command{
 	Use:   "mod",
 	Short: "Create a new module",
 	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Creating module:", args)
 		if len(moduleName) == 0 {
 			cmd.Help()
 			return
@@ -77,20 +78,20 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	moduleName := "Module name"
-	featName := "Feature name"
-	moduleCmd.Flags().StringVarP(&moduleName, "name", "n", "", moduleName)
+	moduleStrName := "Module name"
+	featStrName := "Feature name"
+	moduleCmd.Flags().StringVarP(&moduleName, "name", "n", "", moduleStrName)
 	moduleCmd.MarkFlagRequired("name")
 	rootCmd.AddCommand(moduleCmd)
 
-	featureCmd.Flags().StringVarP(&moduleName, "module", "m", "", moduleName)
-	featureCmd.Flags().StringVarP(&featureName, "name", "n", "", featName)
+	featureCmd.Flags().StringVarP(&moduleName, "module", "m", "", moduleStrName)
+	featureCmd.Flags().StringVarP(&featureName, "name", "n", "", featStrName)
 	featureCmd.MarkFlagRequired("module")
 	featureCmd.MarkFlagRequired("name")
 	rootCmd.AddCommand(featureCmd)
 
-	endpointCmd.Flags().StringVarP(&moduleName, "module", "m", "", moduleName)
-	endpointCmd.Flags().StringVarP(&featureName, "feature", "f", "", featName)
+	endpointCmd.Flags().StringVarP(&moduleName, "module", "m", "", moduleStrName)
+	endpointCmd.Flags().StringVarP(&featureName, "feature", "f", "", featStrName)
 	endpointCmd.Flags().StringVarP(&endpointName, "name", "n", "", "Endpoint name")
 	endpointCmd.MarkFlagRequired("module")
 	endpointCmd.MarkFlagRequired("feature")

@@ -15,7 +15,6 @@ assignees: ''
 **Any technical information related to the feature**
 
 ## Definition of Done (DoD)
-
 - [ ] Update the project board
 - [ ] Ensure the repository is up-to-date
 - [ ] Update and pass all tests

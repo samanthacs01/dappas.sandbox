@@ -41,10 +41,10 @@ func (m *MockILoginUseCase) EXPECT() *MockILoginUseCaseMockRecorder {
 }
 
 // Run mocks base method.
-func (m *MockILoginUseCase) Run(input model.LoginInput) (model.LoginOutput, error) {
+func (m *MockILoginUseCase) Run(input model.LoginInput) (*model.LoginOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Run", input)
-	ret0, _ := ret[0].(model.LoginOutput)
+	ret0, _ := ret[0].(*model.LoginOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

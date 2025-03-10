@@ -8,7 +8,7 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"{{.Package}}/internal/modules/{{.Module}}/model"
-	"{{.Package}}/internal/modules/{{.Module}}/usecase/mocks"
+	"{{.Package}}/internal/modules/{{.Module}}/mocks"
 )
 		
 func Test{{.Name}}(t *testing.T) {
@@ -16,7 +16,7 @@ func Test{{.Name}}(t *testing.T) {
 		// Arrange
 		input := &model.{{.Name}}Request{}
 		mocked := mocks.NewI{{.Name}}UseCase(t)
-		mocked.On("Do", input).Return(&model.{{.Name}}Response{}, nil)
+		mocked.EXPECT().Run(input).Return(&model.{{.Name}}Response{}, nil)
 		ep := New{{.Name}}Endpoint(mocked)
 		// Act
 		result := ep.Handler(input)
@@ -29,7 +29,7 @@ func Test{{.Name}}(t *testing.T) {
 		// Arrange
 		input := &model.{{.Name}}Request{}
 		mocked := mocks.NewI{{.Name}}UseCase(t)
-		mocked.On("Do", input).Return(nil, errors.New("not implemented"))
+		mocked.EXPECT().Run(input).Return(nil, errors.New("not implemented"))
 		ep := New{{.Name}}Endpoint(mocked)
 		// Act
 		result := ep.Handler(input)

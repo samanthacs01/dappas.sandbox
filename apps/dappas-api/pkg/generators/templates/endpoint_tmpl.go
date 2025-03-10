@@ -18,7 +18,7 @@ func New{{.Name}}Endpoint(useCase usecase.I{{.Name}}UseCase) *{{.Name}}Endpoint 
 	}
 }
 
-// Godoc
+// Handler godoc
 // @Summary {{.Name}}
 // @Description {{.Module}} {{.ModuleName}} {{.Endpoint}}
 // @Tags {{.Feature}}
@@ -28,12 +28,12 @@ func New{{.Name}}Endpoint(useCase usecase.I{{.Name}}UseCase) *{{.Name}}Endpoint 
 // @Success 200 {object} {{.Name}}Response
 // @Failure 500 {object} ErrorResponse
 // @Router /v1/{{.Module}}/{{.ModuleName}}/{{.Name}} [post]
-func (e *{{.Name}}Endpoint) Handler(request *model.{{.Name}}Request) webapi.Result {
-    success, fail := e.useCase.Do(request)
+func (e *{{.Name}}Endpoint) Handler(input *model.{{.Name}}Request) webapi.Result {
+    success, fail := e.useCase.Run(input)
 	if fail != nil {
 		return webapi.InternalServerError(fail)
 	}
-	return webapi.Ok(success)
+	return webapi.Ok(*success)
 }
 
 `

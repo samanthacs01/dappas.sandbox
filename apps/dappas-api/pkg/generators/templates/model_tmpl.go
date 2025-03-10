@@ -2,16 +2,16 @@ package templates
 
 var ModelTmpl = `package model
 
-type {{.Name}}Request struct {
+type {{.Name}}Input struct {
 }
 
-type {{.Name}}Response struct {
+type {{.Name}}Output struct {
 }
 
-type {{.Name}}PageResponse struct {
+type {{.Name}}PageOutput struct {
 	Page int
 	Size int
 	Total int
-	{{.Name}} []{{.Name}}Response
+	{{.Name}} []{{.Name}}Output
 }
 `

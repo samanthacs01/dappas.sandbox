@@ -7,6 +7,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/fx"
+	_ "selector.dev/dappas/docs"
 	secModel "selector.dev/security/model"
 	security "selector.dev/security/use_cases"
 )

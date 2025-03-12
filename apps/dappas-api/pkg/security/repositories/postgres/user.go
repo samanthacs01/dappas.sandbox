@@ -23,7 +23,7 @@ func NewUserPostgresRepository(uow database.UnitOfWork, log *zap.Logger) *userPo
 }
 
 func (r *userPostgresRepositoryImpl) FindByEmail(email string) (*entities.User, error) {
-	qb := builders.NewSelectRawQueryBuilder("SELECT * FROM users WHERE email = ?", []interface{}{email})
+	qb := builders.NewSelectRawQueryBuilder("SELECT * FROM users WHERE email = $1", []interface{}{email})
 	result, err := br.RunQuery[entities.User](r.unitOfWork, qb)
 	if err != nil {
 		r.logger.Error("error finding user by email", zap.Error(err))

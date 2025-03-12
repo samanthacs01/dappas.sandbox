@@ -3,6 +3,7 @@ package use_cases
 import (
 	"errors"
 
+	"go.uber.org/zap"
 	"selector.dev/security/config"
 	"selector.dev/security/model"
 	"selector.dev/security/repositories"
@@ -16,10 +17,11 @@ type ILoginUseCase interface {
 type loginUseCase struct {
 	repository repositories.IUserRepository
 	config     config.ISecurityConfig
+	logger *zap.Logger
 }
 
-func NewLoginUseCase(repository repositories.IUserRepository, config config.ISecurityConfig) ILoginUseCase {
-	return &loginUseCase{repository: repository, config: config}
+func NewLoginUseCase(repository repositories.IUserRepository, config config.ISecurityConfig, logger *zap.Logger) ILoginUseCase {
+	return &loginUseCase{repository: repository, config: config, logger: logger}
 }
 
 func (uc *loginUseCase) Run(input model.LoginInput) (*model.LoginOutput, error) {
@@ -27,11 +29,17 @@ func (uc *loginUseCase) Run(input model.LoginInput) (*model.LoginOutput, error) 
 	if err != nil {
 		return nil, err
 	}
-	if !result.VerifyPassword(input.Password, uc.config) {
+	if !result.VerifyPassword(input.Password) {
+		uc.logger.Info("credentials not match for: ", zap.Any("Email", input.Email))
 		return nil, errors.New("invalid credentials")
 	}
+	token, err := result.GenerateToken(uc.config)
+	if err != nil {
+		uc.logger.Error("Cannot generate token for: ", zap.Any("UserId", result.Id))
+		return nil, err
+	}
 	output := model.LoginOutput{
-		Token: result.GenerateToken(uc.config),
+		Token: token,
 	}
 	return &output, nil
 }

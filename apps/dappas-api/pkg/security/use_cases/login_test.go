@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	gomock "go.uber.org/mock/gomock"
+	"go.uber.org/zap"
 	"selector.dev/security/entities"
 	"selector.dev/security/mocks"
 	"selector.dev/security/model"
@@ -21,7 +22,7 @@ func TestLoginUsecase(t *testing.T) {
 		repository.EXPECT().FindByEmail(input.Email).Return(entities.User{}, config)
 		config.EXPECT().GetSecretKey().Return("secret")
 
-		useCase := NewLoginUseCase(repository, config)
+		useCase := NewLoginUseCase(repository, config, zap.L())
 		// act
 		output, err := useCase.Run(input)
 		// assert

@@ -13,6 +13,7 @@ func TestExecute(t *testing.T) {
 	// Teardown: Remove the test directory after each test
 	t.Cleanup(func() {
 		os.RemoveAll(fmt.Sprintf("internal/modules/%s", moduleName))
+		os.RemoveAll("internal")
 	})
 	t.Run("Root command executes without error", func(t *testing.T) {
 		// act

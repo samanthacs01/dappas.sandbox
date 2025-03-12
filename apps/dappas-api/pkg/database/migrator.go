@@ -13,7 +13,7 @@ import (
 func init() {
 	goose.SetDialect("pgx")
 }
-func ApplyMigrations(dbURL string, migrationsDir string) {
+func ApplyMigrations(dbURL string, migrationsDir []string) {
 	db, err := goose.OpenDBWithDriver("pgx", dbURL)
 	if err != nil {
 		log.Fatalf("Failed to open DB: %v\n", err)
@@ -24,14 +24,18 @@ func ApplyMigrations(dbURL string, migrationsDir string) {
 		log.Fatalf("Failed to ensure tracking_changes table exists: %v\n", err)
 	}
 
-	if err := goose.Up(db, migrationsDir); err != nil {
-		log.Fatalf("Failed to apply migrations: %v\n", err)
+	for _, dir := range migrationsDir {
+		if err := goose.Up(db, dir); err != nil {
+			log.Fatalf("Failed to apply migrations: %v\n", err)
+		}
 	}
+	
 	log.Println("Migrations applied successfully")
 }
 
 
 func ensureDbLoggerExists(db *sql.DB) error {
+	errPattern := "failed to ensure tracking_changes table exists: %w"
     query := `
     CREATE TABLE IF NOT EXISTS db_logger (
         id SERIAL PRIMARY KEY,
@@ -46,17 +50,17 @@ func ensureDbLoggerExists(db *sql.DB) error {
     `
     _, err := db.ExecContext(context.Background(), query)
     if err != nil {
-        return fmt.Errorf("failed to create tracking_changes table: %w", err)
+        return fmt.Errorf(errPattern, err)
     }
 	query = `ALTER TABLE db_logger ADD COLUMN IF NOT EXISTS action VARCHAR(100) NOT NULL DEFAULT 'INSERT';`
 	_, err = db.ExecContext(context.Background(), query)
     if err != nil {
-        return fmt.Errorf("failed to create tracking_changes table: %w", err)
+        return fmt.Errorf(errPattern, err)
     }
 	query = `ALTER TABLE db_logger DROP COLUMN IF EXISTS table_identity;`
 	_, err = db.ExecContext(context.Background(), query)
     if err != nil {
-        return fmt.Errorf("failed to create tracking_changes table: %w", err)
+        return fmt.Errorf(errPattern, err)
     }
     return nil
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 	"selector.dev/dappas/internal/app/config"
 	"selector.dev/database"
 )
@@ -27,6 +28,24 @@ func invokeCloseDb(lc fx.Lifecycle, db *database.Conn) {
 			return nil
 		},
 	})
+}
+
+func ProvidePostgresMigratorDatabase() fx.Option {
+	return fx.Options(
+		fx.Provide(providePostgres),
+		fx.Provide(provideUnitOfWork),
+		fx.Invoke(invokeCloseDb),
+		fx.Invoke(runMigration),
+	)
+}
+
+func runMigration(c config.IAppConfig, logger *zap.Logger) {
+	logger.Info("Running migrations")
+	migrations := []string{
+		"./pkg/security/migrations",
+	}
+	logger.Info("Migrations", zap.Strings("migrations", migrations))
+	database.ApplyMigrations(c.GetConnectionString(), migrations)
 }
 
 func ProvidePostgresDatabase() fx.Option {

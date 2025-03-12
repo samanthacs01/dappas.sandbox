@@ -49,7 +49,10 @@ func RunQuery[T interface{}](uow database.UnitOfWork, qb database.IQueryBuilder)
 func mapToStruct[T any](m map[string]interface{}, s *T) error {
 	val := reflect.ValueOf(s).Elem()
 	for k, v := range m {
-		field := val.FieldByName(k)
+		field, found := getFieldByTag(k, val)
+		if !found {
+			continue
+		}
 		if !field.IsValid() {
 			continue
 		}
@@ -63,4 +66,21 @@ func mapToStruct[T any](m map[string]interface{}, s *T) error {
 		field.Set(fieldVal)
 	}
 	return nil
+}
+
+func getFieldByTag(tag string, val reflect.Value) (reflect.Value, bool) {
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Type().Field(i)
+		dbTag := field.Tag.Get("db")
+		if dbTag == "" {
+			dbTag = field.Name
+		}
+		if dbTag == tag {
+			fieldVal := val.Field(i)
+			if fieldVal.CanSet() {
+				return fieldVal, true
+			}
+		}
+	}
+	return reflect.Value{}, false
 }

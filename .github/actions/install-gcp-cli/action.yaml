@@ -1,0 +1,17 @@
+name: Install GCP CLI
+description: "Install Google Cloud CLI"
+inputs:
+  project_id:
+    description: "Google Cloud Project ID"
+    required: true
+  credentials_json:
+    description: "Google Cloud Service Account JSON file"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Install the GCP CLI
+      uses: "google-github-actions/auth@v2"
+      with:
+        project_id: ${{ inputs.project_id }}
+        credentials_json: ${{ inputs.credentials_json }}

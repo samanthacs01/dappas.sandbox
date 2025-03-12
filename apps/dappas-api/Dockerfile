@@ -29,6 +29,7 @@ WORKDIR /root/
 # Copy the built applications from the builder stage
 COPY --from=builder /app/dappas-api .
 COPY --from=builder /app/docs ./docs
+COPY --from=builder /app/pkg/security/migrations ./migrations
 
 # Expose the port the app runs on
 EXPOSE 8080

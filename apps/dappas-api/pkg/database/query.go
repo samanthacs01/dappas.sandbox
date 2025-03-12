@@ -7,8 +7,6 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-
-
 type IQuery interface {
 	Query(qb IQueryBuilder) (*[]interface{}, error)
 	Exec(qb IQueryBuilder, userId *uint) (*int64, error)
@@ -44,12 +42,12 @@ func (q *query) Query(qb IQueryBuilder) (*[]interface{}, error) {
 		return nil, e
 	}
 	defer rows.Close()
-	result, err := mapRowsToStructs(rows)
+	data, err := mapRowsToStructs(rows)
 	if err != nil {
 		return nil, err
 	}
-	_result := q.toInterface(*result)
-	return &_result, nil
+	result := q.toInterface(*data)
+	return &result, nil
 }
 
 func (q *query) Exec(qb IQueryBuilder, userId *uint) (*int64, error) {
@@ -66,7 +64,6 @@ func (q *query) Exec(qb IQueryBuilder, userId *uint) (*int64, error) {
 		if e != nil {
 			return nil, e
 		}
-		
 	}
 	return &rowsAffected, nil
 }
@@ -98,7 +95,7 @@ func (q *query) Save(qb IQueryBuilder, userId *uint) (*[]interface{}, error) {
 		return nil, e
 	}
 	//defer rows.Close()
-	result, err := mapRowsToStructs(rows)
+	data, err := mapRowsToStructs(rows)
 	if err != nil {
 		return nil, err
 	}
@@ -112,18 +109,18 @@ func (q *query) Save(qb IQueryBuilder, userId *uint) (*[]interface{}, error) {
 			return nil, e
 		}
 	}
-	_result := q.toInterface(*result)
-	return &_result, nil
+	result := q.toInterface(*data)
+	return &result, nil
 }
 
 func(q *query) toInterface(items []map[string]interface{}) []interface{} {
-	_items := make([]interface{}, len(items))
+	result := make([]interface{}, len(items))
 	for i, v := range items {
 		if q.mapper != nil {
-			_items[i] = (*q.mapper)(v)
+			result[i] = (*q.mapper)(v)
 		} else {
-			_items[i] = v
+			result[i] = v
 		}
 	}
-	return _items
+	return result
 }

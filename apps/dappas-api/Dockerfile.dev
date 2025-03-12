@@ -1,0 +1,30 @@
+# Stage 1: Build the Go application
+FROM golang:alpine AS base 
+
+# Install necessary dependencies
+RUN apk add --no-cache git && go install github.com/air-verse/air@latest
+
+# Install generator Swagger docs
+RUN go install github.com/swaggo/swag/cmd/swag@v1.8.12
+
+# Install Delve for debugging
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
+# Set the working directory inside the builder container
+WORKDIR /app
+
+# Copy go mod and sum files
+COPY ./pkg ./pkg
+COPY go.mod go.sum ./
+# Download dependencies
+RUN go mod download
+# Default entrypoint to run air
+CMD ["air"]
+
+FROM base AS dev
+
+# Copy the source code
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 8080

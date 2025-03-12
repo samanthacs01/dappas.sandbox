@@ -1,10 +1,9 @@
 package use_cases
 
 import (
-	"errors"
-
 	"go.uber.org/zap"
 	"selector.dev/security/config"
+	"selector.dev/security/exceptions"
 	"selector.dev/security/model"
 	"selector.dev/security/repositories"
 )
@@ -31,7 +30,7 @@ func (uc *loginUseCase) Run(input model.LoginInput) (*model.LoginOutput, error) 
 	}
 	if !result.VerifyPassword(input.Password) {
 		uc.logger.Info("credentials not match for: ", zap.Any("Email", input.Email))
-		return nil, errors.New("invalid credentials")
+		return nil, exceptions.ErrInvalidCredentials
 	}
 	token, err := result.GenerateToken(uc.config)
 	if err != nil {

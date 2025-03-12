@@ -3,6 +3,7 @@ package endpoint
 import (
 	"errors"
 
+	"selector.dev/security/exceptions"
 	"selector.dev/security/model"
 	security "selector.dev/security/use_cases"
 	"selector.dev/webapi"
@@ -36,6 +37,12 @@ func (e *LoginEndpoint) Handler(request *model.LoginInput) webapi.Result {
 	}
 	success, fail := e.useCase.Run(*request)
 	if fail != nil {
+		if errors.Is(fail, exceptions.ErrInvalidCredentials) {
+			return webapi.BadRequest(fail)
+		}
+		if errors.Is(fail, exceptions.ErrUserNotFound) {
+			return webapi.NotFound(fail)
+		}
 		return webapi.InternalServerError(fail)
 	}
 	return webapi.Ok(*success)

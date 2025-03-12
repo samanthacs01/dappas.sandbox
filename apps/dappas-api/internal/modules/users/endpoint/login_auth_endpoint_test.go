@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
+	"selector.dev/security/exceptions"
 	"selector.dev/security/mocks"
 	"selector.dev/security/model"
 )
@@ -37,6 +38,32 @@ func TestLogin(t *testing.T) {
 		// Assert
 		assert.NotNil(t, result)
 		assert.Equal(t, http.StatusInternalServerError, result.Status)
+	})
+
+	t.Run("Login fails when credentials are not correct", func(t *testing.T) {
+		// Arrange
+		input := model.LoginInput{}
+		mocked := mocks.NewMockILoginUseCase(controller)
+		mocked.EXPECT().Run(input).Return(nil, exceptions.ErrInvalidCredentials)
+		ep := NewLoginEndpoint(mocked)
+		// Act
+		result := ep.Handler(&input)
+		// Assert
+		assert.NotNil(t, result)
+		assert.Equal(t, http.StatusBadRequest, result.Status)
+	})
+
+	t.Run("Login fails when user is not found", func(t *testing.T) {
+		// Arrange
+		input := model.LoginInput{}
+		mocked := mocks.NewMockILoginUseCase(controller)
+		mocked.EXPECT().Run(input).Return(nil, exceptions.ErrUserNotFound)
+		ep := NewLoginEndpoint(mocked)
+		// Act
+		result := ep.Handler(&input)
+		// Assert
+		assert.NotNil(t, result)
+		assert.Equal(t, http.StatusNotFound, result.Status)
 	})
 
 	t.Run("Login fails when input is empty", func(t *testing.T) {

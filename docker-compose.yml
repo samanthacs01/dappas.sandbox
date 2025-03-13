@@ -1,14 +1,14 @@
 services:
-  #pulse-web:
-  #  container_name: pulse-web
-  #  image: pulse-web
-  #  build:
-  #    context: .
-  #    dockerfile: ./apps/pulse-web/Dockerfile
-  #  ports:
-  #    - '3000:3000'
-  #  networks:
-  #    - app-network
+  dappas-web:
+    container_name: dappas-web
+    image: dappas-web
+    build:
+      context: .
+      dockerfile: ./apps/dappas-web/Dockerfile
+    ports:
+      - '3000:3000'
+    networks:
+      - app-network
   dappas-api:
     build:
       context: ./apps/dappas-api/

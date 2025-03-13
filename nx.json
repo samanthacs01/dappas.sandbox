@@ -1,5 +1,13 @@
 {
   "installation": {
     "version": "20.5.0"
-  }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
+    }
+  ]
 }

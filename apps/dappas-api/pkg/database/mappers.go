@@ -6,9 +6,8 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func mapRowsToStructs(rows pgx.Rows) (*[]map[string]interface{}, error) {
+func mapRowsToMap(rows pgx.Rows) (*[]map[string]interface{}, error) {
 	var results []map[string]interface{}
-
     for rows.Next() {
         values, err := rows.Values()
         if err != nil {

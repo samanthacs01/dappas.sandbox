@@ -4,7 +4,6 @@ var ProviderTmpl = `package {{.ModuleName}}
 
 import (
 	"go.uber.org/fx"
-	"{{.Package}}/internal/app/config"
 	"{{.Package}}/internal/modules/{{.ModuleName}}/router"
 )
 

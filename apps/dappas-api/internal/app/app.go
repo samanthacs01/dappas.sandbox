@@ -9,7 +9,9 @@ import (
 	"selector.dev/dappas/internal/app/config"
 	"selector.dev/dappas/internal/app/database"
 	"selector.dev/dappas/internal/app/router"
+	"selector.dev/dappas/internal/modules/lookups"
 	"selector.dev/dappas/internal/modules/users"
+	"selector.dev/dappas/internal/modules/vendors"
 	security "selector.dev/security/providers"
 )
 
@@ -27,6 +29,8 @@ func BuildApp() *fx.App {
 		database.ProvidePostgresDatabase(),
 		security.SecurityModule(),
 		users.ProvideUsers(),
+		lookups.ProvideLookups(),
+		vendors.ProvideVendors(),
 		router.ProvideRouter(),
 		fx.Invoke(startServer),
 	)

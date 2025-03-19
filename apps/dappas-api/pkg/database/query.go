@@ -42,7 +42,7 @@ func (q *query) Query(qb IQueryBuilder) (*[]interface{}, error) {
 		return nil, e
 	}
 	defer rows.Close()
-	data, err := mapRowsToStructs(rows)
+	data, err := mapRowsToMap(rows)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (q *query) Save(qb IQueryBuilder, userId *uint) (*[]interface{}, error) {
 		return nil, e
 	}
 	//defer rows.Close()
-	data, err := mapRowsToStructs(rows)
+	data, err := mapRowsToMap(rows)
 	if err != nil {
 		return nil, err
 	}

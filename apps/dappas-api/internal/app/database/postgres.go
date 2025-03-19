@@ -43,6 +43,7 @@ func runMigration(c config.IAppConfig, logger *zap.Logger) {
 	logger.Info("Running migrations")
 	migrations := []string{
 		"./pkg/security/migrations",
+		"./internal/modules/vendors/migrations",
 	}
 	logger.Info("Migrations", zap.Strings("migrations", migrations))
 	database.ApplyMigrations(c.GetConnectionString(), migrations)

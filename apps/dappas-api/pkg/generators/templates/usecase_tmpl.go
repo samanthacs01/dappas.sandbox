@@ -8,7 +8,7 @@ import (
 	"{{.Package}}/internal/modules/{{.Module}}/model"
 )
 
-//go:generate mockgen -destination=../mocks/mock_{{.Endpoint}}_usecase.go -package=mocks {{.Package}}/usecases I{{.Name}}UseCase
+//go:generate mockgen -destination=../mocks/mock_{{.Endpoint}}_usecase.go -package=mocks {{.Package}}/usecase I{{.Name}}UseCase
 type I{{.Name}}UseCase interface {
 	Run(input *model.{{.Name}}Input) (*model.{{.Name}}Output, error)
 }
@@ -17,9 +17,9 @@ type {{.InternalName}}UseCase struct {
 	Repository repository.{{.Feature}}Repository
 }
 
-func New{{.Name}}UseCase(repository *repository.{{.Feature}}Repository) I{{.Name}}UseCase {
+func New{{.Name}}UseCase(repository repository.{{.Feature}}Repository) I{{.Name}}UseCase {
 	return &{{.InternalName}}UseCase{
-		Repository: *repository,
+		Repository: repository,
 	}
 }
 

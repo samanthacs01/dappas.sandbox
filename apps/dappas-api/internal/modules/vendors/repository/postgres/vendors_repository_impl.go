@@ -41,5 +41,8 @@ func (r *vendorsRepositoryImpl) FindAll() ([]entity.Vendor, error) {
 }
 
 func (r *vendorsRepositoryImpl) Save(vendors *entity.Vendor) error {
-	panic("unimplemented")
+	qb := database.InsertInto(vendors)
+	query, args := qb.Build()
+	r.logger.Info("Save", zap.String("query", query), zap.Any("args", args))
+	return nil
 }

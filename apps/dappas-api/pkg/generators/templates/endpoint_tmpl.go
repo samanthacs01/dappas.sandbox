@@ -24,9 +24,9 @@ func New{{.Name}}Endpoint(useCase usecase.I{{.Name}}UseCase) *{{.Name}}Endpoint 
 // @Tags {{.Feature}}
 // @Accept json
 // @Produce json
-// @Param body body {{.Name}}Request true "Request body"
-// @Success 200 {object} {{.Name}}Response
-// @Failure 500 {object} ErrorResponse
+// @Param body body {{.Name}}Input true "Request body"
+// @Success 200 {object} {{.Name}}Input
+// @Failure 500 {object} ProblemDetails
 // @Router /v1/{{.Module}}/{{.ModuleName}}/{{.Name}} [post]
 func (e *{{.Name}}Endpoint) Handler(input *model.{{.Name}}Request) webapi.Result {
     success, fail := e.useCase.Run(input)

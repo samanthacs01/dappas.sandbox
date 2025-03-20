@@ -36,15 +36,8 @@ func getColumnName(field reflect.StructField) string {
 		return field.Name
 	}
 
-	tags := strings.Split(tag, " ")
-	for _, tag := range tags {
-		parts := strings.Split(tag, "=")
-		if len(parts) == 2 && parts[0] == "name" {
-			return parts[1]
-		}
-	}
-
-	return field.Name
+	tags := strings.Split(tag, ";")
+	return tags[0]
 }
 
 func toSnakeCase(str string) string {

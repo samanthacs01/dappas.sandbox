@@ -40,9 +40,35 @@ func (r *vendorsRepositoryImpl) FindAll() ([]entity.Vendor, error) {
 	panic("unimplemented")
 }
 
-func (r *vendorsRepositoryImpl) Save(vendors *entity.Vendor) error {
-	qb := database.InsertInto(vendors)
-	query, args := qb.Build()
-	r.logger.Info("Save", zap.String("query", query), zap.Any("args", args))
-	return nil
+func (r *vendorsRepositoryImpl) Save(vendors *entity.Vendor) (*int64, error) {
+	var id int64
+	err := r.uow.Transaction(func(db database.IQuery) error {
+		qb := database.InsertInto(vendors)
+		query, args := qb.Build()
+		r.logger.Info("Save", zap.String("query", query), zap.Any("args", args))
+		result, err := db.Save(qb)
+		if err != nil {
+			return err
+		}
+		id = result
+
+		if vendors.Products != nil {
+			for _, product := range *vendors.Products {
+				product.VendorId = id
+				qb := database.InsertInto(product)
+				query, args := qb.Build()
+				r.logger.Info("Save", zap.String("query", query), zap.Any("args", args))
+				productId, err := db.Save(qb)
+				if err != nil {
+					return err
+				}
+				r.logger.Info("Save product of vendor", zap.Int64("productId", productId))
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &id, nil
 }

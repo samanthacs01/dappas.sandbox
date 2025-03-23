@@ -1,14 +1,15 @@
 package entity
 
 type Vendor struct {
-	Id           int64   `json:"id" db:"id;auto"`
-	CompanyName  string  `json:"company_name" db:"company_name"`
-	ContactEmail string  `json:"contact_email" db:"contact_email"`
-	ContactPhone string  `json:"contact_phone" db:"contact_phone"`
-	Address      string  `json:"address" db:"address"`
-	CreatedAt    string  `json:"created_at" db:"created_at;auto"`
-	UpdatedAt    string  `json:"updated_at" db:"updated_at;auto"`
-	DeletedAt    *string `json:"deleted_at" db:"deleted_at;auto"`
+	Id           int64                    `json:"id" db:"id;auto"`
+	CompanyName  string                   `json:"company_name" db:"company_name"`
+	ContactEmail string                   `json:"contact_email" db:"contact_email"`
+	ContactPhone string                   `json:"contact_phone" db:"contact_phone"`
+	Address      string                   `json:"address" db:"address"`
+	CreatedAt    string                   `json:"created_at" db:"created_at;auto"`
+	UpdatedAt    string                   `json:"updated_at" db:"updated_at;auto"`
+	DeletedAt    *string                  `json:"deleted_at" db:"deleted_at;auto"`
+	Products     *[]VendorProductSettings `json:"products" db:"products;auto"`
 }
 
 type VendorProductSettings struct {

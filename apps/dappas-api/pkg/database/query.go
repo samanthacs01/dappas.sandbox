@@ -5,12 +5,13 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
+	"selector.dev/database/builders"
 )
 
 type IQuery interface {
 	Query(qb IQueryBuilder) (*[]interface{}, error)
 	Exec(qb IQueryBuilder, userId *uint) (*int64, error)
-	Save(qb IQueryBuilder, userId *uint) (*[]interface{}, error)
+	Save(qb IQueryBuilder) (int64, error)
 	ExecWithoutContext(qb IQueryBuilder) error
 	ExecInTx(qb IQueryBuilder) error
 }
@@ -88,29 +89,9 @@ func (q *query) ExecInTx(qb IQueryBuilder)  error {
 	return e
 }
 
-func (q *query) Save(qb IQueryBuilder, userId *uint) (*[]interface{}, error) {
-	query, args := qb.Build()
-	rows, e := q.tx.Query(q.ctx, query, args...)
-	if e != nil {
-		return nil, e
-	}
-	//defer rows.Close()
-	data, err := mapRowsToMap(rows)
-	if err != nil {
-		return nil, err
-	}
-	rows.Close()
-	if qb.IsAuditable() {
-		fmt.Println("AUDITABLE TABLE: adding new entry")
-		auditQuery, auditArgs := qb.Auditable(userId)
-		_, e := q.tx.Exec(q.ctx, auditQuery, auditArgs...)
-		if e != nil {
-			fmt.Println("Error while adding audit entry", e, auditQuery, auditArgs)
-			return nil, e
-		}
-	}
-	result := q.toInterface(*data)
-	return &result, nil
+func (q *query) Save(qb IQueryBuilder) (int64, error) {
+	strategy := getSaveStrategy(q, qb)
+	return strategy.Save(qb)
 }
 
 func(q *query) toInterface(items []map[string]interface{}) []interface{} {
@@ -123,4 +104,48 @@ func(q *query) toInterface(items []map[string]interface{}) []interface{} {
 		}
 	}
 	return result
+}
+
+type isaveStrategy interface {
+	Save(qb IQueryBuilder) (int64, error)
+}
+
+type returningStrategy struct {
+	query *query
+}
+
+func (i *returningStrategy) Save(qb IQueryBuilder) (int64, error) {
+	query, args := qb.Build()
+	rows, e := i.query.tx.Query(i.query.ctx, query, args...)
+	if e != nil {
+		return 0, e
+	}
+	defer rows.Close()
+	data, err := mapRowsToMap(rows)
+	if err != nil {
+		return 0, err
+	}
+	id := (*data)[0]["id"].(int64)
+	return id, nil
+}
+
+type affectedStrategy struct {
+	query *query
+}
+
+func (u *affectedStrategy) Save(qb IQueryBuilder) (int64, error) {
+	query, args := qb.Build()
+	result, e := u.query.tx.Exec(u.query.ctx, query, args...)
+	if e != nil {
+		return 0, e
+	}
+	affected:= result.RowsAffected()
+	return affected, nil
+}
+
+func getSaveStrategy(q *query, qb IQueryBuilder) isaveStrategy {
+	if _, ok:= qb.(*builders.InsertQueryBuilder); ok {
+		return &returningStrategy{query: q}
+	}
+	return &affectedStrategy{query: q}
 }

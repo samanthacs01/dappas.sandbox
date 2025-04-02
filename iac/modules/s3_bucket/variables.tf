@@ -13,7 +13,6 @@ variable "is_bucket_enabled" {
   description = "Condition to create bucket"
   type = map(string)
   default = {
-    default = "true"
-    dev     = false
+    default = false
   }
 }

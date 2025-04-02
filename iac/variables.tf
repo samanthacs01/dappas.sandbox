@@ -10,3 +10,198 @@ variable "gcp_region" {
   default     = "us-east1"
 }
 
+
+# NETWORK
+
+variable "vpc_name" {
+  description = "VPC name"
+  type = map(string)
+  default = {
+    default = "network"
+    dev     = "dev-network"
+    staging = "staging-network"
+    production = "production-network"
+  }
+}
+
+variable "is_vpc_enabled" {
+  description = "Condition to create vpc"
+  type = map(string)
+  default = {
+    default = "true"
+  }
+}
+
+variable "subnet_name" {
+  description = "Subnet name"
+  type = map(string)
+  default = {
+    default = "subnet"
+    dev     = "dev-subnet"
+    staging = "staging-subnet"
+    production = "production-subnet"
+  }
+}
+
+variable "priv_sql_name" {
+  description = "priv_sql name"
+  type = map(string)
+  default = {
+    default = "priv_sql"
+    dev     = "dev-priv-sql"
+    staging = "staging-priv-sql"
+    production = "production-priv-sql"
+  }
+}
+
+variable "internal_address_name" {
+  description = "internal_address_name"
+  type = map(string)
+  default = {
+    default = "internal_addres"
+    dev     = "dev-priv-sql"
+    staging = "staging-internal-address"
+    production = "production-internal-address"
+  }
+}
+
+variable "nat_router_name" {
+  description = "nat_router_name"
+  type = map(string)
+  default = {
+    default = "nat-router"
+    dev     = "dev-nat-router"
+    staging = "staging-nat-router"
+    production = "production-nat-router"
+  }
+}
+
+variable "nat_config_name" {
+  description = "nat_router_name"
+  type = map(string)
+  default = {
+    default = "nat-config"
+    dev     = "dev-nat-config"
+    staging = "staging-nat-config"
+    production = "production-nat-config"
+  }
+}
+
+variable "cidr_dappas_subnet" {
+  description = "cidr_dappas_subnet"
+  type = map(string)
+  default = {
+    default = "10.0.0.0/28"
+    dev     = "10.0.0.0/28"
+    staging = "10.0.1.0/28"
+    production = "10.0.2.0/28"
+  }
+}
+
+variable "cidr_priv_sql_dappas" {
+  description = "cidr_priv_sql_dappas"
+  type = map(string)
+  default = {
+    default = "10.0.0.16/28"
+    dev     = "10.0.0.16/28"
+    staging = "10.0.1.16/28"
+    production = "10.0.2.16/28"
+  }
+}
+
+variable "internal_address_dappas" {
+  description = "internal_address_dappas"
+  type = map(string)
+  default = {
+    default = "10.0.0.5"
+    dev     = "10.0.0.5"
+    staging = "10.0.1.5"
+    production = "10.0.2.5"
+  }
+}
+# DATABASE
+
+variable "instance_name" {
+  description = "Name of the database instance"
+  type = map(string)
+  default = {
+    default = "db"
+    dev     = "dev-db-instance"
+    staging = "staging-db-instance"
+    production = "production-db-instance"
+  }
+}
+
+variable "region" {
+  description = "Region where the instance will be created"
+  type        = string
+  default     = "us-east1"
+}
+
+variable "database_version" {
+  description = "Version of the database engine"
+  type        = string
+  default     = "POSTGRES_16"
+}
+
+
+variable "deletion_protection" {
+  description = "Configure accidental deletion protection for the instance"
+  type        = bool
+  default     = true
+}
+
+variable "db_name" {
+  description = "Name of the database"
+  type = map(string)
+  default = {
+    default = "db"
+    dev     = "dev-db"
+    staging = "staging-db"
+    production = "production-db"
+  }
+}
+
+variable "db_tier" {
+  description = "Database Tier"
+  type        = string
+}
+
+variable "db_edition" {
+  description = "Edition of the database"
+  type        = string
+}
+
+variable "db_availability" {
+  description = "Availability Type"
+  type        = string
+  default     = "REGIONAL"
+}
+
+variable "db_backup_start_time" {
+  description = "Time to start backup progress"
+  type        = string
+}
+
+variable "retained_backups" {
+  description = "Number of retained backups"
+  type        = number
+}
+
+variable "transaction_log_retention_days" {
+  description = "Number of transaction log reteined"
+  type        = number
+}
+
+# SECRET MANAGER
+
+variable "root_password_secret_id" {
+  description = "root_password_secret_id"
+  type = map(string)
+  default = {
+    default = "root-password"
+    dev     = "root-password-dev"
+    staging = "root-password-staging"
+    production = "root-password-production"
+  }
+}

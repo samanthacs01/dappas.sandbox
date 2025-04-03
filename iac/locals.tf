@@ -25,5 +25,7 @@ locals {
   db_name = lookup(var.db_name, terraform.workspace, var.db_name["default"])
 # SECRET MANAGER
   root_password_secret_id = lookup(var.root_password_secret_id , terraform.workspace, var.root_password_secret_id ["default"])
+# BASTION HOST
+  iap_acces_user = lookup(var.iap_acces_user , terraform.workspace, var.iap_acces_user ["default"])
 }
 

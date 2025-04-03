@@ -205,3 +205,27 @@ variable "root_password_secret_id" {
     production = "root-password-production"
   }
 }
+
+# BASTION HOST
+variable "iap_acces_user" {
+  description = "User with acces to IAP"
+  type = map(string)
+  default = {
+    default = "samantha.cs@yareytech.com"
+    dev     = "samantha.cs@yareytech.com"
+  }
+}
+
+variable "vpn_ranges" {
+  description = "list of allowed IP ranges for SSH access to the bastion host"
+  type        = list(string)
+  default = [
+    "45.33.32.244/32",
+    "45.79.29.134/32",
+    "45.79.228.175/32",
+    "139.144.55.144/32",
+    "139.177.200.40/32",
+    "139.177.200.210/32",
+    "143.198.96.24/32"
+  ]
+}

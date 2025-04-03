@@ -42,3 +42,10 @@ resource "google_project_service" "sqladmin_api" {
   service            = "sqladmin.googleapis.com"
   disable_on_destroy = false
 }
+
+resource "google_service_account" "cloudsql_service_account" {
+  project      = var.gcp_project
+  account_id   = "csql-sa-${terraform.workspace}-id"
+  #account_id   = "csql-sa-${var.env}-id"
+  display_name = "Service Account for Cloud SQL"
+}

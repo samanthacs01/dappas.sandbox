@@ -1,4 +1,5 @@
 resource "google_compute_instance" "bastion_host" {
+  count = local.is_bastion_host_enabled ? 1 : 0
   name         = "bastion-host"
   project      = var.gcp_project
   machine_type = "e2-micro"
@@ -62,7 +63,7 @@ resource "google_project_iam_member" "iap_access" {
 }
 
 resource "google_compute_firewall" "allow_ssh" {
-  name    = "allow-ssh"
+  name    = "allow-ssh-${terraform.workspace}"
   network = google_compute_network.dappas_network.name
   allow {
     protocol = "tcp"

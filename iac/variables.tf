@@ -165,11 +165,13 @@ variable "db_name" {
 variable "db_tier" {
   description = "Database Tier"
   type        = string
+  default     = "db-f1-micro"
 }
 
 variable "db_edition" {
   description = "Edition of the database"
   type        = string
+  default     = "ENTERPRISE"
 }
 
 variable "db_availability" {
@@ -181,16 +183,19 @@ variable "db_availability" {
 variable "db_backup_start_time" {
   description = "Time to start backup progress"
   type        = string
+  default     = "03:00"
 }
 
 variable "retained_backups" {
   description = "Number of retained backups"
   type        = number
+  default     = 15
 }
 
 variable "transaction_log_retention_days" {
   description = "Number of transaction log reteined"
   type        = number
+  default     = 7
 }
 
 # SECRET MANAGER
@@ -207,6 +212,16 @@ variable "root_password_secret_id" {
 }
 
 # BASTION HOST
+
+variable "is_bastion_host_enabled" {
+  description = "Condition to create bucket"
+  type = map(string)
+  default = {
+    default = false
+    dev = true
+  }
+}
+
 variable "iap_acces_user" {
   description = "User with acces to IAP"
   type = map(string)
@@ -229,3 +244,4 @@ variable "vpn_ranges" {
     "143.198.96.24/32"
   ]
 }
+

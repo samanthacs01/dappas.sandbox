@@ -119,6 +119,7 @@ variable "internal_address_dappas" {
     production = "10.0.2.5"
   }
 }
+
 # DATABASE
 
 variable "instance_name" {
@@ -245,3 +246,44 @@ variable "vpn_ranges" {
   ]
 }
 
+# DNS 
+
+variable "domain_zone_name" {
+  description = "The name of manage domain zone"
+  type        = string
+  default     = "dappas-selector-dev"
+}
+
+variable "full_domain" {
+  description = "The full domain name"
+  type        = string
+  default     = "dappas.selector.dev."
+}
+
+variable "domain" {
+  description = "The domain name"
+  type        = string
+  default     = "dappas.selector.dev"
+}
+
+
+# CLOUD RUN FRONTEND
+
+variable "dappas_web_name" {
+  description = "name for the dappas web cloud run"
+  type        = string
+  default     = "dappas-web"
+}
+
+variable "session_expire_time" {
+  description = "session expire time"
+  type        = number
+  default     = 2592000
+}
+
+variable "dappas_web_secret" {
+  description = "secret for the frontend"
+  type        = string
+  sensitive   = true
+  default     = "dhwuwefs"
+  }

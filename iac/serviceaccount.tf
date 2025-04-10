@@ -49,3 +49,26 @@ resource "google_service_account" "cloudsql_service_account" {
   #account_id   = "csql-sa-${var.env}-id"
   display_name = "Service Account for Cloud SQL"
 }
+
+
+# Set roles for Cloud SQL service account
+resource "google_project_iam_member" "member-role" {
+  depends_on = [google_service_account.cloudsql_service_account]
+  for_each = toset([
+    "roles/cloudsql.client",
+    "roles/cloudsql.editor",
+    "roles/cloudsql.admin",
+    "roles/secretmanager.secretAccessor",
+    "roles/secretmanager.secretVersionManager",
+    "roles/vpcaccess.serviceAgent",
+    "roles/storage.objectCreator",
+    "roles/storage.admin",
+    "roles/documentai.admin",
+    "roles/cloudscheduler.admin",
+    "roles/cloudtasks.admin"
+  ])
+  role    = each.key
+  project = var.gcp_project
+  member  = "serviceAccount:${google_service_account.cloudsql_service_account.email}"
+}
+

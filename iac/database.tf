@@ -1,6 +1,7 @@
 # Create Cloud SQL database instance
 resource "google_sql_database_instance" "db_dappas_instance" {
-  name             = "${local.instance_name}"
+  #name             = "${local.instance_name}"
+  name             = "${terraform.workspace}-db-instance"
   region           = var.region
   database_version = var.database_version
   #root_password    = google_secret_manager_secret_version.root_password_dappas.secret_data
@@ -38,7 +39,7 @@ resource "google_sql_database_instance" "db_dappas_instance" {
 
 # Create Cloud SQL database
 resource "google_sql_database" "db_dappas" {
-  name       = "${local.db_name}"
+  name       = "${terraform.workspace}-db"
   instance   = google_sql_database_instance.db_dappas_instance.name
   depends_on = [google_sql_database_instance.db_dappas_instance]
 }

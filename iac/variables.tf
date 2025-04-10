@@ -122,17 +122,6 @@ variable "internal_address_dappas" {
 
 # DATABASE
 
-variable "instance_name" {
-  description = "Name of the database instance"
-  type = map(string)
-  default = {
-    default = "db"
-    dev     = "dev-db-instance"
-    staging = "staging-db-instance"
-    production = "production-db-instance"
-  }
-}
-
 variable "region" {
   description = "Region where the instance will be created"
   type        = string
@@ -150,17 +139,6 @@ variable "deletion_protection" {
   description = "Configure accidental deletion protection for the instance"
   type        = bool
   default     = true
-}
-
-variable "db_name" {
-  description = "Name of the database"
-  type = map(string)
-  default = {
-    default = "db"
-    dev     = "dev-db"
-    staging = "staging-db"
-    production = "production-db"
-  }
 }
 
 variable "db_tier" {

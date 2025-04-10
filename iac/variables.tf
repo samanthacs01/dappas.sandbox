@@ -190,6 +190,25 @@ variable "root_password_secret_id" {
   }
 }
 
+variable "dappas_web_secret" {
+  description = "secret for the frontend"
+  type        = string
+  sensitive   = true
+  default     = "dhwuwefs"
+  }
+
+variable "resend-api-key" {
+  description = "Secret for resend API key"
+  sensitive   = true
+  default = "aiajidf"
+}
+
+variable "pulse-admin-passwd" {
+  description = "Secret for the Pulse Admin Password"
+  sensitive   = true
+  default     = "sdjofweir"
+}
+
 # BASTION HOST
 
 variable "is_bastion_host_enabled" {
@@ -259,9 +278,4 @@ variable "session_expire_time" {
   default     = 2592000
 }
 
-variable "dappas_web_secret" {
-  description = "secret for the frontend"
-  type        = string
-  sensitive   = true
-  default     = "dhwuwefs"
-  }
+

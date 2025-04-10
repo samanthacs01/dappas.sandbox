@@ -286,7 +286,7 @@ variable "volume_mounts" {
 
 variable "bucket_name" {
   description = "to upload pdf for proccesing"
-  default     = "pulse-docs"
+  default     = "dappas-docs"
 }
 
 variable "environment" {

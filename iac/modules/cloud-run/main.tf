@@ -8,7 +8,7 @@ locals {
 }
 
 module "project" {
-  source = "../project"
+  source = "git::https://github.com/GoogleCloudPlatform/cloud-foundation-fabric.git//modules/project?ref=v36.0.0"
   billing_account = (var.project_create != null
     ? var.project_create.billing_account_id
     : null
@@ -28,7 +28,7 @@ module "project" {
 
 # Cloud Run service
 module "cloud_run" {
-  source          = "../cloud-run-v2"
+  source          = "git::https://github.com/GoogleCloudPlatform/cloud-foundation-fabric.git//modules/cloud-run-v2?ref=v36.0.0"
   project_id      = module.project.project_id
   name            = var.name
   region          = var.region
@@ -157,7 +157,7 @@ resource "google_compute_global_address" "default" {
 
 # Global L7 HTTPS Load Balancer in front of Cloud Run
 module "glb" {
-  source     = "../net-lb-app-ext"
+  source     = "git::https://github.com/GoogleCloudPlatform/cloud-foundation-fabric.git//modules/net-lb-app-ext?ref=v36.0.0"
   count      = local.gclb_create ? 1 : 0
   project_id = module.project.project_id
   name       = "glb-${var.name}"

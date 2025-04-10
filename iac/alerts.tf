@@ -194,3 +194,46 @@ resource "google_monitoring_alert_policy" "cloudsql_critical_states" {
     mime_type = "text/markdown"
   }
 }
+
+
+# resource "google_monitoring_alert_policy" "cloudsql_connections_high" {
+#   display_name = "High Connections - ${local.instance_name}"
+#   combiner     = "OR"
+
+#   conditions {
+#     display_name = "Connection Count High - ${local.instance_name}"
+
+#     condition_threshold {
+#       filter = <<-EOT
+#         resource.type = "cloudsql_database" AND
+#         metric.type = "cloudsql.googleapis.com/database/postgresql/connections" AND
+#         resource.labels."database_id" = "${var.gcp_project}:${local.instance_name}"
+#       EOT
+#       duration        = "300s"  # 5 min
+#       comparison      = "COMPARISON_GT"
+#       threshold_value = 25
+#       aggregations {
+#         alignment_period   = "60s"
+#         per_series_aligner = "ALIGN_MEAN"
+#       }
+#     }
+#   }
+
+#   notification_channels = values(module.notification_channels.channel_names)
+
+#   documentation {
+#     content = <<-EOT
+#       Instance ${local.instance_name} has exceeded the connection threshold for more than 5 minutes.
+
+#       Recommended actions:
+#       1. Check for connection leaks in application code
+#       2. Review active connections
+#       3. Consider increasing max_connections parameter if needed
+#       4. Optimize connection pooling settings
+#       5. Scale up the instance if consistently hitting limits
+
+#       Direct link: https://console.cloud.google.com/sql/instances/${local.instance_name}/overview
+#     EOT
+#     mime_type = "text/markdown"
+#   }
+# }

@@ -36,56 +36,32 @@ module "bucket_test" {
 
 
 
-# Create Cloud Run for the frontend
 module "load-balancing-fe" {
-  source              = "./modules/cloud-run"
-  project_id          = var.gcp_project
-  region              = "us-east1"
-  name                = "${var.dappas_web_name}-${terraform.workspace}"
-  custom_domain       = "${terraform.workspace}.${var.full_domain}"
-  ingress             = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
-  create_job          = false
-  cloud_sql_instances = ""
-  service_account     = "${data.google_project.project.number}-compute@developer.gserviceaccount.com"
-  connector           = google_sql_database_instance.db_dappas_instance.connection_name
-  #image               = "us-docker.pkg.dev/${var.gcp_project}/pulse/${var.dappas_web_name}-${terraform.workspace}:FRONTEND_TAG"
-  image               = "us-docker.pkg.dev/cloudrun/container/hello"
+  source                 = "./modules/cloud-run-new" 
+  project_id             = var.gcp_project
+  region                 = "us-east1"
+  name                   = "frontend-api-${terraform.workspace}"
+  custom_domain          = "api.${terraform.workspace}.${var.full_domain}"
+  service_account        = "${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+  image                  = "gcr.io/google-samples/hello-app:1.0"
+  allow_unauthenticated  = true
+  connector              = google_sql_database_instance.db_dappas_instance.connection_name
 
-  # Frontend vars required
-  NEXT_APP_API_URL                = "https://api.${terraform.workspace}.${var.domain}"
-  NEXT_PUBLIC_SESSION_COOKIE_NAME = "${var.dappas_web_name}-session"
-  NEXT_PUBLIC_SOCKET_URL          = "https://api.${terraform.workspace}.${var.domain}"
-  NEXTAUTH_URL                    = "https://${terraform.workspace}.${var.domain}"
+  # Security
+  security_policy = {
+    ip_blacklist = ["1.2.3.4", "5.6.7.8"] # Puedes dejar vacío con []
+  }
+
+
+
+  # Variables de entorno
+env_vars = {
+  NEXT_APP_API_URL                 = "https://api.${terraform.workspace}.${var.full_domain}"
+  NEXT_PUBLIC_SESSION_COOKIE_NAME = "frontend-api-session"
+  NEXT_PUBLIC_SOCKET_URL          = "https://api.${terraform.workspace}.${var.full_domain}"
+  NEXTAUTH_URL                    = "https://api.${terraform.workspace}.${var.full_domain}"
   NEXTAUTH_SECRET                 = var.dappas_web_secret
   NEXTAUTH_SESSION_EXPIRE         = var.session_expire_time
-  NEXT_PUBLIC_APP_ENV             = "${terraform.workspace}"
-
-  # Backend vars required
-  INSTANCE_CONNECTION_NAME       = null
-  PROCESSOR_ENV                  = ""
-  SUPPORT_EMAIL                  = ""
-  FRONTEND_BASE_URL              = ""
-  GOOGLE_APPLICATION_CREDENTIALS = ""
-  CLOUD_STORAGE_BUCKET_NAME      = ""
-  CLOUD_PROJECT_ID               = ""
-  CLOUD_PROJECT_NUMBER           = ""
-  DOCUMENT_AI_PROCESSOR_ID       = ""
-  DOCUMENT_AI_PROCESSOR_LOCATION = ""
-  CLOUD_TASK_ID                  = ""
-  FROM_EMAIL                     = ""
-  SESSION_EXPIRE                 = null
-  APP_ENV                        = ""
-  BASE_URL                       = ""
-  DB_HOST                        = google_sql_database_instance.db_dappas_instance.private_ip_address
-  # Backend secrets vars required
-  DB_USER              = module.secret_manager.secrets["dbusersecret-${terraform.workspace}"].id
-  DB_PASS              = module.secret_manager_2.secrets["dbpasssecret-${terraform.workspace}"].id 
-  DB_NAME              = module.secret_manager.secrets["dbnamesecret-${terraform.workspace}"].id 
-  PULSE_ADMIN_PASSWORD = module.secret_manager.secrets["admin-passwd-${terraform.workspace}"].id 
-  RESEND_API_KEY       = module.secret_manager.secrets["resend-api-key-${terraform.workspace}"].id  
-  # DB_USER              = google_secret_manager_secret.dbuser_pulse.secret_id
-  # DB_PASS              = google_secret_manager_secret.dbpass_pulse.secret_id
-  # DB_NAME              = google_secret_manager_secret.dbname_pulse.secret_id
-  # PULSE_ADMIN_PASSWORD = google_secret_manager_secret.pulse_admin_passwd.secret_id
-  # RESEND_API_KEY       = google_secret_manager_secret.resend_api_key.secret_id
+  NEXT_PUBLIC_APP_ENV             = terraform.workspace
+}
 }

@@ -1,16 +1,16 @@
 # HIGH CPU
 resource "google_monitoring_alert_policy" "cloudsql_cpu_high" {
-  display_name = "High CPU - ${local.instance_name}"
+  display_name = "High CPU - ${google_sql_database_instance.db_dappas_instance.name}"
   combiner     = "OR"
 
   conditions {
-    display_name = "CPU > 85% - ${local.instance_name}"
+    display_name = "CPU > 85% - ${google_sql_database_instance.db_dappas_instance.name}"
 
     condition_threshold {
       filter = <<-EOT
         resource.type = "cloudsql_database" AND
         metric.type = "cloudsql.googleapis.com/database/cpu/utilization" AND
-        resource.labels."database_id" = "${var.gcp_project}:${local.instance_name}"
+        resource.labels."database_id" = "${var.gcp_project}:${google_sql_database_instance.db_dappas_instance.name}"
       EOT
       duration        = "300s"  # 5 min
       comparison      = "COMPARISON_GT"
@@ -26,14 +26,14 @@ resource "google_monitoring_alert_policy" "cloudsql_cpu_high" {
 
 documentation {
   content = <<-EOT
-    Instance ${local.instance_name} has exceeded 85% CPU usage for more than 5 minutes.
+    Instance ${google_sql_database_instance.db_dappas_instance.name} has exceeded 85% CPU usage for more than 5 minutes.
 
     Recommended actions:
     1. Check active queries in Cloud SQL
     2. Review performance dashboard
     3. Consider query optimization or scaling
 
-    Direct link: https://console.cloud.google.com/sql/instances/${local.instance_name}/overview
+    Direct link: https://console.cloud.google.com/sql/instances/${google_sql_database_instance.db_dappas_instance.name}/overview
   EOT
   mime_type = "text/markdown"
  }
@@ -42,17 +42,17 @@ documentation {
 
 # HIGH DISK
 resource "google_monitoring_alert_policy" "cloudsql_disk_high" {
-  display_name = "High Disk - ${local.instance_name}"
+  display_name = "High Disk - ${google_sql_database_instance.db_dappas_instance.name}"
   combiner     = "OR"
 
   conditions {
-    display_name = "Disk > 85% - ${local.instance_name}"
+    display_name = "Disk > 85% - ${google_sql_database_instance.db_dappas_instance.name}"
 
     condition_threshold {
       filter = <<-EOT
         resource.type = "cloudsql_database" AND
         metric.type = "cloudsql.googleapis.com/database/disk/utilization" AND
-        resource.labels."database_id" = "${var.gcp_project}:${local.instance_name}"
+        resource.labels."database_id" = "${var.gcp_project}:${google_sql_database_instance.db_dappas_instance.name}"
       EOT
       duration        = "300s"  # 5 min
       comparison      = "COMPARISON_GT"
@@ -68,7 +68,7 @@ resource "google_monitoring_alert_policy" "cloudsql_disk_high" {
 
   documentation {
     content = <<-EOT
-      Instance ${local.instance_name} has exceeded 85% disk usage for more than 5 minutes.
+      Instance ${google_sql_database_instance.db_dappas_instance.name} has exceeded 85% disk usage for more than 5 minutes.
 
       Recommended actions:
       1. Check storage usage and clean up if possible
@@ -76,7 +76,7 @@ resource "google_monitoring_alert_policy" "cloudsql_disk_high" {
       3. Consider scaling up disk size
       4. Verify binary logs/backups aren't consuming excessive space
 
-      Direct link: https://console.cloud.google.com/sql/instances/${local.instance_name}/storage
+      Direct link: https://console.cloud.google.com/sql/instances/${google_sql_database_instance.db_dappas_instance.name}/storage
     EOT
     mime_type = "text/markdown"
   }
@@ -85,17 +85,17 @@ resource "google_monitoring_alert_policy" "cloudsql_disk_high" {
 
 # HIGH MEMORY
 resource "google_monitoring_alert_policy" "cloudsql_memory_high" {
-  display_name = "High Memory - ${local.instance_name}"
+  display_name = "High Memory - ${google_sql_database_instance.db_dappas_instance.name}"
   combiner     = "OR"
 
   conditions {
-    display_name = "Memory Usage High - ${local.instance_name}"
+    display_name = "Memory Usage High - ${google_sql_database_instance.db_dappas_instance.name}"
 
     condition_threshold {
       filter = <<-EOT
         resource.type = "cloudsql_database" AND
         metric.type = "cloudsql.googleapis.com/database/memory/usage" AND
-        resource.labels."database_id" = "${var.gcp_project}:${local.instance_name}"
+        resource.labels."database_id" = "${var.gcp_project}:${google_sql_database_instance.db_dappas_instance.name}"
       EOT
       duration        = "300s"  # 5 min
       comparison      = "COMPARISON_GT"
@@ -111,7 +111,7 @@ resource "google_monitoring_alert_policy" "cloudsql_memory_high" {
 
   documentation {
     content = <<-EOT
-      Instance ${local.instance_name} has exceeded 85% memory usage for more than 5 minutes.
+      Instance ${google_sql_database_instance.db_dappas_instance.name} has exceeded 85% memory usage for more than 5 minutes.
 
       Recommended actions:
       1. Check active queries for memory leaks
@@ -119,7 +119,7 @@ resource "google_monitoring_alert_policy" "cloudsql_memory_high" {
       3. Optimize memory-intensive queries
       4. Consider upgrading to a machine type with more memory
 
-      Direct link: https://console.cloud.google.com/sql/instances/${local.instance_name}/overview
+      Direct link: https://console.cloud.google.com/sql/instances/${google_sql_database_instance.db_dappas_instance.name}/overview
     EOT
     mime_type = "text/markdown"
   }
@@ -129,17 +129,17 @@ resource "google_monitoring_alert_policy" "cloudsql_memory_high" {
 # INSTANCE STATE
 
 resource "google_monitoring_alert_policy" "cloudsql_critical_states" {
-  display_name = "Critical State - ${local.instance_name}"
+  display_name = "Critical State - ${google_sql_database_instance.db_dappas_instance.name}"
   combiner     = "OR"
 
   conditions {
-    display_name = "Instance in Critical State - ${local.instance_name}"
+    display_name = "Instance in Critical State - ${google_sql_database_instance.db_dappas_instance.name}"
 
 #     condition_threshold {
 #       filter = <<-EOT
 #         resource.type = "cloudsql_database" AND
 #         metric.type = "cloudsql.googleapis.com/database/instance_state" AND
-#         resource.labels.database_id = "${var.gcp_project}:${local.instance_name}" AND
+#         resource.labels.database_id = "${var.gcp_project}:${google_sql_database_instance.db_dappas_instance.name}" AND
 #         metric.state = one_of("SUSPENDED", "FAILED", "MAINTENANCE", "UNKNOWN_STATE")
 #       EOT
 #       threshold_value = 0.5  # Para métricas booleanas, >0.5 significa TRUE
@@ -156,7 +156,7 @@ resource "google_monitoring_alert_policy" "cloudsql_critical_states" {
       query = <<-EOT
         fetch cloudsql_database
         | metric 'cloudsql.googleapis.com/database/instance_state'
-        | filter (resource.database_id == '${var.gcp_project}:${local.instance_name}')
+        | filter (resource.database_id == '${var.gcp_project}:${google_sql_database_instance.db_dappas_instance.name}')
         | filter (metric.state == 'SUSPENDED' 
                || metric.state == 'FAILED' 
                || metric.state == 'MAINTENANCE' 
@@ -176,7 +176,7 @@ resource "google_monitoring_alert_policy" "cloudsql_critical_states" {
 
   documentation {
     content = <<-EOT
-      Instance ${local.instance_name} has entered a critical state:
+      Instance ${google_sql_database_instance.db_dappas_instance.name} has entered a critical state:
       
       Possible states triggering this alert:
       - SUSPENDED: Instance suspended (check billing)
@@ -189,7 +189,7 @@ resource "google_monitoring_alert_policy" "cloudsql_critical_states" {
       2. Check logs for errors
       3. Contact support if needed
       
-      Direct link: https://console.cloud.google.com/sql/instances/${local.instance_name}/overview
+      Direct link: https://console.cloud.google.com/sql/instances/${google_sql_database_instance.db_dappas_instance.name}/overview
     EOT
     mime_type = "text/markdown"
   }
@@ -197,17 +197,17 @@ resource "google_monitoring_alert_policy" "cloudsql_critical_states" {
 
 
 # resource "google_monitoring_alert_policy" "cloudsql_connections_high" {
-#   display_name = "High Connections - ${local.instance_name}"
+#   display_name = "High Connections - ${google_sql_database_instance.db_dappas_instance.name}"
 #   combiner     = "OR"
 
 #   conditions {
-#     display_name = "Connection Count High - ${local.instance_name}"
+#     display_name = "Connection Count High - ${google_sql_database_instance.db_dappas_instance.name}"
 
 #     condition_threshold {
 #       filter = <<-EOT
 #         resource.type = "cloudsql_database" AND
 #         metric.type = "cloudsql.googleapis.com/database/postgresql/connections" AND
-#         resource.labels."database_id" = "${var.gcp_project}:${local.instance_name}"
+#         resource.labels."database_id" = "${var.gcp_project}:${google_sql_database_instance.db_dappas_instance.name}"
 #       EOT
 #       duration        = "300s"  # 5 min
 #       comparison      = "COMPARISON_GT"
@@ -223,7 +223,7 @@ resource "google_monitoring_alert_policy" "cloudsql_critical_states" {
 
 #   documentation {
 #     content = <<-EOT
-#       Instance ${local.instance_name} has exceeded the connection threshold for more than 5 minutes.
+#       Instance ${google_sql_database_instance.db_dappas_instance.name} has exceeded the connection threshold for more than 5 minutes.
 
 #       Recommended actions:
 #       1. Check for connection leaks in application code
@@ -232,7 +232,7 @@ resource "google_monitoring_alert_policy" "cloudsql_critical_states" {
 #       4. Optimize connection pooling settings
 #       5. Scale up the instance if consistently hitting limits
 
-#       Direct link: https://console.cloud.google.com/sql/instances/${local.instance_name}/overview
+#       Direct link: https://console.cloud.google.com/sql/instances/${google_sql_database_instance.db_dappas_instance.name}/overview
 #     EOT
 #     mime_type = "text/markdown"
 #   }

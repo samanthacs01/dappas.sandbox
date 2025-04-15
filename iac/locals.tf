@@ -20,9 +20,6 @@ locals {
   cidr_dappas_subnet = lookup(var.cidr_dappas_subnet, terraform.workspace, var.cidr_dappas_subnet["default"])
   cidr_priv_sql_dappas = lookup(var.cidr_priv_sql_dappas, terraform.workspace, var.cidr_priv_sql_dappas["default"])
   internal_address_dappas = lookup(var.internal_address_dappas, terraform.workspace, var.internal_address_dappas["default"])
-# DATABASE
-  instance_name = lookup(var.instance_name, terraform.workspace, var.instance_name["default"])
-  db_name = lookup(var.db_name, terraform.workspace, var.db_name["default"])
 # SECRET MANAGER
   root_password_secret_id = lookup(var.root_password_secret_id , terraform.workspace, var.root_password_secret_id ["default"])
 # BASTION HOST

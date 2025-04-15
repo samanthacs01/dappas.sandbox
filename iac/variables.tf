@@ -119,18 +119,8 @@ variable "internal_address_dappas" {
     production = "10.0.2.5"
   }
 }
-# DATABASE
 
-variable "instance_name" {
-  description = "Name of the database instance"
-  type = map(string)
-  default = {
-    default = "db"
-    dev     = "dev-db-instance"
-    staging = "staging-db-instance"
-    production = "production-db-instance"
-  }
-}
+# DATABASE
 
 variable "region" {
   description = "Region where the instance will be created"
@@ -149,17 +139,6 @@ variable "deletion_protection" {
   description = "Configure accidental deletion protection for the instance"
   type        = bool
   default     = true
-}
-
-variable "db_name" {
-  description = "Name of the database"
-  type = map(string)
-  default = {
-    default = "db"
-    dev     = "dev-db"
-    staging = "staging-db"
-    production = "production-db"
-  }
 }
 
 variable "db_tier" {
@@ -211,6 +190,25 @@ variable "root_password_secret_id" {
   }
 }
 
+variable "dappas_web_secret" {
+  description = "secret for the frontend"
+  type        = string
+  sensitive   = true
+  default     = "dhwuwefs"
+  }
+
+variable "resend-api-key" {
+  description = "Secret for resend API key"
+  sensitive   = true
+  default = "aiajidf"
+}
+
+variable "pulse-admin-passwd" {
+  description = "Secret for the Pulse Admin Password"
+  sensitive   = true
+  default     = "sdjofweir"
+}
+
 # BASTION HOST
 
 variable "is_bastion_host_enabled" {
@@ -244,4 +242,40 @@ variable "vpn_ranges" {
     "143.198.96.24/32"
   ]
 }
+
+# DNS 
+
+variable "domain_zone_name" {
+  description = "The name of manage domain zone"
+  type        = string
+  default     = "dappas-selector-dev"
+}
+
+variable "full_domain" {
+  description = "The full domain name"
+  type        = string
+  default     = "dappas.selector.dev."
+}
+
+variable "domain" {
+  description = "The domain name"
+  type        = string
+  default     = "dappas.selector.dev"
+}
+
+
+# CLOUD RUN FRONTEND
+
+variable "dappas_web_name" {
+  description = "name for the dappas web cloud run"
+  type        = string
+  default     = "dappas-web"
+}
+
+variable "session_expire_time" {
+  description = "session expire time"
+  type        = number
+  default     = 2592000
+}
+
 

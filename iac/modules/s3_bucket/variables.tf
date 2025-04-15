@@ -3,9 +3,9 @@ variable "bucket_name" {
   type = map(string)
   default = {
     default = "tf-name"
-    dev     = "dev-bucket"
-    staging = "staging-bucket"
-    production = "production-bucket"
+    dev     = "dappas-docs-dev"
+    staging = "dappas-docs-staging"
+    production = "dappas-docs-production"
   }
 }
 
@@ -14,5 +14,6 @@ variable "is_bucket_enabled" {
   type = map(string)
   default = {
     default = false
+    dev = true
   }
 }

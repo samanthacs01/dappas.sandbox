@@ -42,7 +42,7 @@ variable "env_vars" {
 variable "ingress" {
   description = "Ingress traffic sources allowed to call the service."
   type        = string
-  default     = "internal-and-cloud-load-balancing"
+  default     = "INGRESS_TRAFFIC_INTERNAL_LOAD_BALANCER"
 }
 
 variable "allow_unauthenticated" {
@@ -70,4 +70,15 @@ variable "memory_limit" {
   description = "Amount of memory to allocate (e.g. 512Mi, 1Gi)"
   type        = string
   default     = "2Gi"
+}
+
+variable "INSTANCE_CONNECTION_NAME" {
+  type        = string
+  description = "Cloud SQL instance connection name"
+  sensitive   = true
+}
+
+variable "bucket_name" {
+  description = "to upload pdf for proccesing"
+  default     = "dappas-docs-dev"
 }

@@ -4,44 +4,118 @@ provider "google" {
 }
 
 
+
 # **Cloud Run Service**
-resource "google_cloud_run_service" "default" {
+# resource "google_cloud_run_service" "default" {
+#   name     = var.name
+#   location = var.region
+
+#   metadata {
+#     annotations = {
+#       "run.googleapis.com/ingress" = var.ingress
+#     }
+#   }
+
+#   template {
+#     spec {
+#       service_account_name = var.service_account
+
+#       containers {
+#         image = var.image
+
+#         dynamic "env" {
+#           for_each = var.env_vars
+#           content {
+#             name  = env.key
+#             value = env.value
+#           }
+#         }
+
+#         resources {
+#           limits = {
+#             cpu    = var.cpu_limit
+#             memory = var.memory_limit
+#           }
+#         }
+#       }
+#     }
+
+#     metadata {
+#       annotations = {
+#         "run.googleapis.com/vpc-access-connector" = var.connector,
+#         "run.googleapis.com/vpc-access-egress"    = "all-traffic"
+#       }
+#     }
+#   }
+# }
+
+
+
+resource "google_cloud_run_v2_service" "default" {
   name     = var.name
   location = var.region
-
-    metadata {
-    annotations = {
-      "run.googleapis.com/ingress" = var.ingress 
-      "run.googleapis.com/vpc-access-connector" = var.connector                 
-      "run.googleapis.com/vpc-access-egress"    = "all-traffic" 
-    }
-  }
+  project  = var.project_id
+  ingress  = var.ingress
 
   template {
-    spec {
-      service_account_name = var.service_account
 
-      containers {
-        image = var.image
+    volumes {
+      name = "cloudsql"
+      cloud_sql_instance {
+        instances = [var.INSTANCE_CONNECTION_NAME]
+      }
+    }    
+    volumes {
+      name = "gcs-bucket-volume"
+      gcs {
+        bucket        = var.bucket_name
+        read_only     = false
+      }
+    }    
 
-        dynamic "env" {
+    containers {
+      image = var.image
+      
+      
+      dynamic "env" {
         for_each = var.env_vars
         content {
-            name  = env.key
-            value = env.value
+          name  = env.key
+          value = env.value
         }
-        }
-       resources {
-        limits = {
-        cpu    = var.cpu_limit
-        memory = var.memory_limit
-        }
-       }
+      }
 
-      } 
+      resources {
+        limits = {
+          cpu    = var.cpu_limit
+          memory = var.memory_limit
+        }
+      }
+
+      volume_mounts {
+        name = "cloudsql"
+        mount_path = "/cloudsql"
+      }
+
+      volume_mounts {
+        name       = "gcs-bucket-volume"
+        mount_path = "/mnt/gcs"
+      }
+    }
+
+    vpc_access {
+      connector = var.connector
+      egress    = "ALL_TRAFFIC"
     }
   }
 }
+
+   
+
+
+
+
+
 
 # IAM role that allows "allUsers" making HTTP requests to a Cloud Run service
 resource "google_cloud_run_service_iam_member" "no_auth" {
@@ -49,7 +123,7 @@ resource "google_cloud_run_service_iam_member" "no_auth" {
 
   location = var.region
   project  = var.project_id
-  service  = google_cloud_run_service.default.name
+  service  = google_cloud_run_v2_service.default.name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }

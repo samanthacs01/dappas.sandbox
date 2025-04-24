@@ -1,0 +1,8 @@
+name: Set up GCP CLI
+description: "Login Artifact Registry"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up GCP CLI
+      run: gcloud auth configure-docker us-docker.pkg.dev
+      shell: bash

@@ -1,0 +1,176 @@
+-- +goose Up
+CREATE TABLE IF NOT EXISTS users (
+	id SERIAL PRIMARY KEY,
+	email VARCHAR(255) NOT NULL UNIQUE,
+	password_hash VARCHAR(255) NOT NULL,
+	role VARCHAR(50) NOT NULL,
+	active BOOLEAN NOT NULL DEFAULT FALSE,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+	id SERIAL PRIMARY KEY,
+	user_id INT NOT NULL REFERENCES users(id),
+	token VARCHAR(255) NOT NULL UNIQUE,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS payers (
+    id SERIAL PRIMARY KEY,
+    entity_name VARCHAR(255) NOT NULL,
+    entity_address VARCHAR(255) NOT NULL,
+    contact_name VARCHAR(255) NOT NULL,
+    contact_phone_number VARCHAR(50) NOT NULL,
+    contact_email VARCHAR(255) NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS productions (
+	id SERIAL PRIMARY KEY,
+	entity_name VARCHAR(255) NOT NULL,
+	address VARCHAR(255) NOT NULL,
+	contact_name VARCHAR(255) NOT NULL,
+	contact_phone_number VARCHAR(50) NOT NULL,
+	contact_email VARCHAR(255) NOT NULL,
+	production_split DECIMAL (10, 2) NOT NULL,
+	production_billing_type VARCHAR(50) NOT NULL,
+	production_expense_discount_type VARCHAR(50) NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS expenses (
+	id SERIAL PRIMARY KEY,
+	production_id INT NOT NULL REFERENCES productions(id),
+	month VARCHAR(50) NOT NULL,
+	year VARCHAR(50) NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS expense_items (
+	id SERIAL PRIMARY KEY,
+	expense_id INT NOT NULL REFERENCES expenses(id),
+	category VARCHAR(255) NOT NULL,
+	amount DECIMAL (10, 2) NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS expense_docs (
+	id SERIAL PRIMARY KEY,
+	expense_id INT NOT NULL REFERENCES expenses(id),
+	file_name VARCHAR(255) NOT NULL,
+	file_path VARCHAR(255) NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS insertion_orders (
+	id SERIAL PRIMARY KEY,
+	number VARCHAR(100) NOT NULL,
+	payer_id INT NOT NULL REFERENCES payers(id),
+	revenue DECIMAL(10, 2) NOT NULL,
+	payment_terms VARCHAR(50) NOT NULL,
+	status VARCHAR(50) NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS flights (
+	id SERIAL PRIMARY KEY,
+	production_id INT NOT NULL REFERENCES productions(id),
+	ads_type VARCHAR(50) NOT NULL,
+	duration VARCHAR(50) NOT NULL,
+	total_cost DECIMAL(10, 2) NOT NULL,
+	start_date DATE NOT NULL,
+	end_date DATE NOT NULL,
+	guaranteed_impressions INT NOT NULL,
+	status VARCHAR(50) NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS invoices (
+	id SERIAL PRIMARY KEY,
+	io_id INT NOT NULL REFERENCES insertion_orders(id),
+	due_date DATE NOT NULL,
+	status VARCHAR(50) NOT NULL,
+	paid_amount DECIMAL(10, 2) NOT NULL default 0,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS invoice_items (
+	id SERIAL PRIMARY KEY,
+	invoice_id INT NOT NULL REFERENCES invoices(id),
+	io_item_id INT NOT NULL REFERENCES flights(id),
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS io_drafts(
+	id SERIAL PRIMARY KEY,
+	file_name VARCHAR(255) NOT NULL,
+	file_path VARCHAR(255) NOT NULL,
+	status VARCHAR(50) NOT NULL,
+	io_number VARCHAR(100),
+	io_payer_name VARCHAR(255),
+	io_payer_id INT,
+	io_revenue DECIMAL(10, 2),
+	io_payment_terms VARCHAR(50),
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS io_draft_flights(
+	id SERIAL PRIMARY KEY,
+	io_draft_id INT NOT NULL REFERENCES io_drafts(id),
+	ads_type VARCHAR(50),
+	duration VARCHAR(50),
+	total_cost DECIMAL(10, 2),
+	start_date DATE,
+	end_date DATE,
+	guaranteed_impressions INT,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	deleted_at TIMESTAMP
+);
+
+-- +goose StatementBegin
+SELECT 'up SQL query';
+-- +goose StatementEnd
+
+-- +goose Down
+DROP TABLE IF EXISTS io_draft_flights;
+DROP TABLE IF EXISTS io_drafts;
+DROP TABLE IF EXISTS invoice_items;
+DROP TABLE IF EXISTS invoices;
+DROP TABLE IF EXISTS flights;
+DROP TABLE IF EXISTS insertion_orders;
+DROP TABLE IF EXISTS expense_docs;
+DROP TABLE IF EXISTS expense_items;
+DROP TABLE IF EXISTS expenses;
+DROP TABLE IF EXISTS productions;
+DROP TABLE IF EXISTS payers;
+DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS users;
+
+-- +goose StatementBegin
+SELECT 'down SQL query';
+-- +goose StatementEnd

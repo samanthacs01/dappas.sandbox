@@ -1,0 +1,63 @@
+{
+  "name": "pulse-api",
+  "sourceRoot": "apps/pulse-api",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/pulse-api && GO111MODULE=auto go build -o dist/pulse-api main.go"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f docker-compose.yml up --build pulse-api -d"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml  up --build pulse-api"
+      }
+    },
+    "gendocs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "swag init --dir=apps/pulse-api --output=apps/pulse-api/docs"
+      }
+    },
+    "test": {
+      "executor": "@nx-go/nx-go:test",
+      "options": {
+        "buildTarget": "pulse-api:build"
+      }
+    },
+    "test-cover": {
+      "executor": "@nx-go/nx-go:test",
+      "options": {
+        "buildTarget": "pulse-api:build",
+        "cover": true
+      }
+    },
+    "lint": {
+      "executor": "@nx-go/nx-go:lint",
+      "options": {
+        "lintFilePatterns": ["apps/pulse-api/**/*.go"]
+      }
+    },
+    "tidy": {
+      "executor": "@nx-go/nx-go:tidy",
+      "options": {
+        "buildTarget": "pulse-api:download"
+      }
+    },
+    "download": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd apps/pulse-api && go mod download"
+      }
+    }
+  },
+  "tags": []
+}

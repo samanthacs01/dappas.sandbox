@@ -1,0 +1,30 @@
+{
+  "name": "pulse-web",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/pulse-web",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "production",
+      "options": {
+        "command": "nx run pulse-web:build:prod"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "nx run pulse-web:build:prod"
+          },
+          {
+            "command": "nx run pulse-web:start:dev"
+          }
+        ],
+        "parallel": false
+      }
+    }
+  }
+}

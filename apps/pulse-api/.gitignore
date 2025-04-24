@@ -1,0 +1,7 @@
+tmp/
+uploads/
+bucket/
+docs/*.json
+docs/*.yaml
+docs/docs.go
+.idea

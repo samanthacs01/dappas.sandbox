@@ -1,0 +1,18 @@
+# Config file for air
+[build]
+  cmd = "swag init --dir=./ --output=./docs && go build -gcflags 'all=-N -l'  -o ./tmp/pulse-api ./main.go"
+  bin = "./tmp/pulse-api"
+  full_bin = "APP_ENV=dev dlv exec ./tmp/pulse-api --listen=:40000 --headless=true --api-version=2 --accept-multiclient --continue --log --"
+  include_ext = ["go"]
+  exclude_dir = ["tmp", "vendor", "docs", "uploads"]
+  exclude_file = ["air.toml"]
+  delay = 1000 # ms
+  log = "air_errors.log"
+  stop_on_error = true
+  kill_delay = 500 # ms
+  poll = true
+
+[log]
+  color = true
+  timestamp = false
+  highlight = true

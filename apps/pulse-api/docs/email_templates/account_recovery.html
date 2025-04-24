@@ -1,0 +1,254 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{entity_name}} Account Recovery</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f5;
+      font-family: Inter, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      color: #02196d;
+    "
+  >
+    <table
+      role="presentation"
+      cellpadding="0"
+      cellspacing="0"
+      style="
+        border-spacing: 0;
+        font-family: Arial, sans-serif;
+
+        width: 100%;
+      "
+    >
+      <tr>
+        <td style="padding: 20px">
+          <table
+            role="presentation"
+            cellpadding="0"
+            cellspacing="0"
+            style="width: 100%; max-width: 600px; margin: 0 auto"
+          >
+            <tr>
+              <td
+                style="
+                  width: 123px;
+                  height: auto;
+                  padding: 20px 0;
+                  text-align: center;
+                "
+              >
+                <img
+                  src="data:image/png;base64,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"
+                  style="mix-blend-mode: multiply"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td
+                align="center"
+                style="padding: 0 0 30px 0; font-size: 24px; font-weight: bold"
+              >
+                Account Recovery
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding-bottom: 20px">
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="
+                    width: 100%;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                  "
+                >
+                  <tr>
+                    <td style="padding: 40px">
+                      <table
+                        role="presentation"
+                        cellpadding="0"
+                        cellspacing="0"
+                        style="width: 100%; border-spacing: 0"
+                      >
+                        <tr>
+                          <td style="padding: 0 0 20px 0">
+                            <p
+                              style="
+                                margin: 0 0 15px 0;
+                                font-size: 18px;
+                                text-align: center;
+                                font-weight: 600;
+                              "
+                            >
+                              Dear {{entity_name}}:
+                            </p>
+                            <p
+                              style="
+                                margin: 0 0 15px 0;
+                                font-size: 16px;
+                                text-align: center;
+                              "
+                            >
+                              You are receiving this email because we received a
+                              password reset request for your account.
+                            </p>
+                            <hr
+                              style="
+                                width: 339px;
+                                border: 1px solid #e4e4e7;
+                                margin-top: 24px;
+                              "
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td align="center" style="padding: 0 0 30px 0">
+                            <a
+                              href="{{confirm_link}}"
+                              target="_blank"
+                              style="
+                                background-color: #02196d;
+                                color: #ffffff;
+                                text-decoration: none;
+                                padding: 12px 24px;
+                                font-weight: bold;
+                                border-radius: 4px;
+                                display: inline-block;
+                                font-size: 16px;
+                              "
+                              >Reset your password</a
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p
+                              style="
+                                margin: 0 0 15px 0;
+                                font-size: 16px;
+                                text-align: center;
+                                font-weight: 600;
+                              "
+                            >
+                              If the above button does not work for you. copy
+                              and paste the following into your browsers address
+                              bar:
+                            </p>
+                            <p
+                              style="
+                                margin: 0 0 20px 0;
+                                text-align: center;
+                                word-break: break-all;
+                              "
+                            >
+                              <a
+                                href="{{confirm_link}}"
+                                target="_blank"
+                                style="color: #0066cc; font-size: 14px"
+                                >{{confirm_link}}</a
+                              >
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding-bottom: 20px">
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="
+                    width: 100%;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                  "
+                >
+                  <tr>
+                    <td style="padding: 30px">
+                      <table
+                        role="presentation"
+                        cellpadding="0"
+                        cellspacing="0"
+                        style="width: 100%; border-spacing: 0"
+                      >
+                        <tr>
+                          <td style="padding: 0; text-align: center">
+                            <p style="margin: 0 0 15px 0; font-size: 14px">
+                              If you have any questions or need further
+                              assistance, please do not hesitate to contact our
+                              support team via
+                              <a
+                                href="mailto:{{support_email}}"
+                                target="_blank"
+                                style="color: #0066cc"
+                                >{{support_email}}</a
+                              >
+                            </p>
+                            <p
+                              style="
+                                margin: 0 0 5px 0;
+                                font-size: 16px;
+                                font-weight: 600;
+                              "
+                            >
+                              Thank you for using PULSE.
+                            </p>
+                            <p
+                              style="
+                                margin: 0;
+                                font-size: 16px;
+                                font-weight: 600;
+                              "
+                            >
+                              Best regards
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                style="
+                  padding: 20px 0;
+                  text-align: center;
+                  font-size: 16px;
+                  font-weight: 700;
+                "
+              >
+                PULSE Support Team
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: center">
+                <img
+                  src="data:image/png;base64,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"
+                  style="width: 123px; height: auto; mix-blend-mode: multiply"
+                />
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

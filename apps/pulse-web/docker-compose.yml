@@ -1,0 +1,9 @@
+version: '3.9'
+
+services:
+  pulse-web:
+    container_name: pulse-web
+    image: pulse-web
+    build: .
+    ports:
+      - "3000:3000"

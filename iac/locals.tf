@@ -1,14 +1,4 @@
-# locals {
-#   bucket_name = lookup(var.bucket_name, terraform.workspace, var.bucket_name["default"])
-#   is_bucket_enabled = lookup(var.is_bucket_enabled, terraform.workspace, var.is_bucket_enabled["default"])
-# }
-
-
-
-
-
 locals {
-
 # NETWORK
   vpc_name = lookup(var.vpc_name, terraform.workspace, var.vpc_name["default"])
   is_vpc_enabled = lookup(var.is_vpc_enabled, terraform.workspace, var.is_vpc_enabled["default"])

@@ -43,11 +43,14 @@ module "load-balancing-fe" {
   INSTANCE_CONNECTION_NAME = google_sql_database_instance.db_dappas_instance.connection_name
   image                  = "gcr.io/google-samples/hello-app:1.0"
   allow_unauthenticated  = true
-
-  # Security
-  security_policy = {
-    ip_blacklist = ["1.2.3.4", "5.6.7.8"] # Puedes dejar vacío con []
+  volumes_config = {
+    cloudsql_enabled = false
+    gcs_enabled      = false
   }
+  # Security
+  # security_policy = {
+  #   ip_blacklist = ["*"] 
+  # }
 
   # Variables de entorno
 env_vars = {

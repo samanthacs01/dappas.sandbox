@@ -4,53 +4,6 @@ provider "google" {
 }
 
 
-
-# **Cloud Run Service**
-# resource "google_cloud_run_service" "default" {
-#   name     = var.name
-#   location = var.region
-
-#   metadata {
-#     annotations = {
-#       "run.googleapis.com/ingress" = var.ingress
-#     }
-#   }
-
-#   template {
-#     spec {
-#       service_account_name = var.service_account
-
-#       containers {
-#         image = var.image
-
-#         dynamic "env" {
-#           for_each = var.env_vars
-#           content {
-#             name  = env.key
-#             value = env.value
-#           }
-#         }
-
-#         resources {
-#           limits = {
-#             cpu    = var.cpu_limit
-#             memory = var.memory_limit
-#           }
-#         }
-#       }
-#     }
-
-#     metadata {
-#       annotations = {
-#         "run.googleapis.com/vpc-access-connector" = var.connector,
-#         "run.googleapis.com/vpc-access-egress"    = "all-traffic"
-#       }
-#     }
-#   }
-# }
-
-
-
 resource "google_cloud_run_v2_service" "default" {
   name     = var.name
   location = var.region
@@ -59,24 +12,31 @@ resource "google_cloud_run_v2_service" "default" {
 
   template {
 
-    volumes {
-      name = "cloudsql"
-      cloud_sql_instance {
-        instances = [var.INSTANCE_CONNECTION_NAME]
+    dynamic "volumes" {
+      for_each = var.volumes_config.cloudsql_enabled ? [1] : []
+      content {
+        name = "cloudsql"
+        cloud_sql_instance {
+          instances = [var.INSTANCE_CONNECTION_NAME]
+        }
       }
-    }    
-    volumes {
-      name = "gcs-bucket-volume"
-      gcs {
-        bucket        = var.bucket_name
-        read_only     = false
+    }
+
+    dynamic "volumes" {
+      for_each = var.volumes_config.gcs_enabled ? [1] : []
+      content {
+        name = "gcs-bucket-volume"
+        gcs {
+          bucket    = var.bucket_name
+          read_only = false
+        }
       }
-    }    
+    }
 
     containers {
       image = var.image
-      
-      
+
+      # Variables de entorno
       dynamic "env" {
         for_each = var.env_vars
         content {
@@ -92,14 +52,21 @@ resource "google_cloud_run_v2_service" "default" {
         }
       }
 
-      volume_mounts {
-        name = "cloudsql"
-        mount_path = "/cloudsql"
+      # Mounts dinámicos
+      dynamic "volume_mounts" {
+        for_each = var.volumes_config.cloudsql_enabled ? [1] : []
+        content {
+          name       = "cloudsql"
+          mount_path = "/cloudsql"
+        }
       }
 
-      volume_mounts {
-        name       = "gcs-bucket-volume"
-        mount_path = "/mnt/gcs"
+      dynamic "volume_mounts" {
+        for_each = var.volumes_config.gcs_enabled ? [1] : []
+        content {
+          name       = "gcs-bucket-volume"
+          mount_path = "/mnt/gcs"
+        }
       }
     }
 
@@ -109,6 +76,67 @@ resource "google_cloud_run_v2_service" "default" {
     }
   }
 }
+
+
+
+# resource "google_cloud_run_v2_service" "default" {
+#   name     = var.name
+#   location = var.region
+#   project  = var.project_id
+#   ingress  = var.ingress
+
+#   template {
+
+#     volumes {
+#       name = "cloudsql"
+#       cloud_sql_instance {
+#         instances = [var.INSTANCE_CONNECTION_NAME]
+#       }
+#     }    
+#     volumes {
+#       name = "gcs-bucket-volume"
+#       gcs {
+#         bucket        = var.bucket_name
+#         read_only     = false
+#       }
+#     }    
+    
+#     containers {
+#       image = var.image
+      
+      
+#       dynamic "env" {
+#         for_each = var.env_vars
+#         content {
+#           name  = env.key
+#           value = env.value
+#         }
+#       }
+
+#       resources {
+#         limits = {
+#           cpu    = var.cpu_limit
+#           memory = var.memory_limit
+#         }
+#       }
+
+#       volume_mounts {
+#         name = "cloudsql"
+#         mount_path = "/cloudsql"
+#       }
+
+#       volume_mounts {
+#         name       = "gcs-bucket-volume"
+#         mount_path = "/mnt/gcs"
+#       }
+#     }
+
+#     vpc_access {
+#       connector = var.connector
+#       egress    = "ALL_TRAFFIC"
+#     }
+#   }
+# }
 
    
 
@@ -149,6 +177,7 @@ module "load_balancer" {
       ]
       port_name = "http"
       health_checks = []
+      security_policy = google_compute_security_policy.cloud_run_policy.id
     }
   }
 

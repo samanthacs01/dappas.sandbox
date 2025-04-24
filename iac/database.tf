@@ -1,10 +1,8 @@
 # Create Cloud SQL database instance
 resource "google_sql_database_instance" "db_dappas_instance" {
-  #name             = "${local.instance_name}"
   name             = "${terraform.workspace}-db-instance"
   region           = var.region
   database_version = var.database_version
-  #root_password    = google_secret_manager_secret_version.root_password_dappas.secret_data
   root_password    = module.secret_manager_2.secrets["root-password-${terraform.workspace}"].secret_data
   settings {
     tier              = var.db_tier

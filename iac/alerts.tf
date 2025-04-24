@@ -135,23 +135,6 @@ resource "google_monitoring_alert_policy" "cloudsql_critical_states" {
   conditions {
     display_name = "Instance in Critical State - ${google_sql_database_instance.db_dappas_instance.name}"
 
-#     condition_threshold {
-#       filter = <<-EOT
-#         resource.type = "cloudsql_database" AND
-#         metric.type = "cloudsql.googleapis.com/database/instance_state" AND
-#         resource.labels.database_id = "${var.gcp_project}:${google_sql_database_instance.db_dappas_instance.name}" AND
-#         metric.state = one_of("SUSPENDED", "FAILED", "MAINTENANCE", "UNKNOWN_STATE")
-#       EOT
-#       threshold_value = 0.5  # Para métricas booleanas, >0.5 significa TRUE
-#       duration       = "60s" # Alerta inmediata al detectar el estado
-#       comparison     = "COMPARISON_GT"
-
-#       trigger {
-#         count = 1
-#       }
-#     }
-#   }
-
   condition_monitoring_query_language {
       query = <<-EOT
         fetch cloudsql_database

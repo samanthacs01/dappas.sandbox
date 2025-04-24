@@ -29,7 +29,7 @@ variable "security_policy" {
     ip_blacklist = list(string)
   })
   default = {
-    ip_blacklist = []
+    ip_blacklist = ["*"]
   }
 }
 
@@ -82,3 +82,16 @@ variable "bucket_name" {
   description = "to upload pdf for proccesing"
   default     = "dappas-docs-dev"
 }
+
+variable "volumes_config" {
+  description = "Configura qué volúmenes incluir en el servicio"
+  type = object({
+    cloudsql_enabled = optional(bool, false)
+    gcs_enabled      = optional(bool, false)
+  })
+  default = {
+    cloudsql_enabled = false
+    gcs_enabled      = false
+  }
+}
+

@@ -1,1 +1,1 @@
-nx affected -t lint format --parallel=2 --verbose
+turbo run lint format test

@@ -260,3 +260,6 @@ terraform.rc
 apps/pulse-api/ny-lead-d803c01c1db5.json
 .pre-commit-config.yaml
 .idea
+
+# ignore turborepo
+.turbo

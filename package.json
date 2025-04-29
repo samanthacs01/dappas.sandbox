@@ -13,10 +13,6 @@
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
-    "@nx/jest": "^20.5.0",
-    "@nx/js": "20.5.0",
-    "@nx/next": "^20.5.0",
-    "@nx/react": "^20.5.0",
     "@swc-node/register": "~1.9.1",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
@@ -35,6 +31,7 @@
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
+    "turbo": "^2.5.2",
     "typescript": "~5.7.2"
   },
   "dependencies": {
@@ -45,13 +42,19 @@
   "scripts": {
     "prepare": "husky",
     "commit": "git add --all && git cz",
-    "serve": "nx run dappas-api:serve && nx run dappas-web:serve",
-    "test": "nx run dappas-api:test && nx run dappas-web:test"
+    "serve": "npx turbo dappas-api#serve && npx turbo run dappas-web#serve",
+    "test": "npx turbo run dappas-api#test && npx turbo dappas-web#test",
+    "build": "npx turbo run build",
+    "dev": "npx turbo run dev",
+    "lint": "npx turbo run lint"
   },
-  "nx": {},
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "packageManager": "npm@10.9.2"
 }

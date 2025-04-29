@@ -1,0 +1,11 @@
+{
+    "name": "dappas-api",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "build": "GO111MODULE=auto go build -o dist/dappas-api main.go",
+        "serve": "docker-compose -f docker-compose.yml up --build dappas-api -d",
+        "dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml  up --build dappas-api",
+        "gendocs": "swag init --dir=apps/dappas-api --output=apps/dappas-api/docs"
+    }
+}

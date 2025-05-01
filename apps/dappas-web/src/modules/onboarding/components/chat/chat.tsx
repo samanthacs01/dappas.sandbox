@@ -2,15 +2,13 @@
 
 import { Button } from '@/core/components/ui/button';
 import { Textarea } from '@/core/components/ui/textarea';
-import { cn } from '@/core/lib/utils';
 import { PackagingInfo } from '@/server/schemas/brand';
 import { ChatRequestOptions, UIMessage } from 'ai';
 import { Send } from 'lucide-react';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { ChatStatus } from '../../types/chat';
 import InspirationsButton from './inspiration-button';
-import PackagingSelector from './packaging-selector';
-import ChatThinking from './thinking';
+import ChatMessages from './messages';
 
 type Props = {
   packagingInfo: PackagingInfo;
@@ -38,20 +36,6 @@ const OnBoardingChat: React.FC<Props> = ({
   handleSubmit,
   chatStatus,
 }) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  // Initialize the chat with AI SDK
-
-  const handlePackageIcon = (packageIconId: number) => {
-    console.log(`Selected package: ${packageIconId}`);
-  };
-
-  // Scroll to bottom of messages
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
-
   return (
     <div className="flex flex-col h-full">
       <div className="flex justify-between items-center p-4 border-b">
@@ -69,37 +53,7 @@ const OnBoardingChat: React.FC<Props> = ({
         </Button>
       </div>
 
-      <div className="grow overflow-y-auto p-4 space-y-4 max-h-[calc(100vh_-_160px)]">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={cn(
-              'flex flex-col max-w-[80%]',
-              message.role === 'user' ? 'ml-auto items-end' : 'items-start'
-            )}
-          >
-            <div
-              className={cn(
-                'rounded-lg p-3',
-                message.role === 'user' ? 'bg-purple-100' : 'bg-gray-100'
-              )}
-            >
-              {message.content.includes('<PackageSelector />') ? (
-                <>
-                  {message.content.split('<PackageSelector />')[0]}
-                  <PackagingSelector onSelectPackage={handlePackageIcon} />
-                  {message.content.split('<PackageSelector />')[1]}
-                </>
-              ) : (
-                message.content
-              )}
-            </div>
-          </div>
-        ))}
-        {chatStatus !== 'ready' && <ChatThinking />}
-        <div ref={messagesEndRef} />
-      </div>
-
+      <ChatMessages messages={messages} chatStatus={chatStatus} />
       <form
         onSubmit={handleSubmit}
         className="p-4 border-t flex flex-col gap-1"

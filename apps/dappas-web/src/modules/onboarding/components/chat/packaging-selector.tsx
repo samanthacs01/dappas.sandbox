@@ -1,36 +1,36 @@
 'use client';
-import React, { useState } from 'react';
+import clsx from 'clsx';
 import {
+  ArchiveX,
   Gift,
+  Inbox,
   Package,
   Package2,
   PackageOpen,
-  Inbox,
-  ArchiveX,
 } from 'lucide-react';
-import clsx from 'clsx';
+import React, { useState } from 'react';
 
 interface PackagingSelectorProps {
-  onSelectPackage: (packageIcon: number) => void;
+  onSelectPackage: (packageIcon: string) => void;
 }
 
 const PackagingSelector: React.FC<PackagingSelectorProps> = ({
   onSelectPackage,
 }) => {
-  const [selectedIcon, setSelectedIcon] = useState<number>();
+  const [selectedIcon, setSelectedIcon] = useState<string>();
 
   const packageIcons = [
-    { id: 1, icon: Gift },
-    { id: 2, icon: Package },
-    { id: 3, icon: Package2 },
-    { id: 4, icon: PackageOpen },
-    { id: 5, icon: Inbox },
-    { id: 6, icon: ArchiveX },
+    { id: 'gift', icon: Gift },
+    { id: 'package', icon: Package },
+    { id: 'package2', icon: Package2 },
+    { id: 'package-open', icon: PackageOpen },
+    { id: 'inbox', icon: Inbox },
+    { id: 'archive-x', icon: ArchiveX },
   ];
 
-  const handlePackageClick = (packegeIconId: number) => {
-    setSelectedIcon(packegeIconId);
-    onSelectPackage(packegeIconId);
+  const handlePackageClick = (id: string) => {
+    setSelectedIcon(id);
+    onSelectPackage(id);
   };
 
   return (

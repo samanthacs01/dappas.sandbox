@@ -80,7 +80,7 @@ const InspirationButton = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="overflow-hidden max-w-[600px]"
+            className="overflow-hidden w-[600px] z-50 fixed bottom-32"
           >
             <Card className="mt-2 border shadow-sm !py-3">
               <CardContent className="!px-3">

@@ -9,3 +9,27 @@ export const _styles: string[] = [
   'art deco',
   'tropical',
 ];
+
+export const _colors = [
+  { color: 'bg-white', hexColor: '#ffffff' },
+  { color: 'bg-gray-300', hexColor: '#d1d5db' },
+  { color: 'bg-red-500', hexColor: '#ef4444' },
+  { color: 'bg-orange-400', hexColor: '#fb923c' },
+  { color: 'bg-amber-400', hexColor: '#fbbf24' },
+  { color: 'bg-yellow-400', hexColor: '#facc15' },
+  { color: 'bg-lime-400', hexColor: '#a3e635' },
+  { color: 'bg-green-400', hexColor: '#4ade80' },
+  { color: 'bg-emerald-400', hexColor: '#34d399' },
+  { color: 'bg-teal-400', hexColor: '#2dd4bf' },
+  { color: 'bg-cyan-400', hexColor: '#22d3ee' },
+  { color: 'bg-sky-400', hexColor: '#38bdf8' },
+  { color: 'bg-blue-500', hexColor: '#3b82f6' },
+  { color: 'bg-indigo-500', hexColor: '#6366f1' },
+  { color: 'bg-violet-500', hexColor: '#8b5cf6' },
+  { color: 'bg-purple-500', hexColor: '#a855f7' },
+  { color: 'bg-fuchsia-500', hexColor: '#d946ef' },
+  { color: 'bg-pink-500', hexColor: '#ec4899' },
+  { color: 'bg-rose-500', hexColor: '#f43f5e' },
+  { color: 'bg-gray-700', hexColor: '#374151' },
+  { color: 'bg-black', hexColor: '#000000' },
+];

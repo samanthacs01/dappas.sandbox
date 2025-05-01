@@ -10,24 +10,34 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/core/components/ui/tabs';
-import { _styles } from '@/_mock/_packaging-style';
+import { _styles, _colors } from '@/_mock/_packaging-style';
 import { Card, CardContent } from '@/core/components/ui/card';
 import { Separator } from '@/core/components/ui/separator';
+import { cn } from '@/core/lib/utils';
 
 const InspirationButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [styleList, setStyleList] = useState<string[]>([]);
+  const [selectedStyles, setselectedStyles] = useState<string[]>([]);
+  const [selectedColors, setselectedColors] = useState<string[]>([]);
 
   const togglePanel = () => {
     setIsOpen(!isOpen);
   };
 
   const addStyle = (style: string) => {
-    if (styleList.includes(style)) {
-      setStyleList((prev) => prev.filter((s) => s !== style));
+    if (selectedStyles.includes(style)) {
+      setselectedStyles((prev) => prev.filter((s) => s !== style));
       return;
     }
-    setStyleList((prev) => [...(prev || []), style]);
+    setselectedStyles((prev) => [...(prev || []), style]);
+  };
+
+  const addColor = (color: string) => {
+    if (selectedColors.includes(color)) {
+      setselectedColors((prev) => prev.filter((s) => s !== color));
+      return;
+    }
+    setselectedColors((prev) => [...(prev || []), color]);
   };
 
   return (
@@ -92,7 +102,8 @@ const InspirationButton = () => {
                           className={clsx(
                             'bg-zinc-100 rounded-md !p-2 mb-2 text-center cursor-pointer hover:text-violet-700 transition scale-100 border border-transparent',
                             {
-                              'border-violet-500': styleList.includes(style),
+                              'border-violet-500':
+                                selectedStyles.includes(style),
                             }
                           )}
                         >
@@ -103,9 +114,25 @@ const InspirationButton = () => {
                   </TabsContent>
                   <TabsContent
                     value="color"
-                    className="flex flex-col p-4 min-h-[400px] overflow-y-auto gap-2"
+                    className="min-h-[400px] overflow-y-auto gap-2"
                   >
-                    Color
+                    <div className="grid grid-cols-7 auto-rows-min w-full overflow-y-auto gap-2 p-2">
+                      {_colors.map((color, index) => (
+                        <button
+                          key={index}
+                          onClick={() => addColor(color.color)}
+                          className={cn(
+                            `rounded-md h-10 text-center transition scale-100 border`,
+                            color.color,
+                            {
+                              'border-violet-500': selectedColors.includes(
+                                color.color
+                              ),
+                            }
+                          )}
+                        ></button>
+                      ))}
+                    </div>
                   </TabsContent>
                   <TabsContent
                     value="analisis"

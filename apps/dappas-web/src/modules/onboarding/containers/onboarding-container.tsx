@@ -6,6 +6,7 @@ import { UIMessage } from 'ai';
 import { useEffect, useState } from 'react';
 import OnBoardingChat from '../components/chat/chat';
 import OnBoardingSidePanel from '../components/side-panel';
+import { PackageProvider } from '@/store/package-info';
 
 const OnBoardingContainer = () => {
   const [packagingInfo, setPackagingInfo] = useState<PackagingInfo>({});
@@ -57,22 +58,24 @@ const OnBoardingContainer = () => {
   }, [messages.length]);
 
   return (
-    <div className="grid md:grid-cols-[1fr_1fr] h-screen w-full max-w-7xl mx-auto max-h-screen overflow-hidden">
-      <OnBoardingSidePanel
-        packagingInfo={packagingInfo}
-        updatePackagingInfo={updatePackagingInfo}
-        chatStatus={status}
-        onSubmit={handleSubmit}
-      />
-      <OnBoardingChat
-        packagingInfo={packagingInfo}
-        messages={messages}
-        input={input}
-        handleInputChange={handleInputChange}
-        handleSubmit={handleSubmit}
-        chatStatus={status}
-      />
-    </div>
+    <PackageProvider>
+      <div className="grid md:grid-cols-[1fr_1fr] h-screen w-full max-w-7xl mx-auto max-h-screen overflow-hidden">
+        <OnBoardingSidePanel
+          packagingInfo={packagingInfo}
+          updatePackagingInfo={updatePackagingInfo}
+          chatStatus={status}
+          onSubmit={handleSubmit}
+        />
+        <OnBoardingChat
+          packagingInfo={packagingInfo}
+          messages={messages}
+          input={input}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          chatStatus={status}
+        />
+      </div>
+    </PackageProvider>
   );
 };
 

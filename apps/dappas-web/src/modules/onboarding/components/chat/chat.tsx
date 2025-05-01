@@ -9,6 +9,7 @@ import { Send } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { ChatStatus } from '../../types/chat';
 import ChatThinking from './thinking';
+import PackagingSelector from './packaging-selector';
 import InspirationsButton from './inspiration-button';
 
 type Props = {
@@ -39,6 +40,10 @@ const OnBoardingChat: React.FC<Props> = ({
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   // Initialize the chat with AI SDK
+
+  const handlePackageIcon = (packageIconId: number) => {
+    console.log(`Paquete seleccionado: ${packageIconId}`);
+  };
 
   // Scroll to bottom of messages
   useEffect(() => {
@@ -85,6 +90,7 @@ const OnBoardingChat: React.FC<Props> = ({
         ))}
         {chatStatus !== 'ready' && <ChatThinking />}
         <div ref={messagesEndRef} />
+        <PackagingSelector onSelectPackage={handlePackageIcon} />
       </div>
 
       <form

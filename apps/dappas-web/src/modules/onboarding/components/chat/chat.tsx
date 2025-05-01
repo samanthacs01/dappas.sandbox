@@ -42,7 +42,7 @@ const OnBoardingChat: React.FC<Props> = ({
   // Initialize the chat with AI SDK
 
   const handlePackageIcon = (packageIconId: number) => {
-    console.log(`Paquete seleccionado: ${packageIconId}`);
+    console.log(`Selected package: ${packageIconId}`);
   };
 
   // Scroll to bottom of messages

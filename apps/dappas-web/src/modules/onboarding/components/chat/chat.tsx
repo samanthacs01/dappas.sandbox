@@ -9,16 +9,24 @@ import { Send } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { ChatStatus } from '../../types/chat';
 import ChatThinking from './thinking';
+import InspirationsButton from './inspiration-button';
 
 type Props = {
   packagingInfo: PackagingInfo;
   messages: UIMessage[];
   input: string;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => void;
-  handleSubmit: (event?: {
-    preventDefault?: () => void;
-}, chatRequestOptions?: ChatRequestOptions) => void;
- chatStatus: ChatStatus
+  handleInputChange: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => void;
+  handleSubmit: (
+    event?: {
+      preventDefault?: () => void;
+    },
+    chatRequestOptions?: ChatRequestOptions
+  ) => void;
+  chatStatus: ChatStatus;
 };
 
 const OnBoardingChat: React.FC<Props> = ({
@@ -27,7 +35,7 @@ const OnBoardingChat: React.FC<Props> = ({
   handleInputChange,
   messages,
   handleSubmit,
-  chatStatus
+  chatStatus,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   // Initialize the chat with AI SDK
@@ -40,7 +48,7 @@ const OnBoardingChat: React.FC<Props> = ({
   }, [messages]);
 
   return (
-    <div className='flex flex-col h-full'>
+    <div className="flex flex-col h-full">
       <div className="flex justify-between items-center p-4 border-b">
         <h2 className="text-lg font-semibold">
           AI Packaging Design for{' '}
@@ -75,9 +83,7 @@ const OnBoardingChat: React.FC<Props> = ({
             </div>
           </div>
         ))}
-        {chatStatus !== 'ready' && (
-          <ChatThinking/>
-        )}
+        {chatStatus !== 'ready' && <ChatThinking />}
         <div ref={messagesEndRef} />
       </div>
 
@@ -85,6 +91,7 @@ const OnBoardingChat: React.FC<Props> = ({
         onSubmit={handleSubmit}
         className="p-4 border-t flex flex-col gap-1"
       >
+        <InspirationsButton />
         <div className="flex items-center gap-2">
           <Textarea
             placeholder="Type your packaging requirements"

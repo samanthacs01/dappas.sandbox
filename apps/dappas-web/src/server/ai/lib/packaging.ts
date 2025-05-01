@@ -1,24 +1,29 @@
 'use server';
 
 import { google } from '@ai-sdk/google';
-import { generateObject, UIMessage } from 'ai';
+import { CoreMessage, generateObject } from 'ai';
 import { PackagingInfo, PackagingInfoSchema } from '../../schemas/brand';
 
 export async function extractPackagingInfo(
-  messages: UIMessage[],
+  messages: CoreMessage[],
   currentInfo: PackagingInfo
 ): Promise<PackagingInfo> {
   try {
+    if (messages.length === 1) {
+      return currentInfo;
+    }
     let formattedMessage = '';
     messages.forEach((m) => {
-      formattedMessage += `role: ${m.role},  message: ${m.content}\n`;
+      if (Array.isArray(m.content)) {
+        m.content.forEach((c) => {
+          if (c.type === 'text') {
+            formattedMessage += `role: ${m.role},  message: ${c.text}\n`;
+          }
+        });
+      }
     });
-    
-    // Generate structured data from the message
-    const { object } = await generateObject({
-      model: google('gemini-2.0-flash'),
-      schema: PackagingInfoSchema,
-      prompt: `
+
+    const prompt = `
       You are analyzing a message history to extract details about a products packaging design.
 	   • Extract information only from messages where the role is user.
 	   • Messages from the role assistant are for context only — do not extract data from them.
@@ -29,7 +34,13 @@ export async function extractPackagingInfo(
 
        Message to analyze:
        ${formattedMessage}
-      `,
+      `;
+      
+    // Generate structured data from the message
+    const { object } = await generateObject({
+      model: google('gemini-2.0-flash'),
+      schema: PackagingInfoSchema,
+      prompt,
     });
 
     // Merge with current info, keeping existing values if not in new extraction

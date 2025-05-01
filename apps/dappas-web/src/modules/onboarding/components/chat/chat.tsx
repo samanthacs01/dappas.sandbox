@@ -1,17 +1,16 @@
 'use client';
 
-import React from 'react';
 import { Button } from '@/core/components/ui/button';
 import { Textarea } from '@/core/components/ui/textarea';
 import { cn } from '@/core/lib/utils';
 import { PackagingInfo } from '@/server/schemas/brand';
 import { ChatRequestOptions, UIMessage } from 'ai';
 import { Send } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ChatStatus } from '../../types/chat';
-import ChatThinking from './thinking';
-import PackagingSelector from './packaging-selector';
 import InspirationsButton from './inspiration-button';
+import PackagingSelector from './packaging-selector';
+import ChatThinking from './thinking';
 
 type Props = {
   packagingInfo: PackagingInfo;

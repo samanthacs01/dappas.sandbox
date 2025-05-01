@@ -20,9 +20,6 @@ const OnBoardingContainer = () => {
       body: {
         packagingInfo,
       },
-      onToolCall: (toolCall) => {
-        console.log('toolCall', toolCall);
-      },
       onFinish: async (message) => {
         // After each AI response, try to update the packaging info
         try {
@@ -40,7 +37,6 @@ const OnBoardingContainer = () => {
           if (response.ok) {
             const data = await response.json();
             const { updatedInfo } = data;
-            console.log('updatedInfo', data);
             setPackagingInfo((prev) => ({ ...prev, ...updatedInfo }));
           }
         } catch (error) {
@@ -58,7 +54,7 @@ const OnBoardingContainer = () => {
           "Welcome to the AI Packaging Designer! I'm here to help you create the perfect packaging for your product. Let's get started! What product will this packaging be for? For example, is it a cake, cookies, a gift box, or something else?",
       });
     }
-  }, [append, messages.length]);
+  }, [messages.length]);
 
   return (
     <div className="grid md:grid-cols-[1fr_1fr] h-screen w-full max-w-7xl mx-auto max-h-screen overflow-hidden">

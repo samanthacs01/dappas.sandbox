@@ -1,4 +1,3 @@
-import { extractPackageInfo } from '@/server/ai/tools';
 import { PackagingInfo } from '@/server/schemas/brand';
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
@@ -24,18 +23,21 @@ ${Object.entries(currentInfo)
 
 Guide the conversation to collect missing information in a friendly, conversational way.
 Ask about one thing at a time. Don't overwhelm the user with multiple questions.
-Information to collect: product type, brand name, color preferences, style preferences, description and logo.
+Information to collect: product type, brand name, logo, color preferences, style preferences, description.
 
-If the user asks to generate a design and you have at least the product and brand information, tell them you're ready to generate a design.`;
+If the user asks to generate a design and you have at least the product, the brand and the logo information, tell them you're ready to generate a design.`;
 
   // Use streamText to generate a response
   const result = streamText({
     model: google('gemini-2.0-flash'),
     messages,
     system: systemPrompt,
-    tools: {
-      extractPackageInfo,
-    },
+    // toolChoice: 'required',
+    // maxSteps: 2,
+    // tools: {
+    //   packageInfo,
+    //   uploadFile,
+    // },
   });
 
   return result.toDataStreamResponse();

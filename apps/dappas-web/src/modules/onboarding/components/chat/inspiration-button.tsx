@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Plus, Upload } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { Button } from '@/core/components/ui/button';
@@ -14,11 +14,14 @@ import { _styles, _colors } from '@/_mock/_packaging-style';
 import { Card, CardContent } from '@/core/components/ui/card';
 import { Separator } from '@/core/components/ui/separator';
 import { cn } from '@/core/lib/utils';
+import Image from 'next/image';
 
 const InspirationButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStyles, setselectedStyles] = useState<string[]>([]);
   const [selectedColors, setselectedColors] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const togglePanel = () => {
     setIsOpen(!isOpen);
@@ -38,6 +41,21 @@ const InspirationButton = () => {
       return;
     }
     setselectedColors((prev) => [...(prev || []), color]);
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setUploadedImages((prev) => [event.target?.result as string, ...prev]);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileUpload = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -138,7 +156,65 @@ const InspirationButton = () => {
                     value="analisis"
                     className="flex flex-col p-4 min-h-[400px] overflow-y-auto gap-2"
                   >
-                    Analysis
+                    <div className="flex items-start">
+                      <div className="flex flex-col w-full items-start gap-2">
+                        <p className="text-xs font-semibold">
+                          Upload Your Competitors Image
+                        </p>
+                        <button
+                          onClick={triggerFileUpload}
+                          className="size-20 border border-dashed border-violet-700 rounded-md flex items-center justify-center hover:bg-gray-50 cursor-pointer"
+                        >
+                          <Upload className="size-8 text-violet-500" />
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileUpload}
+                            accept="image/*"
+                            className="hidden"
+                          />
+                        </button>
+                        <Separator className="my-2" />
+                        {uploadedImages.map((image, index) => (
+                          <div key={index} className="flex w-full py-1">
+                            <div className="w-20 h-auto">
+                              <Image
+                                src={image}
+                                alt="Imagen subida"
+                                className="w-full h-auto object-cover rounded-md"
+                                width={96}
+                                height={96}
+                                onError={(e) => {
+                                  console.error('Error al cargar la imagen');
+                                  (e.target as HTMLImageElement).style.display =
+                                    'none';
+                                }}
+                              />
+                            </div>
+                            <div className="ml-4 text-sm">Image analysis</div>
+                          </div>
+                        ))}
+                        <div className="mt-4">
+                          <p className="text-xs font-semibold text-zinc-500">
+                            example:
+                          </p>
+                          <div className="flex w-full">
+                            <div className="w-20 h-auto">
+                              <Image
+                                src="/images/t-shirt/white-front.png"
+                                alt="Imagen subida"
+                                className="w-full h-auto object-cover rounded-md"
+                                width={96}
+                                height={96}
+                              />
+                            </div>
+                            <div className="ml-4 text-sm">
+                              An image of a white pullover.
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </TabsContent>
                 </Tabs>
               </CardContent>

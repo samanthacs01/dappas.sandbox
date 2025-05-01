@@ -71,41 +71,6 @@ const OnBoardingChat: React.FC<Props> = ({
       </div>
 
       <div className="grow overflow-y-auto p-4 space-y-4 max-h-[calc(100vh_-_160px)]">
-        {/* {messages.map((message, index) => (
-          <div
-            key={index}
-            className={cn(
-              'flex flex-col max-w-[80%]',
-              message.role === 'user' ? 'ml-auto items-end' : 'items-start'
-            )}
-          >
-            <div
-              className={cn(
-                'rounded-lg p-3',
-                message.role === 'user' ? 'bg-purple-100' : 'bg-gray-100'
-              )}
-            >
-              {message.content.includes('<PackageSelector/>') ? (
-                <>
-                  {message.content
-                    .split('<PackageSelector/>')
-                    .map((part, i, arr) => (
-                      <React.Fragment key={i}>
-                        {part}
-                        {i < arr.length - 1 && (
-                          <PackagingSelector
-                            onSelectPackage={handlePackageIcon}
-                          />
-                        )}
-                      </React.Fragment>
-                    ))}
-                </>
-              ) : (
-                message.content
-              )}
-            </div>
-          </div>
-        ))} */}
         {messages.map((message, index) => (
           <div
             key={index}

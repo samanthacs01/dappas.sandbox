@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -55,5 +55,6 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "nx": {}
+  "nx": {},
+  "packageManager": "npm@10.9.2"
 }

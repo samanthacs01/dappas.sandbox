@@ -1,5 +1,5 @@
 import { extractPackagingInfo } from '@/server/ai/lib/packaging';
-import { tool } from 'ai';
+import { tool, UIMessage } from 'ai';
 import { z } from 'zod';
 
 const packageInfo = tool({
@@ -9,7 +9,7 @@ const packageInfo = tool({
     packagingInfo: z.object({}).optional(),
   }),
   execute: async (args, { messages }) => {
-    const response = await extractPackagingInfo(messages, {});
+    const response = await extractPackagingInfo(messages as UIMessage[], {});
     return response;
   },
 });

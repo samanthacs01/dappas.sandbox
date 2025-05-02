@@ -34,7 +34,7 @@ const PackagingSelector: React.FC<PackagingSelectorProps> = ({
   };
 
   return (
-    <div className="flex w-full justify-center pt-2">
+    <div className="flex w-full justify-start pt-2">
       <div className="grid grid-cols-5 w-[300px] gap-2">
         {packageIcons.map((packageIcon) => (
           <div

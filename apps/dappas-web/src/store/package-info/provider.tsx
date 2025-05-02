@@ -1,8 +1,8 @@
 'use client';
 import React, { FC, useReducer } from 'react';
 import Context from './context';
-import reducer from './reducer';
 import initialState from './initialState';
+import reducer from './reducer';
 
 const PackageProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);

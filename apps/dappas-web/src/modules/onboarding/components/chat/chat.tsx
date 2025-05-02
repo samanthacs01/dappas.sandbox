@@ -11,7 +11,7 @@ import InspirationsButton from './inspiration-button';
 import ChatMessages from './messages';
 
 type Props = {
-  packagingInfo: PackagingInfo;
+  packageInfo: PackagingInfo;
   messages: UIMessage[];
   input: string;
   handleInputChange: (
@@ -26,15 +26,17 @@ type Props = {
     chatRequestOptions?: ChatRequestOptions
   ) => void;
   chatStatus: ChatStatus;
+  onCustomMessage: (message: UIMessage) => void;
 };
 
 const OnBoardingChat: React.FC<Props> = ({
-  packagingInfo,
+  packageInfo: packagingInfo,
   input,
   handleInputChange,
   messages,
   handleSubmit,
   chatStatus,
+  onCustomMessage,
 }) => {
   return (
     <div className="flex flex-col h-full">
@@ -53,7 +55,7 @@ const OnBoardingChat: React.FC<Props> = ({
         </Button>
       </div>
 
-      <ChatMessages messages={messages} chatStatus={chatStatus} />
+      <ChatMessages messages={messages} chatStatus={chatStatus} onCustomMessage={onCustomMessage}/>
       <form
         onSubmit={handleSubmit}
         className="p-4 border-t flex flex-col gap-1"

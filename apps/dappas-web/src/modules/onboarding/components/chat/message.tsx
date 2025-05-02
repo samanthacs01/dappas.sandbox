@@ -3,24 +3,34 @@ import { PackagingInfo } from '@/server/schemas/brand';
 import { UIMessage } from 'ai';
 import { useCallback, useEffect, useState } from 'react';
 
+import { usePackageContext } from '@/store/package-info';
 import useChatComponent from '../../hooks/use-chat-component';
 import { ComponentToken } from '../../types/chat';
 import { extractComponentTags } from '../../utils/chat';
 
 type Props = {
   message: UIMessage;
+  onCustomMessage: (message: UIMessage) => void;
 };
 
-const ChatMessage: React.FC<Props> = ({ message }) => {
+const ChatMessage: React.FC<Props> = ({ message, onCustomMessage }) => {
   const [cleanMessage, setCleanMessage] = useState<string>('');
   const [components, setComponents] = useState<ComponentToken[]>([]);
+  const { state, dispatch } = usePackageContext();
 
   const { getComponent } = useChatComponent();
 
-  // Initialize the chat with AI SDK
-
-  const handleChangeComponent = (obj: Partial<PackagingInfo>) => {
-    console.log(`Change component: ${obj}`);
+  const handleChangeComponent = async (obj: Partial<PackagingInfo>) => {
+    dispatch({
+      type: 'UPDATE_PACKAGE_INFO',
+      payload: { ...state.packageInfo, ...obj },
+    });
+    onCustomMessage({
+      role: 'user',
+      content: 'The user update the data',
+      id: '',
+      parts: [],
+    });
   };
 
   const extractMessageAndComponents = useCallback(() => {

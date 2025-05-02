@@ -10,11 +10,11 @@ const useChatComponent = () => {
     key: number
   ) => {
     switch (id) {
-      case '<PackagingSelector/>':
+      case '<PackageSelector/>':
         return (
           <PackagingSelector
             key={`${id}-${key}`}
-            onSelectPackage={(id) => callback({ packageType: id })}
+            onSelectPackage={(id) => callback({ packageType: id }, 'package type')}
           />
         );
       case '<UploadFile/>':
@@ -25,7 +25,7 @@ const useChatComponent = () => {
               // convert file to base64
               try {
                 const file64 = await fileToBase64(file);
-                callback({ logo: file64 });
+                callback({ logo: file64 }, 'logo');
               } catch (e) {
                 console.log(
                   'An error has occurred while converting the file.',

@@ -1,11 +1,10 @@
 'use client';
 import { Dispatch, createContext } from 'react';
 import { TAction } from './actions';
-import initialState from './initialState';
-import { PackagingInfo } from '@/server/schemas/brand';
+import initialState, { PackageState } from './initialState';
 
 interface IContextProps {
-  state: PackagingInfo;
+  state: PackageState;
   dispatch: Dispatch<TAction>;
 }
 const PackageContext = createContext<IContextProps>({

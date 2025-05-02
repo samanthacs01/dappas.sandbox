@@ -4,4 +4,4 @@ export type ChatStatus = 'submitted' | 'streaming' | 'ready' | 'error';
 
 export type ComponentToken = '<PackageSelector/>' | '<UploadFile/>'
 
-export type ComponentCallback = (object: Partial<PackagingInfo>) => void
+export type ComponentCallback = (object: Partial<PackagingInfo>, fieldName: string) => void

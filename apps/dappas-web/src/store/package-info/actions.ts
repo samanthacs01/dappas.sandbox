@@ -7,7 +7,7 @@ type Action<T> = {
   payload: T;
 };
 
-interface IAddInfo extends Action<Partial<PackagingInfo>> {
+interface IAddInfo extends Action<PackagingInfo> {
   type: 'UPDATE_PACKAGE_INFO';
 }
 

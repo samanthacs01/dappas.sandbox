@@ -1,14 +1,14 @@
 import { TAction } from './actions';
-import { PackagingInfo } from '@/server/schemas/brand';
+import { PackageState } from './initialState';
 
-const reducer = (state: PackagingInfo, action: TAction): PackagingInfo => {
+const reducer = (state: PackageState, action: TAction): PackageState => {
   const { type } = action;
 
   switch (type) {
     case 'UPDATE_PACKAGE_INFO':
       return {
         ...state,
-        ...action.payload,
+        packageInfo: action.payload,
       };
     default:
       return state;

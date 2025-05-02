@@ -1,24 +1,28 @@
 import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
 } from '@/core/components/ui/avatar';
 import { Button } from '@/core/components/ui/button';
 import { Input } from '@/core/components/ui/input';
 import { Textarea } from '@/core/components/ui/textarea';
+import { fileToBase64 } from '@/core/lib/file';
 import { PackagingInfo } from '@/server/schemas/brand';
 import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import { ChatStatus } from '../types/chat';
+import { BrandColors } from './fields/brand-colors';
+import UploadImage from './fields/upload-image';
 
 type Props = {
-  packagingInfo: PackagingInfo;
+  packageInfo: PackagingInfo;
   updatePackagingInfo: (key: string, value: string) => void;
   chatStatus: ChatStatus;
   onSubmit: () => void;
 };
 
 const OnBoardingSidePanel: React.FC<Props> = ({
-  packagingInfo,
+  packageInfo: packagingInfo,
   updatePackagingInfo,
   chatStatus,
   onSubmit,
@@ -32,6 +36,16 @@ const OnBoardingSidePanel: React.FC<Props> = ({
 
   const handleFormChange = (key: string, value: string) => {
     updatePackagingInfo(key, value);
+  };
+
+  const onUploadFile = async (file: File) => {
+    // convert file to base64
+    try {
+      const file64 = await fileToBase64(file);
+      handleFormChange('logo', file64);
+    } catch (e) {
+      console.log('An error has occurred while converting the file.', e);
+    }
   };
 
   return (
@@ -59,7 +73,7 @@ const OnBoardingSidePanel: React.FC<Props> = ({
               onChange={(e) => handleFormChange('product', e.target.value)}
             />
           </div>
-          <div className="space-y-2">
+          <div className="flex  flex-col  space-y-2">
             <label className="font-medium">Brand:</label>
             <Input
               placeholder="Your brand name"
@@ -68,24 +82,29 @@ const OnBoardingSidePanel: React.FC<Props> = ({
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="font-medium">Colors (comma separated):</label>
-            <Input
-              placeholder="e.g., Blue, Red, Gold"
-              value={packagingInfo.colors?.join(', ') || ''}
-              onChange={(e) =>
-                handleFormChange(
-                  'colors',
-                  e.target.value
-                    .split(',')
-                    .map((c) => c.trim())
-                    .join(',')
-                )
-              }
-            />
+          <div className="flex  flex-col  space-y-2">
+            <label className="font-medium">Brand Logo:</label>
+            {!packagingInfo.logo ? (
+              <UploadImage
+                onUpload={onUploadFile}
+                placeholder="Upload your logo"
+              />
+            ) : (
+              <Image
+                src={packagingInfo.logo ?? ''}
+                alt="Brand Logo"
+                width={100}
+                height={100}
+              />
+            )}
           </div>
 
-          <div className="space-y-2">
+          <div className="flex  flex-col space-y-2">
+            <label className="font-medium">Brand Colors</label>
+            <BrandColors colors={packagingInfo.colors ?? []} />
+          </div>
+
+          <div className="flex  flex-col  space-y-2">
             <label className="font-medium">Style:</label>
             <Input
               placeholder="e.g., Modern, Vintage, Minimalist"
@@ -94,7 +113,7 @@ const OnBoardingSidePanel: React.FC<Props> = ({
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="flex  flex-col  space-y-2">
             <label className="font-medium">Description:</label>
             <Textarea
               placeholder="Describe your product and packaging needs"

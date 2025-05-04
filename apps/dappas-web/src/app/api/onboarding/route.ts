@@ -1,3 +1,4 @@
+import { inferBrandInfo } from '@/server/ai/tools';
 import { PackagingInfo } from '@/server/schemas/brand';
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
@@ -32,12 +33,9 @@ If the user asks to generate a design and you have at least the product, the bra
     model: google('gemini-2.0-flash'),
     messages,
     system: systemPrompt,
-    // toolChoice: 'required',
-    // maxSteps: 2,
-    // tools: {
-    //   packageInfo,
-    //   uploadFile,
-    // },
+    tools: {
+      inferBrandInfo,
+    },
   });
 
   return result.toDataStreamResponse();

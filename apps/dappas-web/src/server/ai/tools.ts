@@ -1,4 +1,7 @@
-import { extractPackagingInfo } from '@/server/ai/lib/packaging';
+import {
+  extractPackagingInfo,
+  generativeInferBrandInfo,
+} from '@/server/ai/lib/packaging';
 import { tool, UIMessage } from 'ai';
 import { z } from 'zod';
 
@@ -9,8 +12,7 @@ const packageInfo = tool({
     packagingInfo: z.object({}).optional(),
   }),
   execute: async (args, { messages }) => {
-    const response = await extractPackagingInfo(messages as UIMessage[], {});
-    return response;
+    return extractPackagingInfo(messages as UIMessage[], {});
   },
 });
 
@@ -26,4 +28,16 @@ const uploadFile = tool({
   },
 });
 
-export { packageInfo, uploadFile };
+const inferBrandInfo = tool({
+  description:
+    'Search in the instagram account or website url for a brand, logo, vibes and colors.',
+  parameters: z.object({
+    instagram: z.string().describe('Instagram account'),
+    url: z.string().describe('Brand url website'),
+  }),
+  execute: async (params) => {
+    return generativeInferBrandInfo(params.instagram, params.url);
+  },
+});
+
+export { inferBrandInfo, packageInfo, uploadFile };

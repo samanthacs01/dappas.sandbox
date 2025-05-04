@@ -27,6 +27,7 @@ export async function extractPackagingInfo(
 	   • Only extract information that is explicitly mentioned. Don't make assumptions. If a field is not mentioned, leave it blank.
      • If the assistant asked the user to upload a file and the user responded with plain text instead, do not extract any information.
      • Convert all the colors to hex format.
+     • Don’t fill in the logo field.
        Message to analyze:
        ${formattedMessage}
       `;
@@ -79,6 +80,29 @@ export async function continueChat(
     });
 
     // Merge with current info, keeping existing values if not in new extraction
+    return text;
+  } catch (error) {
+    console.error('Error extracting packaging info:', error);
+    return '';
+  }
+}
+
+export async function generativeInferBrandInfo(
+  instagram: string,
+  url: string
+): Promise<string> {
+  try {
+    const prompt = `
+      Try to extract all the information related to this instagram account(${instagram}) or this website url(${url})
+      Infer the brand colors, the name of the brand, the vibes and styles of the brand and the description if is possible.
+      `;
+
+    // Generate structured data from the message
+    const { text } = await generateText({
+      model: google('gemini-2.0-flash'),
+      prompt,
+    });
+
     return text;
   } catch (error) {
     console.error('Error extracting packaging info:', error);

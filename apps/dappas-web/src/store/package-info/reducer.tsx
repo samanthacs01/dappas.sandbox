@@ -1,3 +1,4 @@
+import { packageInfo } from '@/server/ai/tools';
 import { TAction } from './actions';
 import { PackageState } from './initialState';
 
@@ -8,7 +9,7 @@ const reducer = (state: PackageState, action: TAction): PackageState => {
     case 'UPDATE_PACKAGE_INFO':
       return {
         ...state,
-        packageInfo: action.payload,
+        packageInfo: { ...packageInfo, ...action.payload },
       };
     default:
       return state;

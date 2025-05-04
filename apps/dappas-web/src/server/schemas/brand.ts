@@ -6,7 +6,6 @@ export const PackagingInfoSchema = z.object({
     .optional()
     .describe('The product type for the packaging (e.g., cake, cookies, gift)'),
   brand: z.string().optional().describe('The brand name for the product'),
-  logo: z.string().optional().describe('The logo of the brand'),
   description: z.string().optional().describe('A description of the product'),
   colors: z
     .array(z.string())
@@ -20,4 +19,6 @@ export const PackagingInfoSchema = z.object({
     .describe('The type of packaging (e.g., box, bag, can)'),
 });
 
-export type PackagingInfo = z.infer<typeof PackagingInfoSchema>;
+export type PackagingInfo = z.infer<typeof PackagingInfoSchema> & {
+  logo?: string;
+};

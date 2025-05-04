@@ -13,7 +13,8 @@ module "load-balancing-fe" {
   #connector             = google_sql_database_instance.db_dappas_instance.connection_name
   connector              = google_vpc_access_connector.priv_sql_dappas.id
   INSTANCE_CONNECTION_NAME = google_sql_database_instance.db_dappas_instance.connection_name
-  image                  = "gcr.io/google-samples/hello-app:1.0"
+  #image                  = "gcr.io/google-samples/hello-app:1.0"
+  image                   = "us-docker.pkg.dev/dappas/dappas/dappas-web-staging:latest"
   allow_unauthenticated  = true
 
   volumes_config = {

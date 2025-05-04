@@ -38,7 +38,7 @@ export default function Home() {
                 size="lg"
                 className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white"
               >
-                <Link href="/canva">Open Design Studio</Link>
+                <Link href="/canva/3d-view">Open Design Studio</Link>
               </Button>
             </CardFooter>
           </Card>

@@ -26,5 +26,6 @@ module "load-balancing-fe" {
   # Variables de entorno
   env_vars = {
     NEXT_PUBLIC_APP_ENV             = terraform.workspace
+    GOOGLE_GENERATIVE_AI_API_KEY    = "AIzaSyBucq34lPezSwK3eSj2eCuUj8mTAVJ1Mzo"
   }
 }

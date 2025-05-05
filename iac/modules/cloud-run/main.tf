@@ -206,17 +206,17 @@ module "load_balancer" {
 resource "google_compute_security_policy" "cloud_run_policy" {
   name    = "cloud-run-policy-${var.name}"
   project = var.project_id
-  rule {
-    action   = "deny(403)"
-    priority = 1000
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = var.security_policy.ip_blacklist
-      }
-    }
-    description = "Deny access from blacklisted IPs"
-  }
+  # rule {
+  #   action   = "deny(403)"
+  #   priority = 1000
+  #   match {
+  #     versioned_expr = "SRC_IPS_V1"
+  #     config {
+  #       src_ip_ranges = var.security_policy.ip_blacklist
+  #     }
+  #   }
+  #   description = "Deny access from blacklisted IPs"
+  # }
   
   rule {
     action   = "allow"

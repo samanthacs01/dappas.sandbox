@@ -1,6 +1,5 @@
-import React from 'react';
-import CanvasNavButtons from '@/modules/canva/components/objects/canvas-nav-buttons';
 import TextureProvider from '@/store/texture-store/provider';
+import React from 'react';
 
 export default function CanvasLayout({
   children,
@@ -9,10 +8,7 @@ export default function CanvasLayout({
 }) {
   return (
     <TextureProvider>
-      <div className="h-screen relative">
-        {children}
-        <CanvasNavButtons />
-      </div>
+      <div className="h-screen relative">{children}</div>
     </TextureProvider>
   );
 }

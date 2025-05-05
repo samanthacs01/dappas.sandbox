@@ -29,7 +29,7 @@ variable "security_policy" {
     ip_blacklist = list(string)
   })
   default = {
-    ip_blacklist = ["*"]
+    ip_blacklist = ["0.0.0.0/32"]
   }
 }
 

@@ -1,5 +1,5 @@
-import OnBoardingContainer from '@/modules/onboarding/containers/onboarding-container';
+import OnboardingWelcome from '@/modules/onboarding/components/onboarding-welcome';
 
 export default function OnBoardingPage() {
-  return <OnBoardingContainer />;
+  return <OnboardingWelcome />;
 }

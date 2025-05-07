@@ -14,6 +14,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^19.5.0
         version: 19.8.0
+      '@eslint/js':
+        specifier: ^9.26.0
+        version: 9.26.0
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
@@ -41,6 +44,9 @@ importers:
       commitizen:
         specifier: ^4.3.1
         version: 4.3.1(@types/node@18.16.9)(typescript@5.7.3)
+      eslint:
+        specifier: ^9.26.0
+        version: 9.26.0(jiti@2.4.2)
       husky:
         specifier: ^9.1.7
         version: 9.1.7

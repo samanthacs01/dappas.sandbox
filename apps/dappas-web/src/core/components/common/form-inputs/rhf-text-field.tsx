@@ -1,5 +1,5 @@
-import { Input } from '@/core/components/ui/input';
-import { Label } from '@/core/components/ui/label';
+import { Input } from '@workspace/ui/components/input';
+import { Label } from '@workspace/ui/components/label';
 import React, { ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 

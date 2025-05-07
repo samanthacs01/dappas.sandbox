@@ -1,5 +1,5 @@
-import { cn } from '@/core/lib/utils';
 import { PackagingInfo } from '@/server/schemas/brand';
+import { cn } from '@workspace/ui/lib/utils';
 import { UIMessage } from 'ai';
 import { useCallback, useEffect, useState } from 'react';
 

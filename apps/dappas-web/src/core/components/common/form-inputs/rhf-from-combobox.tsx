@@ -1,5 +1,5 @@
-import { Label } from '@/core/components/ui/label';
-import { cn } from '@/core/lib/utils';
+import { Label } from '@workspace/ui/components/label';
+import { cn } from '@workspace/ui/lib/utils';
 import { Controller, useFormContext } from 'react-hook-form';
 import { FormComboBox } from '../combo-box';
 import { ComboBoxOption } from '../combo-box/types';

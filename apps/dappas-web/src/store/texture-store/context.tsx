@@ -3,7 +3,7 @@ import { Dispatch, createContext } from 'react';
 import { TAction } from './actions';
 import initialState, { TextureState } from './initial-state';
 
-interface IContextProps {
+export interface IContextProps {
   state: TextureState;
   dispatch: Dispatch<TAction>;
 }

@@ -1,5 +1,5 @@
-import { Button } from '@/core/components/ui/button';
 import { Column, SortDirection } from '@tanstack/react-table';
+import { Button } from '@workspace/ui/components/button';
 import clsx from 'clsx';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import { useCallback, useMemo } from 'react';

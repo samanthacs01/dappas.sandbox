@@ -1,6 +1,8 @@
 # Base image
 FROM node:23.11.0-alpine AS base
-
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 FROM base AS builder
 RUN apk update
@@ -9,13 +11,13 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 # Replace <your-major-version> with the major version installed in your repository. For example:
 # RUN yarn global add turbo@^2
-RUN npm install -g turbo@^2
+RUN pnpm add -g turbo@^2
 COPY . .
 
 RUN ls -l
 
 # Generate a partial monorepo with a pruned lockfile for a target workspace.
-RUN turbo prune dappas-web --docker
+RUN pnpm turbo prune dappas-web @workspace/ui --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -25,12 +27,12 @@ WORKDIR /app
 
 # First install the dependencies (as they change less often)
 COPY --from=builder /app/out/json/ .
-RUN npm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 
 # Build the project
 COPY --from=builder /app/out/full/ .
-RUN npx turbo run build
+RUN pnpm turbo run build
  
 FROM base AS runner
 WORKDIR /app

@@ -1,7 +1,8 @@
 import { useContext } from 'react';
-import PackageContext from './context';
+import PackageContext, { type IContextProps } from './context';
 
-const usePackageContext = () => {
+
+const usePackageContext = (): IContextProps => {
   return useContext(PackageContext);
 };
 

@@ -1,7 +1,7 @@
 "use client"
 
-import { Card, CardContent } from "@/core/components/ui/card"
-import { ScrollArea } from "@/core/components/ui/scroll-area"
+import { Card, CardContent } from "@workspace/ui/components/card"
+import { ScrollArea } from "@workspace/ui/components/scroll-area"
 import Image from "next/image"
 import { useState } from "react"
 

@@ -3,7 +3,8 @@
 import { Check, ChevronsUpDown } from 'lucide-react';
 import React, { FunctionComponent, useEffect } from 'react';
 
-import { Button } from '@/core/components/ui/button';
+import { normalizeText } from '@/core/lib/text';
+import { Button } from '@workspace/ui/components/button';
 import {
   Command,
   CommandEmpty,
@@ -11,14 +12,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/core/components/ui/command';
+} from '@workspace/ui/components/command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/core/components/ui/popover';
-import { normalizeText } from '@/core/lib/text';
-import { cn } from '@/core/lib/utils';
+} from '@workspace/ui/components/popover';
+import { cn } from '@workspace/ui/lib/utils';
 import { ComboBoxOption } from './types';
 
 export type ComboBoxProps = {

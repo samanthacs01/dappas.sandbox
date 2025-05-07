@@ -1,4 +1,3 @@
-import { Button } from '@/core/components/ui/button';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -8,6 +7,7 @@ import {
   useReactTable,
   VisibilityState,
 } from '@tanstack/react-table';
+import { Button } from '@workspace/ui/components/button';
 import { Trash2 } from 'lucide-react';
 import {
   FunctionComponent,

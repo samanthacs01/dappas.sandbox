@@ -1,16 +1,16 @@
 import {
+  ColumnDef,
+  flexRender,
+  Table as TanstackTable,
+} from '@tanstack/react-table';
+import {
   Table as ShadCNTable,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/core/components/ui/table';
-import {
-  ColumnDef,
-  flexRender,
-  Table as TanstackTable,
-} from '@tanstack/react-table';
+} from '@workspace/ui/components/table';
 import clsx from 'clsx';
 
 interface CustomTableProps<T> {

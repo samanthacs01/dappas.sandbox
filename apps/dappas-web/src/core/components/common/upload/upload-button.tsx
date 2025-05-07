@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/core/components/ui/button";
-import { Label } from "@/core/components/ui/label";
-import { cn } from "@/core/lib/utils";
+import { Button } from "@workspace/ui/components/button";
+import { Label } from "@workspace/ui/components/label";
+import { cn } from "@workspace/ui/lib/utils";
 import Image from "next/image";
 import { FunctionComponent } from "react";
 import { useDropzone } from "react-dropzone";

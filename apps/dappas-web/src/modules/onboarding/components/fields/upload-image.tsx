@@ -9,8 +9,9 @@ type Props = {
 
 const UploadImage: React.FC<Props> = ({ onUpload, placeholder }) => {
   const onFileUpload = (acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      onUpload(acceptedFiles[0]);
+    const [file] = acceptedFiles;
+    if (file) {
+      onUpload(file);
     }
   };
 

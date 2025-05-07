@@ -1,20 +1,20 @@
 'use client';
-import { useRef, useState } from 'react';
-import { Plus, Upload } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import clsx from 'clsx';
-import { Button } from '@/core/components/ui/button';
+import { _colors, _styles } from '@/_mock/_packaging-style';
+import { Button } from '@workspace/ui/components/button';
+import { Card, CardContent } from '@workspace/ui/components/card';
+import { Separator } from '@workspace/ui/components/separator';
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/core/components/ui/tabs';
-import { _styles, _colors } from '@/_mock/_packaging-style';
-import { Card, CardContent } from '@/core/components/ui/card';
-import { Separator } from '@/core/components/ui/separator';
-import { cn } from '@/core/lib/utils';
+} from '@workspace/ui/components/tabs';
+import { cn } from '@workspace/ui/lib/utils';
+import clsx from 'clsx';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Plus, Upload } from 'lucide-react';
 import Image from 'next/image';
+import { useRef, useState } from 'react';
 
 const InspirationButton = () => {
   const [isOpen, setIsOpen] = useState(false);

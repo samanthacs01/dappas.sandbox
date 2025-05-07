@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/core/components/ui/button';
-import { Textarea } from '@/core/components/ui/textarea';
 import { PackagingInfo } from '@/server/schemas/brand';
+import { Button } from '@workspace/ui/components/button';
+import { Textarea } from '@workspace/ui/components/textarea';
 import { ChatRequestOptions, UIMessage } from 'ai';
 import { Send } from 'lucide-react';
 import React from 'react';

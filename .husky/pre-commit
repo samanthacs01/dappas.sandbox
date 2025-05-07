@@ -1,1 +1,1 @@
-turbo run lint format test
+turbo run lint typecheck test

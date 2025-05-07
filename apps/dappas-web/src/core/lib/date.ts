@@ -53,7 +53,7 @@ export const formatDateOrString = (
 
 export const getMonthByNumber = (monthNumber: number): string => {
   if (monthNumber >= 1 && monthNumber <= 12) {
-    return months[monthNumber - 1];
+    return months[monthNumber - 1] ?? '';
   } else {
     return '';
   }

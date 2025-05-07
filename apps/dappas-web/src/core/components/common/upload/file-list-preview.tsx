@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/core/components/ui/button';
+import { Button } from '@workspace/ui/components/button';
 import { X } from 'lucide-react';
 import { FileWithPath } from 'react-dropzone';
 

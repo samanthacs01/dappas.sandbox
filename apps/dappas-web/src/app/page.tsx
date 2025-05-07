@@ -1,6 +1,6 @@
-import { Button } from '@/core/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/core/components/ui/card';
-import { Palette, UserPlus } from 'lucide-react';
+import { Button } from "@workspace/ui/components/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import { Palette, UserPlus } from "lucide-react";
 import Link from 'next/link';
 
 export default function Home() {

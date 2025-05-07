@@ -1,13 +1,13 @@
+import { fileToBase64 } from '@/core/lib/file';
+import { PackagingInfo } from '@/server/schemas/brand';
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@/core/components/ui/avatar';
-import { Button } from '@/core/components/ui/button';
-import { Input } from '@/core/components/ui/input';
-import { Textarea } from '@/core/components/ui/textarea';
-import { fileToBase64 } from '@/core/lib/file';
-import { PackagingInfo } from '@/server/schemas/brand';
+} from '@workspace/ui/components/avatar';
+import { Button } from '@workspace/ui/components/button';
+import { Input } from '@workspace/ui/components/input';
+import { Textarea } from '@workspace/ui/components/textarea';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { ChatStatus } from '../types/chat';

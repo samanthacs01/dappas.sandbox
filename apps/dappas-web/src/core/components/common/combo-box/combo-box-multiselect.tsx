@@ -3,7 +3,7 @@
 import { Check, ChevronsUpDown, X } from 'lucide-react';
 import React, { FunctionComponent, useEffect } from 'react';
 
-import { Button } from '@/core/components/ui/button';
+import { Button } from '@workspace/ui/components/button';
 import {
   Command,
   CommandEmpty,
@@ -13,13 +13,13 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from '@/core/components/ui/command';
+} from '@workspace/ui/components/command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/core/components/ui/popover';
-import { cn } from '@/core/lib/utils';
+} from '@workspace/ui/components/popover';
+import { cn } from '@workspace/ui/lib/utils';
 import { ComboBoxOption } from './types';
 
 interface ComboBoxMultiselectProps {

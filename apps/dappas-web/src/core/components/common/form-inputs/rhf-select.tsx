@@ -1,12 +1,12 @@
-import { Label } from '@/core/components/ui/label';
+import { SelectProps } from '@radix-ui/react-select';
+import { Label } from '@workspace/ui/components/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/core/components/ui/select';
-import { SelectProps } from '@radix-ui/react-select';
+} from '@workspace/ui/components/select';
 import { FunctionComponent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 

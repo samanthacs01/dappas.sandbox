@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useMemo, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
 import whitePaperTexture from '@/modules/canva/components/3d-view/texture/cardboard.png';
 import useTextureContext from '@/store/texture-store/hook';
+import { useFrame } from '@react-three/fiber';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import * as THREE from 'three';
 
 const DEFAULT_TEXTURES: Record<string, string> = {
   'green-paper':
@@ -75,7 +75,7 @@ const Box3DModel: React.FC<Box3DModelProps> = ({ onLoadingChange }) => {
     // Siempre activar el estado de carga cuando cambia el URL de la textura
     setIsLoading(true);
 
-    return DEFAULT_TEXTURES[currentTexture] || DEFAULT_TEXTURES['green-paper'];
+    return DEFAULT_TEXTURES[currentTexture] || DEFAULT_TEXTURES['green-paper'] as string;
   }, [currentTexture]);
 
   // Load base texture once for the current URL

@@ -1,8 +1,8 @@
 'use client';
+import { cn } from '@workspace/ui/lib/utils';
+import { Box, Shapes } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/core/lib/utils';
-import { Box, Shapes } from 'lucide-react';
 
 const CanvasNavButtons = () => {
   const pathname = usePathname();

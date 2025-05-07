@@ -1,6 +1,7 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import { TextZone } from '@/server/3d/texture';
 import useTextureContext from '@/store/texture-store/hook';
+import React, { useEffect, useRef } from 'react';
 
 const ZONES = {
   top: { label: 'Top', color: '#3b82f6' },
@@ -25,14 +26,14 @@ const EditorPanel: React.FC = () => {
   const handleOnUpdateZoneText = (zone: string, text: string) => {
     dispatch({
       type: 'TEXT_ZONES',
-      payload: { ...textZones[zone], text },
+      payload: { ...textZones[zone] as TextZone, text },
     });
   };
 
   const handleOnUpdateZoneStyle = (zone: string, updates: object) => {
     dispatch({
       type: 'TEXT_ZONES',
-      payload: { ...textZones[zone], ...updates },
+      payload: { ...textZones[zone] as TextZone, ...updates },
     });
   };
 

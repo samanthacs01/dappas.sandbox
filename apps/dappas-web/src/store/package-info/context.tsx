@@ -3,7 +3,7 @@ import { Dispatch, createContext } from 'react';
 import { TAction } from './actions';
 import initialState, { PackageState } from './initialState';
 
-interface IContextProps {
+export interface IContextProps {
   state: PackageState;
   dispatch: Dispatch<TAction>;
 }

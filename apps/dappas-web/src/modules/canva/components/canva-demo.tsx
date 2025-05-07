@@ -151,13 +151,13 @@ const CanvaDemo = () => {
 
     c.on('selection:created', (e: { selected?: FabricObject[] }) => {
       if (e.selected && e.selected.length > 0) {
-        setSelectedObject(e.selected[0]);
+        setSelectedObject(e.selected[0] as FabricObject);
       }
     });
 
     c.on('selection:updated', (e: { selected?: FabricObject[] }) => {
       if (e.selected && e.selected.length > 0) {
-        setSelectedObject(e.selected[0]);
+        setSelectedObject(e.selected[0] as FabricObject);
       }
     });
 
@@ -280,7 +280,7 @@ const CanvaDemo = () => {
         redoStack.push(currentState);
 
         // Load previous state
-        const prevState = undoStack[undoStack.length - 1];
+        const prevState = undoStack[undoStack.length - 1] as string;
         canvas.loadFromJSON(prevState, () => {
           canvas.renderAll();
 

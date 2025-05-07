@@ -1,5 +1,5 @@
-import { Label } from '@/core/components/ui/label';
-import { cn } from '@/core/lib/utils';
+import { Label } from '@workspace/ui/components/label';
+import { cn } from '@workspace/ui/lib/utils';
 import { Upload } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import { UploadBoxProps } from './types';

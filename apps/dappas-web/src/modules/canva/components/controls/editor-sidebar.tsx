@@ -1,12 +1,12 @@
-import { Input } from '@/core/components/ui/input';
-import { Label } from '@/core/components/ui/label';
+import { Input } from '@workspace/ui/components/input';
+import { Label } from '@workspace/ui/components/label';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/core/components/ui/select';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@workspace/ui/components/select';
 import { FabricObject, IText } from 'fabric';
 import { AlignCenter, AlignLeft, AlignRight } from 'lucide-react';
 import { useEffect, useState } from 'react';

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import TextureContext from './context';
+import TextureContext, { type IContextProps } from './context';
 
-const useTextureContext = () => {
+const useTextureContext = (): IContextProps => {
   return useContext(TextureContext);
 };
 

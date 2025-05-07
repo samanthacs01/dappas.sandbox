@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/core/components/ui/button';
-import { Input } from '@/core/components/ui/input';
-import { Label } from '@/core/components/ui/label';
+import { Button } from '@workspace/ui/components/button';
+import { Input } from '@workspace/ui/components/input';
+import { Label } from '@workspace/ui/components/label';
 import { Plus, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
@@ -63,7 +63,7 @@ export function BrandColors({ colors: initialColors }: BrandColorsProps) {
 
   const handleEditStart = (index: number) => {
     setEditingIndex(index);
-    setEditingValue(colors[index]);
+    setEditingValue(colors[index] as string);
   };
 
   const handleEditCancel = () => {
@@ -93,7 +93,7 @@ export function BrandColors({ colors: initialColors }: BrandColorsProps) {
       setEditingIndex(null);
       // Update refs array to remove the deleted color
       colorRefs.current = colorRefs.current.filter(
-        (_, i) => i !== editingIndex
+        (_, i) => i !== editingIndex,
       );
     }
   };

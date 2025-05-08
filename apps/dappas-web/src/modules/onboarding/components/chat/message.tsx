@@ -7,6 +7,7 @@ import { usePackageContext } from '@/store/package-info';
 import useChatComponent from '../../hooks/use-chat-component';
 import { ComponentToken } from '../../types/chat';
 import { extractComponentTags } from '../../utils/chat';
+import Image from 'next/image';
 
 type Props = {
   message: UIMessage;
@@ -35,7 +36,7 @@ const ChatMessage: React.FC<Props> = ({ message, onCustomMessage }) => {
 
   const extractMessageAndComponents = useCallback(() => {
     const { cleanedText, extractedTags } = extractComponentTags(
-      message.content
+      message.content,
     );
     setCleanMessage(cleanedText);
     setComponents(extractedTags);
@@ -50,18 +51,25 @@ const ChatMessage: React.FC<Props> = ({ message, onCustomMessage }) => {
   }, [message.content, message.role, extractMessageAndComponents]);
 
   return (
-    <div
-      className={cn(
-        'flex flex-col max-w-[80%]',
-        message.role === 'user' ? 'ml-auto items-end' : 'items-start'
-      )}
-    >
-      <div
-        className={cn(
-          'rounded-lg p-3',
-          message.role === 'user' ? 'bg-purple-100' : 'bg-gray-100'
+    <div className={cn('flex flex-col w-full items-start')}>
+      <div className={cn('flex items-start gap-6')}>
+        {message.role === 'user' ? (
+          <Image
+            src="/user-logo.svg"
+            alt="User logo"
+            width={16}
+            height={16}
+            className="mt-1"
+          />
+        ) : (
+          <Image
+            src="/assistant-logo.svg"
+            alt="Assistant logo"
+            width={16}
+            height={16}
+            className="mt-1"
+          />
         )}
-      >
         {cleanMessage}
         <div className="flex flex-col gap-2">
           {components?.map((value, index) => {

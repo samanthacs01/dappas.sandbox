@@ -90,7 +90,7 @@ jobs:
     needs: [setup, detect_changes]
     if: needs.detect_changes.outputs.fe_changes == 'true'
     env:
-      SENTRY_ENABLE: true
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -105,6 +105,11 @@ jobs:
 
       - name: Login to artifact registry
         uses: ./.github/actions/login-artifact-registry
+
+      - name: Debug environment and tag
+        run: |
+          echo "ENVIRONMENT=${ENVIRONMENT}"
+          echo "Tag: us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-${ENVIRONMENT}:${{ github.sha }}"
 
       - name: Build and Push Frontend Docker Image
         run: |

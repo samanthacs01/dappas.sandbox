@@ -1,5 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "NEXT_PUBLIC_AMPLITUDE_API_KEY",
+    "VITE_PUBLIC_AMPLITUDE_API_KEY",
+    "GOOGLE_GENERATIVE_AI_API_KEY",
+    "SHOPIFY_STORE_DOMAIN",
+    "SHOPIFY_STOREFRONT_ACCESS_TOKEN",
+    "VERCEL_PROJECT_PRODUCTION_URL"
+  ],
   "ui": "tui",
   "tasks": {
     "build": {

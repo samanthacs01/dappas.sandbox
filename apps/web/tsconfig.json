@@ -1,0 +1,12 @@
+{
+  "extends": "@workspace/typescript-config/vite.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "jsx": "react-jsx",
+  },
+  
+}

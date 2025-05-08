@@ -52,13 +52,5 @@
   "packageManager": "pnpm@10.4.1",
   "engines": {
     "node": ">=20"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "canvas",
-      "core-js-pure",
-      "sharp",
-      "unrs-resolver"
-    ]
   }
 }

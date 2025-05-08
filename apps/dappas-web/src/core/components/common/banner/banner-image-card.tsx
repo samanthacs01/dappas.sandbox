@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { ImageWithFallback } from '../image/image-with-fallback';
 
 type BannerImageCardProps = {
-  src: string | null;
+  src: string;
   alt: string;
 };
 

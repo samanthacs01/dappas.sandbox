@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 
 import AmplitudeContextProvider from '@/core/providers/amplitude';
 import '@workspace/ui/styles/globals.css';
+import BaseLayout from '@/core/layout/base-layout';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -29,7 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AmplitudeContextProvider>{children}</AmplitudeContextProvider>
+        <AmplitudeContextProvider>
+          <BaseLayout>{children}</BaseLayout>
+        </AmplitudeContextProvider>
       </body>
     </html>
   );

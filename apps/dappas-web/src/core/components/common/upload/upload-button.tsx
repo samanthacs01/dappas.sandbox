@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import { Button } from "@workspace/ui/components/button";
-import { Label } from "@workspace/ui/components/label";
-import { cn } from "@workspace/ui/lib/utils";
-import Image from "next/image";
-import { FunctionComponent } from "react";
-import { useDropzone } from "react-dropzone";
-import { UploadBoxProps } from "./types";
+import { Button } from '@workspace/ui/components/button';
+import { Label } from '@workspace/ui/components/label';
+import { cn } from '@workspace/ui/lib/utils';
+import Image from 'next/image';
+import { FunctionComponent } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { UploadBoxProps } from './types';
+import { Upload } from 'lucide-react';
 
 const UploadButton: FunctionComponent<UploadBoxProps> = ({
   label,
@@ -31,33 +32,39 @@ const UploadButton: FunctionComponent<UploadBoxProps> = ({
   const hasError = isDragReject || error;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 items-center">
       <Label htmlFor="upload-button">
         {required ? <span>{label} *</span> : label}
       </Label>
       <div
         className={
-          "bg-primary-foreground rounded-lg flex-col justify-center items-center inline-flex h-auto p-2"
+          'flex-col justify-center items-center inline-flex h-auto max-w-[425px] gap-3'
         }
-        {...getRootProps()}
       >
         <div
           className={cn(
-            "flex flex-col items-center justify-center gap-4 border border-dashed w-full rounded-lg h-full cursor-pointer p-2",
-            isDragActive && "bg-secondary",
-            isDragReject && "border-destructive/40 border-2"
+            'flex flex-col gap-4 border-2 border-dashed border-zinc-300 cursor-pointer px-20 md:px-32 py-7',
+            isDragActive && 'bg-secondary',
+            isDragReject && 'border-destructive/40 border-2',
           )}
+          {...getRootProps()}
         >
           <div
-            className={"flex items-center gap-4 w-full flex-row justify-start"}
+            className={'flex flex-col items-center gap-3 w-full justify-start'}
           >
-            <Button type="button">Choose files to upload</Button>
-            <Label className="text-sm font-medium cursor-pointer hover:underline">
-              or drag and drop them here
+            <Upload />
+            <Label className="flex text-base text-center font-normal cursor-pointer">
+              <span className="text-zinc-400">
+                Drop your logo here or{' '}
+                <strong className="text-black">Choose File</strong>
+              </span>
             </Label>
           </div>
           <input {...getInputProps()} />
         </div>
+        <p className="w-72 text-xs text-center">
+          Upload an svg-file or a transparent png of at least 2000x2000 px
+        </p>
       </div>
       {acceptedFiles.length > 0 && (
         <div className="flex flex-col gap-2">

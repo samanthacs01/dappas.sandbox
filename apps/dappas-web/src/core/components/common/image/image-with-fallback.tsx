@@ -3,8 +3,9 @@
 import Image, { type ImageProps } from 'next/image';
 import { useState } from 'react';
 
-interface ImageWithFallbackProps extends Omit<ImageProps, 'onError'> {
+interface ImageWithFallbackProps extends Omit<ImageProps, 'onError' | 'src'> {
   fallbackSrc?: string;
+  src: string | null;
   alt: string;
 }
 

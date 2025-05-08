@@ -6,13 +6,13 @@ const BusinessBanner = () => {
   return (
     <div className="bg-white w-full py-18 px-20 relative h-[580px] flex items-center justify-center">
       <div className="hidden md:flex justify-between items-center w-full max-w-[70%] top-[12%] absolute">
-        <BannerImageCard src="" alt="image 1" />
-        <BannerImageCard src="" alt="image 2" />
+        <BannerImageCard src={null} alt="image 1" />
+        <BannerImageCard src={null} alt="image 2" />
       </div>
 
       <div className="hidden md:flex justify-between items-center w-full max-w-[95%] bottom-[12%] absolute">
-        <BannerImageCard src="" alt="image 1" />
-        <BannerImageCard src="" alt="image 2" />
+        <BannerImageCard src={null} alt="image 1" />
+        <BannerImageCard src={null} alt="image 2" />
       </div>
 
       <div className="flex flex-col gap-8 items-center justify-center z-20">

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { ImageWithFallback } from '../image/image-with-fallback';
 
 type BannerImageCardProps = {
-  src: string;
+  src: string | null;
   alt: string;
 };
 

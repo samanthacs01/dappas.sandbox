@@ -6,6 +6,7 @@ import (
 	"selector.dev/security/config"
 	"selector.dev/security/entities"
 	"selector.dev/security/repositories/google"
+	"selector.dev/security/repositories/hooks"
 	"selector.dev/security/repositories/postgres"
 )
 
@@ -18,8 +19,8 @@ type IUserRepository interface {
 	Delete(user *entities.User) error
 }
 
-func NewUserRepository(conn *database.Conn, log *zap.Logger) IUserRepository {
-	return postgres.NewUserPostgresRepository(conn, log)
+func NewUserRepository(conn *database.Conn, log *zap.Logger, hooks hooks.IUseSaveHooks) IUserRepository {
+	return postgres.NewUserPostgresRepository(conn, log, hooks)
 }
 
 type IGoogleUserRepository interface {
@@ -29,3 +30,4 @@ type IGoogleUserRepository interface {
 func NewGoogleUserRepository(config config.IGoogleConfig, log *zap.Logger) IGoogleUserRepository {
 	return google.NewGoogleUserRepositoryImpl(config, log)
 }
+

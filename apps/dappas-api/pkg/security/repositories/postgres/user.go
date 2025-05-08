@@ -9,17 +9,20 @@ import (
 	"selector.dev/database"
 	"selector.dev/security/entities"
 	"selector.dev/security/exceptions"
+	"selector.dev/security/repositories/hooks"
 )
 
 type userPostgresRepositoryImpl struct {
 	logger     *zap.Logger
 	conn *database.Conn
+	hooks hooks.IUseSaveHooks
 }
 
-func NewUserPostgresRepository(c *database.Conn, log *zap.Logger) *userPostgresRepositoryImpl {
+func NewUserPostgresRepository(c *database.Conn, log *zap.Logger, hooks hooks.IUseSaveHooks) *userPostgresRepositoryImpl {
 	return &userPostgresRepositoryImpl{
 		conn: c,
 		logger: log,
+		hooks: hooks,
 	}
 }
 
@@ -45,11 +48,18 @@ func (r *userPostgresRepositoryImpl) FindByID(id uint) (*entities.User, error) {
 
 func (r *userPostgresRepositoryImpl) Save(user *entities.User) error {
 	return r.conn.UnitOfWork(func(db *gorm.DB) error {
-		err := db.Save(user).Error
-		if err != nil {
+		if err := r.hooks.BeforeSave(user); err != nil {
+			r.logger.Error("Error in BeforeSave hook", zap.Error(err))
+			return err
+		}
+		if err := db.Save(user).Error; err != nil {
 			r.logger.Error("Error saving user", zap.Error(err))
 		}
-		return err
+		if err := r.hooks.AfterSave(user); err != nil {
+			r.logger.Error("Error in AfterSave hook", zap.Error(err))
+			return err
+		}
+		return nil
 	})
 }
 

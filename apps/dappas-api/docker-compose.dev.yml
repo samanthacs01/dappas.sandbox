@@ -1,10 +1,10 @@
 services:
   dappas-api:
     build:
-      context: ./apps/dappas-api/
+      context: .
       dockerfile: Dockerfile.dev
     volumes:
-      - ./apps/dappas-api/:/app
+      - .:/app
       - /app/tmp
       - /app/bucket
     ports:

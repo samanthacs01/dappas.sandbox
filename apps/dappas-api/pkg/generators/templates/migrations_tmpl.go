@@ -11,15 +11,15 @@ func init() {
 	database.AddMigrationContext(up{{.Name}}Models, down{{.Name}}Models)
 }
 	
-func up{{.Name}}Models(migrator gorm.Migrator) error {
+func up{{.Name}}Models(db *gorm.DB) error {
 	// This code is executed when the migration is applied.
-	err := migrator.AutoMigrate(&entities.{{.Name}}{})
+	err := db.Migrator().AutoMigrate(&entities.{{.Name}}{})
 	return err
 }
 	
-func down{{.Name}}Models(migrator gorm.Migrator) error {
+func down{{.Name}}Models(db gorm.DB) error {
 	// This code is executed when the migration is rolled back.
-	err := migrator.DropTable(&entities.{{.Name}}{})
+	err := db.Migrator().DropTable(&entities.{{.Name}}{})
 	return err
 }	
 `

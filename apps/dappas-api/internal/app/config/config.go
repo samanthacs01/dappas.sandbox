@@ -23,9 +23,21 @@ const (
 type IAppConfig interface {
 	GetConnectionString() string
 	GetEnvironment() Environment
+	GetShopifySharedSecret() string
+	GetShopifyApiKey() string
 }
 
 type config struct {
+}
+
+// GetShopifyApiKey implements IAppConfig.
+func (c *config) GetShopifyApiKey() string {
+	panic("unimplemented")
+}
+
+// GetShopifySharedSecret implements IAppConfig.
+func (c *config) GetShopifySharedSecret() string {
+	return getEnv("SHOPIFY_SHARED_SECRET", "")
 }
 
 // GetClientId implements config.IGoogleConfig.

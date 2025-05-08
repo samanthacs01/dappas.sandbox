@@ -20,10 +20,16 @@
     "test": {
       "dependsOn": ["^build"]
     },
+    "test:coverage": {
+      "dependsOn": ["^build"]
+    },
     "test:watch": {
       "cache": false,
       "persistent": true,
       "dependsOn": ["^build"]
+    },
+    "gen": {
+      "cache": false
     }
   }
 }

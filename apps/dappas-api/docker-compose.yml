@@ -1,17 +1,7 @@
 services:
-  dappas-web:
-    container_name: dappas-web
-    image: dappas-web
-    build:
-      context: .
-      dockerfile: ./apps/dappas-web/Dockerfile
-    ports:
-      - '3000:3000'
-    networks:
-      - app-network
   dappas-api:
     build:
-      context: ./apps/dappas-api/
+      context: .
       dockerfile: Dockerfile
     ports:
       - '8080:8080'
@@ -34,7 +24,7 @@ services:
     restart: on-failure
   migrator:
     build:
-      context: ./apps/dappas-api/
+      context: .
       dockerfile: Dockerfile.migrator
     environment:
       - DB_HOST=postgres

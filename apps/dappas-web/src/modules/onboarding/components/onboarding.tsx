@@ -5,8 +5,8 @@ import { usePackageContext } from '@/store/package-info';
 import { useChat } from '@ai-sdk/react';
 import { UIMessage } from 'ai';
 import { useEffect } from 'react';
-import OnBoardingChat from '../components/chat/chat';
-import OnBoardingSidePanel from '../components/side-panel';
+import OnboardingChat from './chat/onboarding-chat';
+import OnboardingSidebar from './chat/onboarding-sidebar';
 
 const OnBoarding = () => {
   const { state, dispatch } = usePackageContext();
@@ -78,22 +78,9 @@ const OnBoarding = () => {
   };
 
   return (
-    <div className="grid md:grid-cols-[1fr_1fr] h-screen w-full max-w-7xl mx-auto max-h-screen overflow-hidden">
-      <OnBoardingSidePanel
-        packageInfo={packageInfo}
-        updatePackagingInfo={updatePackagingInfo}
-        chatStatus={status}
-        onSubmit={handleSubmit}
-      />
-      <OnBoardingChat
-        packageInfo={packageInfo}
-        messages={messages}
-        input={input}
-        handleInputChange={handleInputChange}
-        handleSubmit={handleSubmit}
-        chatStatus={status}
-        onCustomMessage={onCustomMessage}
-      />
+    <div className="grid md:grid-cols-[639px_1fr] h-screen w-full max-h-screen overflow-hidden">
+      <OnboardingChat />
+      <OnboardingSidebar />
     </div>
   );
 };

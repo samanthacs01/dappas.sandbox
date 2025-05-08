@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path"
 	"strings"
+	"time"
 
 	"selector.dev/generators/templates"
 )
@@ -23,13 +24,15 @@ func CreateFeature(moduleName string, featureName string) error {
 	pkg := strings.TrimSpace(string(out))
 	module := moduleName
 	submodule := featureName
+	version := time.Now().Format("20060102150405")
 	modulePath := fmt.Sprintf("internal/modules/%s", module)
 
 	// Initialize submodule files
 	files := map[string]string{
-		path.Join(modulePath, "entity", fmt.Sprintf("%s_entity.go", submodule)):                       templates.EntityTmpl,
-		path.Join(modulePath, "repository", fmt.Sprintf("%s_repository.go", submodule)):               templates.RepositoryTmpl,
-		path.Join(modulePath, "repository/postgres", fmt.Sprintf("%s_repository_impl.go", submodule)): templates.PostgresTmpl,
+		path.Join(modulePath, "entities", fmt.Sprintf("%s_entity.go", submodule)):                       templates.EntityTmpl,
+		path.Join(modulePath, "repositories", fmt.Sprintf("%s_repository.go", submodule)):               templates.RepositoryTmpl,
+		path.Join(modulePath, "repositories/postgres", fmt.Sprintf("%s_repository_impl.go", submodule)): templates.PostgresTmpl,
+		path.Join(modulePath, "migrations", fmt.Sprintf("%v_%s.go", version, submodule)): templates.MigrationsTmpl,
 	}
 
 	for file, content := range files {

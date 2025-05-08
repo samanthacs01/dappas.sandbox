@@ -24,8 +24,6 @@ services:
       - ENV=development
       - DAPPAS_ADMIN_PASSWORD=admin
       - DAPPAS_ADMIN_EMAIL=admin@dappas.com
-      - DAPPAS_ADMIN_FIRST_NAME=Dappas 
-      - DAPPAS_ADMIN_LAST_NAME=Admin
     depends_on:
       postgres:
         condition: service_healthy

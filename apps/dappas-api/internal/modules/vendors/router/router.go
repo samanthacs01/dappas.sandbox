@@ -2,16 +2,16 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"selector.dev/dappas/internal/modules/vendors/endpoint"
+	"selector.dev/dappas/internal/modules/vendors/endpoints"
 	"selector.dev/webapi"
 )
 
 func Route(
 	app *gin.Engine,
-	saveEndpoint *endpoint.SaveEndpoint,
+	listVendors *endpoints.ListVendorsEndpoint,
 ) {
 	vendors := app.Group("/v1/vendors")
 	{
-		vendors.POST("/save", webapi.GinHandler(saveEndpoint.Handler))
+		vendors.GET("", webapi.GinHandler(listVendors.Handler))
 	}
 }

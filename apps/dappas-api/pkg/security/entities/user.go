@@ -1,51 +1,67 @@
 package entities
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
-	"selector.dev/security/config"
+	"gorm.io/gorm"
 )
 
 type User struct {
-	Id           int64   `json:"id" db:"id"`
-	Email        string  `json:"email" db:"email"`
-	Password 	 string  `json:"-" db:"password"`
-	Role         string  `json:"role" db:"role"`
-	FirstName    string  `json:"first_name" db:"first_name"`
-	LastName     string  `json:"last_name" db:"last_name"`
-	IsActive     bool    `json:"is_active" db:"is_active"`
+	*gorm.Model
+	Email      string `json:"email" gorm:"unique;not null"`
+	Password   string `json:"password" gorm:"null"` // Null for social network users
+	Role       string `json:"role" gorm:"not null"`
+	IsExternal bool   `json:"is_external" gorm:"default:false"` // True for social network users
+	Provider   string `json:"provider" gorm:"null"`             // e.g., "google", "facebook"
+	ProviderID string `json:"provider_id" gorm:"unique;null"`   // ID from the social network provider
 }
 
-func (u *User) FullName() string {
-	return u.FirstName + " " + u.LastName
+type Claims struct {
+	Subject string `json:"sub"`
+	jwt.RegisteredClaims
 }
 
 func (u *User) VerifyPassword(password string) bool {
 	bytes := []byte(password)
 	err := bcrypt.CompareHashAndPassword([]byte(u.Password), bytes)
+	fmt.Println("err", err)
 	return err == nil
 }
 
-func (u *User) GenerateToken(config config.ISecurityConfig) (string, error) {
-	var secretKey = []byte(config.GetSecretKey())
-	var duration = config.GetTokenDuration()
+func (u *User) GenerateToken(secret, issuer string, duration int) (string, string, error) {
+	var secretKey = []byte(secret)
+
 	exp := time.Now().Add(time.Duration(duration) * time.Second).Unix()
 
-	claims := jwt.MapClaims{
-		"id":       u.Id,
-		"username": u.Email,
-		"role":     u.Role,
-		"exp":      exp,
+	claims := &Claims{
+		Subject: u.Email,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    issuer,
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Unix(exp, 0)),
+		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := token.SignedString(secretKey)
+	accessToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(secretKey)
 	if err != nil {
-		return "", err
+		return "", "", err
+	}
+	
+	refreshClaims := Claims{
+		Subject: u.Email,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(30 * 24 * time.Hour)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+	}
+	
+	refreshToken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims).SignedString(secretKey)
+	if err != nil {
+		return "", "", err
 	}
 
-	return tokenString, nil
+	return accessToken, refreshToken, nil
 }

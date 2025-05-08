@@ -5,59 +5,63 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"selector.dev/database"
-	"selector.dev/database/builders"
-	br "selector.dev/database/repositories"
 	"selector.dev/security/entities"
 	"selector.dev/security/exceptions"
 )
 
 type userPostgresRepositoryImpl struct {
 	logger     *zap.Logger
-	unitOfWork database.UnitOfWork
+	conn *database.Conn
 }
 
-func NewUserPostgresRepository(uow database.UnitOfWork, log *zap.Logger) *userPostgresRepositoryImpl {
+func NewUserPostgresRepository(c *database.Conn, log *zap.Logger) *userPostgresRepositoryImpl {
 	return &userPostgresRepositoryImpl{
-		unitOfWork: uow,
-		logger:     log,
+		conn: c,
+		logger: log,
 	}
 }
 
 func (r *userPostgresRepositoryImpl) FindByEmail(email string) (*entities.User, error) {
-	qb := builders.NewSelectRawQueryBuilder("SELECT * FROM users WHERE email = $1", []interface{}{email})
-	result, err := br.RunQuery[entities.User](r.unitOfWork, qb)
-	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
+	var user entities.User
+	query := r.conn.DB.First(&user, "email = ?", email)
+	if query.Error != nil {
+		if errors.Is(query.Error, pgx.ErrNoRows) {
 			return nil, exceptions.ErrUserNotFound
 		}
-		r.logger.Error("error finding user by email", zap.Error(err))
-		return nil, err
+		r.logger.Error("Error finding user by email", zap.Error(query.Error))
+		return nil, query.Error
 	}
-	if len(*result) == 0 {
+	if query.RowsAffected == 0 {
 		return nil, exceptions.ErrUserNotFound
 	}
-	user := (*result)[0]
 	return &user, nil
 }
 
-func (r *userPostgresRepositoryImpl) FindByID(id int64) (*entities.User, error) {
+func (r *userPostgresRepositoryImpl) FindByID(id uint) (*entities.User, error) {
 	return &entities.User{}, nil
 }
 
-func (r *userPostgresRepositoryImpl) Store(user entities.User) (*int64, error) {
-	zero := int64(0)
-	return &zero, nil
+func (r *userPostgresRepositoryImpl) Save(user *entities.User) error {
+	return r.conn.UnitOfWork(func(db *gorm.DB) error {
+		err := db.Save(user).Error
+		if err != nil {
+			r.logger.Error("Error saving user", zap.Error(err))
+		}
+		return err
+	})
 }
 
-func (r *userPostgresRepositoryImpl) Update(user entities.User) error {
-	return nil
+func (r *userPostgresRepositoryImpl) Delete(user *entities.User) error {
+	return r.conn.UnitOfWork(func(db *gorm.DB) error {
+		if err := db.Delete(&user).Error; err != nil {
+			return err
+		}
+		return nil
+	})
 }
 
-func (r *userPostgresRepositoryImpl) Delete(id int64) error {
-	return nil
-}
-
-func (r *userPostgresRepositoryImpl) FindAll() (*[]entities.User, error) {
-	return nil, nil
+func (r *userPostgresRepositoryImpl) FindAll() (*[]entities.User, *int64, error) {
+	return nil, nil, errors.New("not implemented")
 }

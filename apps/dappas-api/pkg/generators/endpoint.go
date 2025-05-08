@@ -27,10 +27,10 @@ func CreateEndpoint(moduleName string, featureName string, endpointName string) 
 
 	// Initialize submodule files
 	files := map[string]string{
-		path.Join(modulePath, "endpoint", fmt.Sprintf("%s_%s_endpoint.go", endpointName, submodule)):      templates.EndpointTmpl,
-		path.Join(modulePath, "endpoint", fmt.Sprintf("%s_%s_endpoint_test.go", endpointName, submodule)): templates.EndpointTestTmpl,
-		path.Join(modulePath, "usecase", fmt.Sprintf("%s_%s_usecase.go", endpointName, submodule)):        templates.UsecaseTmpl,
-		path.Join(modulePath, "model", fmt.Sprintf("%s_%s_model.go", endpointName, submodule)):            templates.ModelTmpl,
+		path.Join(modulePath, "endpoints", fmt.Sprintf("%s_%s_endpoint.go", endpointName, submodule)):      templates.EndpointTmpl,
+		path.Join(modulePath, "endpoints", fmt.Sprintf("%s_%s_endpoint_test.go", endpointName, submodule)): templates.EndpointTestTmpl,
+		path.Join(modulePath, "usecases", fmt.Sprintf("%s_%s_usecase.go", endpointName, submodule)):        templates.UsecaseTmpl,
+		path.Join(modulePath, "models", fmt.Sprintf("%s_%s_model.go", endpointName, submodule)):            templates.ModelTmpl,
 	}
 
 	for file, content := range files {

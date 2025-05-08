@@ -1,8 +1,11 @@
 package templates
 
-var EntityTmpl = `package entity
+var EntityTmpl = `package entities
+import (
+	"gorm.io/gorm"
+)
 
 type {{.Name}} struct {
-	Id int64 ` + "`json:\"id\"`" + `
+	*gorm.Model
 }
 `

@@ -25,13 +25,14 @@ func CreateModule(module string) error {
 	// Initialize module directory
 	directories := []string{
 		modulePath,
-		path.Join(modulePath, "entity"),
-		path.Join(modulePath, "model"),
-		path.Join(modulePath, "repository"),
-		path.Join(modulePath, "repository/postgres"),
-		path.Join(modulePath, "usecase"),
-		path.Join(modulePath, "endpoint"),
+		path.Join(modulePath, "entities"),
+		path.Join(modulePath, "models"),
+		path.Join(modulePath, "repositories"),
+		path.Join(modulePath, "repositories/postgres"),
+		path.Join(modulePath, "usecases"),
+		path.Join(modulePath, "endpoints"),
 		path.Join(modulePath, "router"),
+		path.Join(modulePath, "migrations"),
 	}
 
 	for _, directory := range directories {

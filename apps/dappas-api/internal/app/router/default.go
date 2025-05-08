@@ -8,8 +8,8 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/fx"
 	_ "selector.dev/dappas/docs"
-	secModel "selector.dev/security/model"
-	security "selector.dev/security/use_cases"
+	secModel "selector.dev/security/models"
+	security "selector.dev/security/usecases"
 )
 
 func ProvideRouter() fx.Option {
@@ -32,9 +32,12 @@ func swaggerRoutes(router *gin.Engine, s security.ILoginUseCase) {
 func basicAuth(s security.ILoginUseCase) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		email, pass, hasAuth := ctx.Request.BasicAuth()
-		input := secModel.LoginInput{
-			Email:    email,
-			Password: pass,
+		input := &secModel.AuthInput{
+			RequestType: secModel.RequestTypeInternalUser,
+			Body: map[string]any{
+				"email":    email,
+				"password": pass,
+			},
 		}
 		_, err := s.Run(input)
 		if err != nil {

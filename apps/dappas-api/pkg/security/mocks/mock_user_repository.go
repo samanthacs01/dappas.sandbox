@@ -41,26 +41,27 @@ func (m *MockIUserRepository) EXPECT() *MockIUserRepositoryMockRecorder {
 }
 
 // Delete mocks base method.
-func (m *MockIUserRepository) Delete(id int64) error {
+func (m *MockIUserRepository) Delete(user *entities.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", id)
+	ret := m.ctrl.Call(m, "Delete", user)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockIUserRepositoryMockRecorder) Delete(id any) *gomock.Call {
+func (mr *MockIUserRepositoryMockRecorder) Delete(user any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIUserRepository)(nil).Delete), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIUserRepository)(nil).Delete), user)
 }
 
 // FindAll mocks base method.
-func (m *MockIUserRepository) FindAll() (*[]entities.User, error) {
+func (m *MockIUserRepository) FindAll() (*[]entities.User, *int64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAll")
 	ret0, _ := ret[0].(*[]entities.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(*int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // FindAll indicates an expected call of FindAll.
@@ -85,7 +86,7 @@ func (mr *MockIUserRepositoryMockRecorder) FindByEmail(email any) *gomock.Call {
 }
 
 // FindByID mocks base method.
-func (m *MockIUserRepository) FindByID(id int64) (*entities.User, error) {
+func (m *MockIUserRepository) FindByID(id uint) (*entities.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByID", id)
 	ret0, _ := ret[0].(*entities.User)
@@ -99,31 +100,16 @@ func (mr *MockIUserRepositoryMockRecorder) FindByID(id any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockIUserRepository)(nil).FindByID), id)
 }
 
-// Store mocks base method.
-func (m *MockIUserRepository) Store(user entities.User) (*int64, error) {
+// Save mocks base method.
+func (m *MockIUserRepository) Save(user *entities.User) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Store", user)
-	ret0, _ := ret[0].(*int64)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Store indicates an expected call of Store.
-func (mr *MockIUserRepositoryMockRecorder) Store(user any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockIUserRepository)(nil).Store), user)
-}
-
-// Update mocks base method.
-func (m *MockIUserRepository) Update(user entities.User) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", user)
+	ret := m.ctrl.Call(m, "Save", user)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Update indicates an expected call of Update.
-func (mr *MockIUserRepositoryMockRecorder) Update(user any) *gomock.Call {
+// Save indicates an expected call of Save.
+func (mr *MockIUserRepositoryMockRecorder) Save(user any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIUserRepository)(nil).Update), user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockIUserRepository)(nil).Save), user)
 }

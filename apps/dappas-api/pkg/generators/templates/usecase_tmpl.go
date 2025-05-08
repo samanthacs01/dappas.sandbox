@@ -1,29 +1,29 @@
 package templates
 
-var UsecaseTmpl = `package usecase
+var UsecaseTmpl = `package usecases
 
 import (
 	"errors"
-	"{{.Package}}/internal/modules/{{.Module}}/repository"
-	"{{.Package}}/internal/modules/{{.Module}}/model"
+	"{{.Package}}/internal/modules/{{.Module}}/repositories"
+	"{{.Package}}/internal/modules/{{.Module}}/models"
 )
 
-//go:generate mockgen -destination=../mocks/mock_{{.Endpoint}}_usecase.go -package=mocks {{.Package}}/usecase I{{.Name}}UseCase
+//go:generate mockgen -destination=../mocks/mock_{{.Endpoint}}_usecase.go -package=mocks {{.Package}}/internal/modules/{{.Module}}/usecases I{{.Name}}UseCase
 type I{{.Name}}UseCase interface {
-	Run(input *model.{{.Name}}Input) (*model.{{.Name}}Output, error)
+	Run(input *models.{{.Name}}Input) (*models.{{.Name}}Output, error)
 }
 
 type {{.InternalName}}UseCase struct {
-	Repository repository.{{.Feature}}Repository
+	Repository repositories.{{.Feature}}Repository
 }
 
-func New{{.Name}}UseCase(repository repository.{{.Feature}}Repository) I{{.Name}}UseCase {
+func New{{.Name}}UseCase(repository repositories.{{.Feature}}Repository) I{{.Name}}UseCase {
 	return &{{.InternalName}}UseCase{
 		Repository: repository,
 	}
 }
 
-func (u *{{.InternalName}}UseCase) Run(input *model.{{.Name}}Input) (*model.{{.Name}}Output, error) {
+func (u *{{.InternalName}}UseCase) Run(input *models.{{.Name}}Input) (*models.{{.Name}}Output, error) {
 	return nil, errors.New("not implemented")
 }
 	

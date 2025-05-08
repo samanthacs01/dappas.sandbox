@@ -41,7 +41,7 @@ jobs:
       - name: Extract Environment
         id: extract_env
         run: |
-          if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == "dappas-turborepo" ]]; then
+          if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == "main" ]]; then
             echo "ENVIRONMENT=dev" >> $GITHUB_ENV
             echo "environment=dev" >> $GITHUB_OUTPUT
           elif [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then

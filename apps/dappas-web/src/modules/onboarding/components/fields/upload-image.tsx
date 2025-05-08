@@ -18,6 +18,7 @@ const UploadImage: React.FC<Props> = ({ onUpload, placeholder }) => {
   return (
     <UploadButton
       multiple={false}
+      description="Upload an svg-file or a transparent png of at least 2000x2000 px"
       placeholder={placeholder}
       accept={{
         'image/*': ['.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif'],

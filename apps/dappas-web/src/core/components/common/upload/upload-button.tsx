@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@workspace/ui/components/button';
 import { Label } from '@workspace/ui/components/label';
 import { cn } from '@workspace/ui/lib/utils';
 import Image from 'next/image';
@@ -15,6 +14,7 @@ const UploadButton: FunctionComponent<UploadBoxProps> = ({
   disabled,
   accept,
   error,
+  description,
   ...rest
 }) => {
   const {
@@ -62,9 +62,7 @@ const UploadButton: FunctionComponent<UploadBoxProps> = ({
           </div>
           <input {...getInputProps()} />
         </div>
-        <p className="w-72 text-xs text-center">
-          Upload an svg-file or a transparent png of at least 2000x2000 px
-        </p>
+        <p className="w-72 text-xs text-center">{description}</p>
       </div>
       {acceptedFiles.length > 0 && (
         <div className="flex flex-col gap-2">

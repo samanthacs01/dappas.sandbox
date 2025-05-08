@@ -6,6 +6,7 @@ export interface UploadBoxProps extends DropzoneOptions {
   error?: boolean;
   disabled?: boolean;
   className?: string;
+  description?: string;
   accept?: Accept;
   thumbnail?: boolean;
   placeholder?: React.ReactNode;

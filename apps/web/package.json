@@ -10,6 +10,7 @@
     "start": "vite preview"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.17.3",
     "@tailwindcss/vite": "^4.1.5",
     "@workspace/ui": "workspace:*",
     "lucide-react": "^0.509.0",

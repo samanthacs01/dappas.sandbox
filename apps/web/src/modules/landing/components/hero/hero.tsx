@@ -1,8 +1,11 @@
+import { AmplitudeContext } from '@/core/providers/amplitude';
 import { Button } from '@workspace/ui/components/button';
+import { use } from 'react';
 import { Link } from 'react-router';
 import BannerImageCard from './banner-image-card';
 
 const LandingHero = () => {
+  const { track } = use(AmplitudeContext);
   return (
     <div className="bg-white w-full py-18 px-20 relative h-[600px] flex items-center justify-center">
       <div className="hidden md:flex justify-between items-center w-full max-w-[70%] top-[12%] absolute opacity-30 lg:opacity-100 transition-all duration-500">
@@ -24,7 +27,21 @@ const LandingHero = () => {
           products.
         </p>
         <div className="flex flex-col justify-center items-center gap-5">
-          <Link to="/welcome">
+          <Link
+            to="/welcome"
+            onClick={() =>
+              track('get-started-button-click', {
+                button_name: 'get-started-button',
+                button_id: 'btn-cta-get-started-hero',
+                page_url: window.location.href,
+                page_title: document.title,
+                component_name: 'hero',
+                cta_text: 'Get Started',
+                click_source: 'Hero Image',
+                experiment_variant: '',
+              })
+            }
+          >
             <Button
               variant={'default'}
               className="px-20 py-2.5 h-12 rounded-none"

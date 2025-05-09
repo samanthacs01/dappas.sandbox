@@ -8,7 +8,7 @@ import { Link } from 'react-router';
 
 const OnboardingChat = () => {
   return (
-    <div className="flex flex-col h-full px-20 py-12 justify-between border-r-4">
+    <div className="flex flex-col h-full px-10 md:px-20 py-12 justify-between bg-white">
       <div className="flex items-start gap-6">
         <ImageWithFallback
           src={'/assistant-logo.svg'}

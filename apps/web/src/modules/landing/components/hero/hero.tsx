@@ -1,4 +1,5 @@
 import { Button } from '@workspace/ui/components/button';
+import { Link } from 'react-router';
 import BannerImageCard from './banner-image-card';
 
 const LandingHero = () => {
@@ -23,12 +24,14 @@ const LandingHero = () => {
           products.
         </p>
         <div className="flex flex-col justify-center items-center gap-5">
-          <Button
-            variant={'default'}
-            className="px-20 py-2.5 h-12 rounded-none"
-          >
-            Start creating for free
-          </Button>
+          <Link to="/welcome">
+            <Button
+              variant={'default'}
+              className="px-20 py-2.5 h-12 rounded-none"
+            >
+              Start creating for free
+            </Button>
+          </Link>
           <p className="text-sm leading-[120%] tracking-[-4%] text-gray-500">
             Start for free, no account needed
           </p>

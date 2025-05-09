@@ -1,6 +1,9 @@
+
+
 import Image from '@/core/commons/image-with-fallback';
 import { Product } from '@/server/shopify/types';
 import { Button } from '@workspace/ui/components/button';
+import { Link } from 'react-router';
 
 type ProductCardProps = {
   product: Product;
@@ -16,9 +19,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
       />
       <div className="flex flex-row gap-4 px-2 justify-between items-center">
         <h3 className="text-xl font-medium truncate">{product.title}</h3>
-        <Button variant="default" size="lg">
-          Start creating
-        </Button>
+        <Link to="/welcome">
+          <Button variant="default" size="lg">
+            Start creating
+          </Button>
+        </Link>
       </div>
     </div>
   );

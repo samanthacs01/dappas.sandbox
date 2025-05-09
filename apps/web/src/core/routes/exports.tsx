@@ -4,4 +4,8 @@ const LandingContainer = React.lazy(
   () => import('@/modules/landing/containers/landing-container'),
 );
 
-export default { LandingContainer };
+const WelcomeChatContainer = React.lazy(
+  () => import('@/modules/chat/welcome/containers/welcome-chat-container'),
+);
+
+export default { LandingContainer, WelcomeChatContainer };

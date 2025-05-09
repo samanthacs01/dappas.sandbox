@@ -1,3 +1,4 @@
+import WelcomeChatContainer from '@/modules/chat/welcome/containers/welcome-chat-container';
 import LandingContainer from '@/modules/landing/containers/landing-container';
 import { getProducts } from '@/server/shopify';
 import { createBrowserRouter } from 'react-router';
@@ -14,6 +15,10 @@ export const router = createBrowserRouter([
         loader: async () => {
           return { products: await getProducts({ first: 10 }) };
         },
+      },
+      {
+        path: 'welcome',
+        Component: WelcomeChatContainer,
       },
     ],
   },

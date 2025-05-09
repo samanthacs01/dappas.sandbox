@@ -7,7 +7,7 @@ type ProductsProps = {
 
 const Products = ({ products }: ProductsProps) => {
   return (
-    <div className="flex flex-col gap-20 p-8 bg-white">
+    <div className="flex flex-col gap-y-20 p-8 bg-white w-full">
       <h2 className="text-2xl font-semibold w-full lg:w-[220px]">
         Explore products and add your brand
       </h2>

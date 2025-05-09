@@ -1,3 +1,4 @@
+import OnboardingChatContainer from '@/modules/chat/onboarding-chat/containers/onboarding';
 import WelcomeChatContainer from '@/modules/chat/welcome/containers/welcome-chat-container';
 import LandingContainer from '@/modules/landing/containers/landing-container';
 import { getProducts } from '@/server/shopify';
@@ -19,6 +20,10 @@ export const router = createBrowserRouter([
       {
         path: 'welcome',
         Component: WelcomeChatContainer,
+      },
+      {
+        path: 'welcome/onboarding',
+        Component: OnboardingChatContainer,
       },
     ],
   },

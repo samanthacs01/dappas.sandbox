@@ -8,4 +8,12 @@ const WelcomeChatContainer = React.lazy(
   () => import('@/modules/chat/welcome/containers/welcome-chat-container'),
 );
 
-export default { LandingContainer, WelcomeChatContainer };
+const OnboardingChatContainer = React.lazy(
+  () => import('@/modules/chat/onboarding-chat/containers/onboarding'),
+);
+
+export default {
+  LandingContainer,
+  WelcomeChatContainer,
+  OnboardingChatContainer,
+};

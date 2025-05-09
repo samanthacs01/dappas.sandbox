@@ -236,3 +236,9 @@ variable "dappas_web_name" {
   type        = string
   default     = "dappas-web"
 }
+
+variable "dappas_web_name_react" {
+  description = "name for the dappas web cloud run"
+  type        = string
+  default     = "dappas-web-react"
+}

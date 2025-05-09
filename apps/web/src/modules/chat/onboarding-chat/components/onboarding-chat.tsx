@@ -1,5 +1,6 @@
 'use client';
 
+import ImageWithFallback from '@/core/commons/image-with-fallback';
 import { Button } from '@workspace/ui/components/button';
 import { Textarea } from '@workspace/ui/components/textarea';
 import { ArrowUp } from 'lucide-react';
@@ -9,7 +10,7 @@ const OnboardingChat = () => {
   return (
     <div className="flex flex-col h-full px-20 py-12 justify-between border-r-4">
       <div className="flex items-start gap-6">
-        <img
+        <ImageWithFallback
           src={'/assistant-logo.svg'}
           alt="Assistant icon"
           width={16}

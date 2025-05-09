@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
         Component: WelcomeChatContainer,
       },
       {
-        path: 'welcome/onboarding',
+        path: 'onboarding',
         Component: OnboardingChatContainer,
       },
     ],

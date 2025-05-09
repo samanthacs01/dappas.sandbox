@@ -1,5 +1,6 @@
 'use client';
 
+import ImageWithFallback from '@/core/commons/image-with-fallback';
 import { ChevronRight } from 'lucide-react';
 
 const OnboardingSidebar = () => {
@@ -13,7 +14,7 @@ const OnboardingSidebar = () => {
         <p className="font-medium text-sm text-red-300 ">
           *Outline illustration
         </p>
-        <img
+        <ImageWithFallback
           src={'/images/products/coffee-cup.png'}
           alt="Assistant icon"
           width={326}

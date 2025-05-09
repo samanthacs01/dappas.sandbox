@@ -7,7 +7,7 @@ import BannerImageCard from './banner-image-card';
 const LandingHero = () => {
   const { track } = use(AmplitudeContext);
   return (
-    <div className="bg-white w-full py-18 px-20 relative h-[600px] flex items-center justify-center">
+    <div className="bg-white w-full py-18 px-20 relative h-[650px] flex items-center justify-center">
       <div className="hidden md:flex justify-between items-center w-full max-w-[70%] top-[12%] absolute opacity-30 lg:opacity-100 transition-all duration-500">
         <BannerImageCard src="" alt="image 1" />
         <BannerImageCard src="" alt="image 2" />

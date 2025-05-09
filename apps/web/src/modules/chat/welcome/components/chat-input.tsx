@@ -3,6 +3,7 @@
 import { Button } from '@workspace/ui/components/button';
 import { Textarea } from '@workspace/ui/components/textarea';
 import { ArrowUp, ChevronDown } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useNavigate } from 'react-router';
 
 const WelcomeChatInput = () => {
@@ -19,8 +20,26 @@ const WelcomeChatInput = () => {
 
   return (
     <form className="flex flex-col mx-auto p-4 gap-20 items-center max-w-xl">
-      <p className="text-2xl font-normal">Lets make your brand shine!</p>
-      <div className="flex flex-col border border-zinc-300 p-4 gap-1">
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.8,
+          delay: 0.2,
+        }}
+        className="text-2xl font-normal"
+      >
+        Lets make your brand shine!
+      </motion.p>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 1,
+          delay: 0.3,
+        }}
+        className="flex flex-col border border-zinc-300 p-4 gap-1 "
+      >
         <div className="flex items-start gap-2">
           <Textarea
             placeholder="What do you want to create today?"
@@ -63,7 +82,7 @@ const WelcomeChatInput = () => {
             <ChevronDown />
           </Button>
         </div>
-      </div>
+      </motion.div>
     </form>
   );
 };

@@ -15,6 +15,8 @@ const UploadButton: FunctionComponent<UploadBoxProps> = ({
   accept,
   error,
   description,
+  labelOrientation = 'vertical',
+
   ...rest
 }) => {
   const {
@@ -33,36 +35,61 @@ const UploadButton: FunctionComponent<UploadBoxProps> = ({
 
   return (
     <div className="flex flex-col gap-2 items-center">
-      <Label htmlFor="upload-button">
-        {required ? <span>{label} *</span> : label}
-      </Label>
       <div
-        className={
-          'flex-col justify-center items-center inline-flex h-auto max-w-[425px] gap-3'
-        }
+        className={cn(
+          'flex',
+          labelOrientation === 'vertical'
+            ? 'flex-col gap-2'
+            : 'flex-row gap-10 items-start',
+        )}
       >
+        {label ? (
+          typeof label === 'string' ? (
+            <Label
+              htmlFor={'upload-button'}
+              className={cn(
+                error && 'text-destructive',
+                'font-medium',
+                labelOrientation === 'vertical' ? '' : 'w-1/3',
+              )}
+            >
+              {label} {required && '*'}
+            </Label>
+          ) : (
+            label
+          )
+        ) : null}
+
         <div
-          className={cn(
-            'flex flex-col gap-4 border-2 border-dashed border-zinc-300 cursor-pointer px-20 md:px-32 py-7',
-            isDragActive && 'bg-secondary',
-            isDragReject && 'border-destructive/40 border-2',
-          )}
-          {...getRootProps()}
+          className={
+            'flex-col justify-center items-center inline-flex h-auto max-w-[425px] gap-3'
+          }
         >
           <div
-            className={'flex flex-col items-center gap-3 w-full justify-start'}
+            className={cn(
+              'flex flex-col gap-4 border-2 border-dashed border-zinc-300 cursor-pointer px-20 md:px-32 py-7',
+              isDragActive && 'bg-secondary',
+              isDragReject && 'border-destructive/40 border-2',
+            )}
+            {...getRootProps()}
           >
-            <Upload />
-            <Label className="flex text-base text-center font-normal cursor-pointer">
-              <span className="text-zinc-400">
-                Drop your logo here or{' '}
-                <strong className="text-black">Choose File</strong>
-              </span>
-            </Label>
+            <div
+              className={
+                'flex flex-col items-center gap-3 w-full justify-start'
+              }
+            >
+              <Upload />
+              <Label className="flex text-base text-center font-normal cursor-pointer">
+                <span className="text-zinc-400">
+                  Drop your logo here or{' '}
+                  <strong className="text-black">Choose File</strong>
+                </span>
+              </Label>
+            </div>
+            <input {...getInputProps()} />
           </div>
-          <input {...getInputProps()} />
+          <p className="w-72 text-xs text-center">{description}</p>
         </div>
-        <p className="w-72 text-xs text-center">{description}</p>
       </div>
       {acceptedFiles.length > 0 && (
         <div className="flex flex-col gap-2">

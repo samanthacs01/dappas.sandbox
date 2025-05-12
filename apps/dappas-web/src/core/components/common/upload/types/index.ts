@@ -21,6 +21,8 @@ export interface UploadBoxProps extends DropzoneOptions {
   loading?: boolean;
   simpleUpload?: boolean;
   tableRemoveFile?: (fileName: string) => void;
+  labelOrientation?: 'vertical' | 'horizontal',
+
 }
 
 export interface CustomFile extends File {

@@ -1,12 +1,19 @@
-import { Button } from "@workspace/ui/components/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@workspace/ui/components/card";
-import { Palette, UserPlus } from "lucide-react";
-import Link from "next/link";
+import { Button } from '@workspace/ui/components/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@workspace/ui/components/card';
+import { Palette, UserPlus } from 'lucide-react';
+import Link from 'next/link';
 
 export default async function Home() {
   return (
-    <div className="w-full space-y-2 h-screen overflow-y-auto">
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+    <div className="w-full space-y-2 overflow-y-auto h-full">
+      <div className="bg-gradient-to-b h-full from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
         <div className="container mx-auto px-4 py-16">
           <div className="mb-12 text-center">
             <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">

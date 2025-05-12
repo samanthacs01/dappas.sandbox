@@ -78,7 +78,7 @@ const OnBoarding = () => {
   };
 
   return (
-    <div className="grid md:grid-cols-[639px_1fr] h-screen w-full max-h-screen overflow-hidden">
+    <div className="grid md:grid-cols-[639px_1fr] h-full w-full">
       <OnboardingChat />
       <OnboardingSidebar />
     </div>

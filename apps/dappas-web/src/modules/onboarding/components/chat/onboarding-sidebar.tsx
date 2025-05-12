@@ -6,7 +6,7 @@ import { ChevronRight } from 'lucide-react';
 
 const OnboardingSidebar = () => {
   return (
-    <div className="flex flex-col h-full w-full px-10">
+    <div className="flex flex-col h-full w-full px-10 bg-white">
       <div className="flex absolute pt-12 items-center gap-2">
         <p>Coffee cup</p>
         <ChevronRight className="size-4" />

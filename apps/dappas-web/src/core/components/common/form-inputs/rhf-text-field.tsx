@@ -1,5 +1,6 @@
 import { Input } from '@workspace/ui/components/input';
 import { Label } from '@workspace/ui/components/label';
+import { cn } from '@workspace/ui/lib/utils';
 import React, { ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -8,6 +9,7 @@ type TextFieldProps = React.ComponentProps<'input'> & {
   label?: string | ReactNode;
   required?: boolean;
   disableErrorLabel?: boolean;
+  labelOrientation?: 'horizontal' | 'vertical';
 };
 
 const RHFTextField = ({
@@ -16,18 +18,30 @@ const RHFTextField = ({
   required,
   type = 'text',
   disableErrorLabel,
+  labelOrientation = 'vertical',
   ...others
 }: TextFieldProps) => {
   const { control } = useFormContext();
   return (
     <Controller
       render={({ field, fieldState: { error } }) => (
-        <div className="flex flex-col">
+        <div
+          className={cn(
+            'flex',
+            labelOrientation === 'vertical'
+              ? 'flex-col gap-2'
+              : 'flex-row gap-10',
+          )}
+        >
           {label ? (
             typeof label === 'string' ? (
               <Label
                 htmlFor={name}
-                className={`${error && 'text-destructive'} font-medium mb-2`}
+                className={cn(
+                  error && 'text-destructive',
+                  'font-medium',
+                  labelOrientation === 'vertical' ? '' : 'w-1/3',
+                )}
               >
                 {label} {required && '*'}
               </Label>
@@ -49,7 +63,9 @@ const RHFTextField = ({
             {...others}
           />
           {error && !disableErrorLabel && (
-            <Label className="text-destructive text-xs mt-1">{error.message}</Label>
+            <Label className="text-destructive text-xs mt-1">
+              {error.message}
+            </Label>
           )}
         </div>
       )}

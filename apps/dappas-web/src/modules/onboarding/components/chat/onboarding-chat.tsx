@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 const OnboardingChat = () => {
   return (
-    <div className="flex flex-col h-full px-20 py-12 justify-between border-r-4">
+    <div className="flex flex-col h-full px-20 py-12 justify-between border-r-4 bg-white">
       <div className="flex items-start gap-6">
         <Image
           src={'/group2.svg'}

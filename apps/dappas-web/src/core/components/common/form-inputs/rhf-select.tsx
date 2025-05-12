@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@workspace/ui/components/select';
+import { cn } from '@workspace/ui/lib/utils';
 import { FunctionComponent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -16,6 +17,8 @@ type FormSelectProps = SelectProps & {
   label?: string;
   required?: boolean;
   placeholder?: string;
+  labelOrientation?: 'horizontal' | 'vertical';
+  className?: string;
 };
 
 export type FormSelectOptions = {
@@ -29,6 +32,8 @@ const RHFSelect: FunctionComponent<FormSelectProps> = ({
   label,
   required,
   placeholder,
+  labelOrientation = 'vertical',
+  className,
   ...rest
 }) => {
   const { control } = useFormContext();
@@ -38,9 +43,19 @@ const RHFSelect: FunctionComponent<FormSelectProps> = ({
       control={control}
       rules={{ required }}
       render={({ field, fieldState: { error } }) => (
-        <div className="flex flex-col gap-2">
+        <div
+          className={cn(
+            'flex',
+            labelOrientation === 'vertical'
+              ? 'flex-col gap-2'
+              : 'flex-row gap-10',
+          )}
+        >
           {label && (
-            <Label htmlFor={name}>
+            <Label
+              htmlFor={name}
+              className={`${labelOrientation === 'vertical' ? '' : 'w-1/3'}`}
+            >
               {typeof label === 'string' ? (
                 <>
                   {label} {required && <span className="text-gray-900">*</span>}
@@ -52,7 +67,7 @@ const RHFSelect: FunctionComponent<FormSelectProps> = ({
           )}
 
           <Select onValueChange={field.onChange} value={field.value} {...rest}>
-            <SelectTrigger>
+            <SelectTrigger className={cn('w-full', className)}>
               <SelectValue placeholder={placeholder || 'Select an option'} />
             </SelectTrigger>
             <SelectContent>
@@ -69,7 +84,9 @@ const RHFSelect: FunctionComponent<FormSelectProps> = ({
             </SelectContent>
           </Select>
 
-          {error && <p className="text-destructive text-sm mt-1">{error.message}</p>}
+          {error && (
+            <p className="text-destructive text-sm mt-1">{error.message}</p>
+          )}
         </div>
       )}
     />

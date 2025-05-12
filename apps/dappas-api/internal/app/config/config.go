@@ -25,6 +25,9 @@ type IAppConfig interface {
 	GetEnvironment() Environment
 	GetShopifySharedSecret() string
 	GetShopifyApiKey() string
+	GetShopifySecret() string
+	GetShopifyShopName() string
+	GetShopifyAccessToken() string
 }
 
 type config struct {
@@ -32,9 +35,20 @@ type config struct {
 
 // GetShopifyApiKey implements IAppConfig.
 func (c *config) GetShopifyApiKey() string {
-	panic("unimplemented")
+	return getEnv("SHOPIFY_API_KEY", "")
 }
-
+// GetShopifyApiKey implements IAppConfig.
+func (c *config) GetShopifyShopName() string {
+	return getEnv("SHOPIFY_SHOP_NAME", "")
+}
+// GetShopifyApiKey implements IAppConfig.
+func (c *config) GetShopifyAccessToken() string {
+	return getEnv("SHOPIFY_SHOP_ACCESS_TOKEN", "")
+}
+// GetShopifyApiKey implements IAppConfig.
+func (c *config) GetShopifySecret() string {
+	return getEnv("SHOPIFY_API_SECRET", "")
+}
 // GetShopifySharedSecret implements IAppConfig.
 func (c *config) GetShopifySharedSecret() string {
 	return getEnv("SHOPIFY_SHARED_SECRET", "")

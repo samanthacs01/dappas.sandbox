@@ -4,6 +4,7 @@ import (
 	"go.uber.org/zap"
 	"selector.dev/dappas/internal/modules/ecommerce/entities"
 	"selector.dev/dappas/internal/modules/ecommerce/repositories/postgres"
+	"selector.dev/dappas/internal/modules/ecommerce/shopify"
 	"selector.dev/database"
 )
 
@@ -15,6 +16,10 @@ type CustomersRepository interface {
 	Delete(customers *entities.Customer) error
 }
 
-func NewCustomersRepository(conn *database.Conn, logger *zap.Logger) CustomersRepository {
-	return postgres.NewPostgresCustomersRepository(conn, logger)
+func NewCustomersRepository(conn *database.Conn, logger *zap.Logger, s shopify.ECommerceCustomerService) CustomersRepository {
+	return postgres.NewPostgresCustomersRepository(conn, logger, s)
+}
+
+type ShopifyCustomersRepository interface {
+	Save(customers *entities.Customer) error
 }

@@ -4,16 +4,18 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"selector.dev/dappas/internal/modules/ecommerce/entities"
+	"selector.dev/dappas/internal/modules/ecommerce/shopify"
 	"selector.dev/database"
 )
 
 type CustomersRepositoryImpl struct {
 	conn   *database.Conn
+	service shopify.ECommerceCustomerService
 	logger *zap.Logger
 }
 
-func NewPostgresCustomersRepository(conn *database.Conn, logger *zap.Logger) *CustomersRepositoryImpl {
-	return &CustomersRepositoryImpl{conn, logger}
+func NewPostgresCustomersRepository(conn *database.Conn, logger *zap.Logger, s shopify.ECommerceCustomerService) *CustomersRepositoryImpl {
+	return &CustomersRepositoryImpl{conn, s, logger}
 }
 
 func (r *CustomersRepositoryImpl) FindPage(page, size int) (*[]entities.Customer, *int64, error) {
@@ -52,6 +54,13 @@ func (r *CustomersRepositoryImpl) FindAll() (*[]entities.Customer, error) {
 
 func (r *CustomersRepositoryImpl) Save(customers *entities.Customer) error {
 	return r.conn.UnitOfWork(func(db *gorm.DB) error {
+		spfId, err := r.service.Save(customers)
+		if err != nil {
+			r.logger.Error("Error saving customer to Shopify", zap.Error(err))
+			return err
+		}
+		customers.ShopifyID = *spfId
+
 		return db.Save(customers).Error
 	})
 }

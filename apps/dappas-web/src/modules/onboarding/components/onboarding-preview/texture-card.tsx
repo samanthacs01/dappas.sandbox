@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import Image from 'next/image';
+import { ImageWithFallback } from '@/core/components/common/image/image-with-fallback';
 
 type TextureCardProps = {
   texture: string;
@@ -19,7 +19,7 @@ const TextureCard: FC<TextureCardProps> = ({
       }`}
       onClick={onSelect}
     >
-      <Image
+      <ImageWithFallback
         src={texture}
         alt={texture}
         fill

@@ -7,8 +7,8 @@ import {
   PerspectiveCamera,
   ContactShadows,
 } from '@react-three/drei';
-import Loader from './loader';
-import Box3DModel from '@/modules/canva/components/3d-view/models/box-3d-model';
+import Loader from '../../../../core/components/common/loader/loader';
+import Box3DModel from '@/core/components/models/box-3d-model';
 
 const ModelViewer: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);

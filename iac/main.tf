@@ -2,10 +2,33 @@
 data "google_project" "project" {
 }
 
+# Data Definition for Forntend env vars
+
 data "google_secret_manager_secret_version" "ai_api_key" {
-  secret  = "google_generative_ai_api_key"
+  secret  = "google_generative_ai_api_key_${terraform.workspace}"
   version = "latest"
 }
+
+data "google_secret_manager_secret_version" "next_public_amplitude_api_key" {
+  secret  = "next_public_amplitude_api_key_${terraform.workspace}"
+  version = "latest"
+}
+
+data "google_secret_manager_secret_version" "shopify_store_domain" {
+  secret  = "shopify_store_domain_${terraform.workspace}"
+  version = "latest"
+}
+
+data "google_secret_manager_secret_version" "shopify_storefront_acces_token" {
+  secret  = "shopify_storefront_acces_token_${terraform.workspace}"
+  version = "latest"
+}
+
+data "google_secret_manager_secret_version" "vercel_project_production_url" {
+  secret  = "vercel_project_production_url_${terraform.workspace}"
+  version = "latest"
+}
+
 
 #Create Load Balancing Frontend
 module "load-balancing-fe" {
@@ -18,9 +41,9 @@ module "load-balancing-fe" {
   #connector             = google_sql_database_instance.db_dappas_instance.connection_name
   connector              = google_vpc_access_connector.priv_sql_dappas.id
   INSTANCE_CONNECTION_NAME = google_sql_database_instance.db_dappas_instance.connection_name
-  image                  = "gcr.io/google-samples/hello-app:1.0"
+  #image                  = "gcr.io/google-samples/hello-app:1.0"
   #image                  = "us-docker.pkg.dev/dappas/dappas/dappas-web-staging:latest"
-  #image                   = "us-docker.pkg.dev/${var.gcp_project}/dappas/${var.dappas_web_name}-${terraform.workspace}:FRONTEND_TAG"
+  image                   = "us-docker.pkg.dev/${var.gcp_project}/dappas/${var.dappas_web_name}-${terraform.workspace}:FRONTEND_TAG"
   allow_unauthenticated  = true
 
   volumes_config = {
@@ -32,5 +55,9 @@ module "load-balancing-fe" {
   env_vars = {
     NEXT_PUBLIC_APP_ENV             = terraform.workspace
     GOOGLE_GENERATIVE_AI_API_KEY    = data.google_secret_manager_secret_version.ai_api_key.secret_data
+    NEXT_PUBLIC_AMPLITUDE_API_KEY   = data.google_secret_manager_secret_version.next_public_amplitude_api_key.secret_data
+    SHOPIFY_STORE_DOMAIN            = data.google_secret_manager_secret_version.shopify_store_domain.secret_data
+    SHOPIFY_STOREFRONT_ACCESS_TOKEN = data.google_secret_manager_secret_version.shopify_storefront_acces_token.secret_data
+    VERCEL_PROJECT_PRODUCTION_URL   = data.google_secret_manager_secret_version.vercel_project_production_url.secret_data
   }
 }

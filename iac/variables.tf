@@ -218,3 +218,4 @@ variable "dappas_web_name" {
   type        = string
   default     = "dappas-web"
 }
+

@@ -30,26 +30,6 @@ module "secret_manager" {
         "${google_project_iam_member.member-role["roles/secretmanager.secretVersionManager"].member}",
         "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
       ]      
-    },
-    "resend-api-key-${terraform.workspace}" = {
-      id        = "resend-api-key-${terraform.workspace}"
-      locations = ["us-east1"]
-      secret_data = var.resend-api-key
-      role       = "roles/secretmanager.secretAccessor"
-      members  = [
-        "${google_project_iam_member.member-role["roles/secretmanager.secretVersionManager"].member}",
-        "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
-      ]      
-    },
-    "admin-passwd-${terraform.workspace}" = {
-      id        = "admin-passwd-${terraform.workspace}"
-      locations = ["us-east1"]
-      secret_data = var.pulse-admin-passwd
-      role       = "roles/secretmanager.secretAccessor"
-      members  = [
-        "${google_project_iam_member.member-role["roles/secretmanager.secretVersionManager"].member}",
-        "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
-      ]      
     }
   }
 }

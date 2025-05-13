@@ -1,7 +1,7 @@
 variable "gcp_project" {
   description = "Google Cloud project ID"
   type        = string
-  default     = "dappas"
+  default     = "dappas-459214"
 }
 
 variable "gcp_region" {
@@ -190,24 +190,6 @@ variable "root_password_secret_id" {
   }
 }
 
-variable "dappas_web_secret" {
-  description = "secret for the frontend"
-  type        = string
-  sensitive   = true
-  default     = "dhwuwefs"
-  }
-
-variable "resend-api-key" {
-  description = "Secret for resend API key"
-  sensitive   = true
-  default = "aiajidf"
-}
-
-variable "pulse-admin-passwd" {
-  description = "Secret for the Pulse Admin Password"
-  sensitive   = true
-  default     = "sdjofweir"
-}
 
 # DNS
 

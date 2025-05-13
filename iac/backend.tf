@@ -2,7 +2,7 @@
 # Create remote bucket manually first
 terraform {
   backend "gcs" {
-    bucket  = "tf-state-dappas-turbo-repo"
+    bucket  = "terraform-state-dappas"
     prefix  = "/enviroments"
   }
 }

@@ -1,29 +1,30 @@
 import React, { FC } from 'react';
-import { ImageWithFallback } from '@/core/components/common/image/image-with-fallback';
+import { TextureBuilder } from '@/core/components/common/texture/texture-builder';
+import { TextureBuilderConfig } from '@/server/3d/texture';
 
 type TextureCardProps = {
-  texture: string;
+  baseConfig: TextureBuilderConfig;
   onSelect: VoidFunction;
   selectedTexture: boolean;
 };
 
 const TextureCard: FC<TextureCardProps> = ({
-  texture,
+  baseConfig,
   onSelect,
   selectedTexture,
 }) => {
   return (
     <div
-      className={`size-24 border-2 rounded-lg cursor-pointer relative ${
-        selectedTexture ? 'border-blue-500' : 'border-gray-300'
+      className={`size-24 border-2 cursor-pointer relative overflow-hidden ${
+        selectedTexture ? 'border-gray-800' : 'border-gray-300'
       }`}
       onClick={onSelect}
     >
-      <ImageWithFallback
-        src={texture}
-        alt={texture}
-        fill
-        className="w-full h-full object-cover absolute rounded-lg"
+      <TextureBuilder
+        config={baseConfig}
+        className="w-full h-full object-cover rounded-lg"
+        canvasId={`canvas-${baseConfig.id}`}
+        fitContainer={true}
       />
     </div>
   );

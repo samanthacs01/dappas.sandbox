@@ -1,29 +1,28 @@
 import React, { FC } from 'react';
 import TextureCard from './texture-card';
+import { TextureBuilderConfig } from '@/server/3d/texture';
 
 type TextureCardListProps = {
   onSelect: (texture: string) => void;
-  selectedTexture: string;
-  textures: string[];
+  activeTexture: string | null;
+  textures: TextureBuilderConfig[];
 };
 
 const TextureCardList: FC<TextureCardListProps> = ({
   onSelect,
-  selectedTexture,
+  activeTexture: selectedTexture,
   textures,
 }) => {
   return (
-    <div>
-      <div className="flex flex-col gap-4 absolute top-[50%] right-4 translate-y-[-50%]">
-        {textures.map((texture, index) => (
-          <TextureCard
-            key={index}
-            texture={texture}
-            onSelect={() => onSelect(texture)}
-            selectedTexture={selectedTexture === texture}
-          />
-        ))}
-      </div>
+    <div className="flex flex-col gap-4 absolute top-[50%] right-4 translate-y-[-50%]">
+      {textures.map((texture, index) => (
+        <TextureCard
+          key={index}
+          baseConfig={texture}
+          onSelect={() => onSelect(texture.id)}
+          selectedTexture={selectedTexture === texture.id}
+        />
+      ))}
     </div>
   );
 };

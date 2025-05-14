@@ -39,6 +39,9 @@ export function CoffeeCupModel({
       texture.flipY = true;
       texture.colorSpace = THREE.SRGBColorSpace;
 
+      texture.rotation = Math.PI;
+      texture.center.set(0.5, 0.5);
+
       if (materials.Material) {
         materials.Material.map = texture;
         materials.Material.needsUpdate = true;

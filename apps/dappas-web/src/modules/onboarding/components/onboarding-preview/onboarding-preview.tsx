@@ -6,8 +6,7 @@ import React, { useState, useEffect } from 'react';
 import TextureCardList from './texture-card-list';
 import { TextureGenerator } from '@/core/components/common/texture/texture-generator';
 import { TextureBuilderConfig } from '@/server/3d/texture';
-import { textureToBlob } from '@/core/components/common/texture/texture-export';
-import { renderLayer } from '@/core/components/common/texture/layer-render';
+import { TextureConverter } from '@/core/components/common/texture/texture-converter';
 
 const DEFAULT_JSON_CONFIG = `{
   "width": 512,
@@ -29,8 +28,8 @@ const DEFAULT_JSON_CONFIG = `{
     },
     {
       "type": "image",
-      "url": "/images/products/coffee-cup.png",
-      "width": 120,
+      "url": "/logo.svg",
+      "width": 80,
       "height": 120,
       "position": "center",
       "zIndex": 2
@@ -61,7 +60,7 @@ const OnboardingPreview = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (const layer of config.layers) {
-      await renderLayer(ctx, layer);
+      await TextureGenerator.renderLayer(ctx, layer);
     }
 
     return canvas.toDataURL('image/png');
@@ -76,7 +75,7 @@ const OnboardingPreview = () => {
           TextureGenerator.generateVariants(DEFAULT_JSON_CONFIG);
         setVariantTextures(variantConfigs);
 
-        const defaultConfig = TextureGenerator.fromJSON(DEFAULT_JSON_CONFIG);
+        const defaultConfig = TextureConverter.fromJSON(DEFAULT_JSON_CONFIG);
         const defaultTextureUrl =
           await generateTextureFromConfig(defaultConfig);
         setSelectedTexture(defaultTextureUrl);
@@ -99,8 +98,8 @@ const OnboardingPreview = () => {
         throw new Error('Canvas missing');
       }
 
-      const blob = await textureToBlob(canvas, 'png', 0.9);
-      const url = URL.createObjectURL(blob);
+      const url = await TextureGenerator.textureToUrl(canvas, 'png');
+
       setActiveTexture(textureId === activeTexture ? null : textureId);
 
       setSelectedTexture(url);

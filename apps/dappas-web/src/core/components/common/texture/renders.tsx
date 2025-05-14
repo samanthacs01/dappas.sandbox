@@ -12,7 +12,7 @@ const loadImage = (src: string): Promise<HTMLImageElement> => {
 };
 
 // Render a background layer
-const renderBackgroundLayer = (
+export const renderBackgroundLayer = (
   ctx: CanvasRenderingContext2D,
   layer: Layer & { type: 'background'; color: string },
 ) => {
@@ -26,7 +26,7 @@ const renderBackgroundLayer = (
 };
 
 // Render a pattern layer
-const renderPatternLayer = async (
+export const renderPatternLayer = async (
   ctx: CanvasRenderingContext2D,
   layer: Layer & {
     type: 'pattern';
@@ -62,7 +62,7 @@ const renderPatternLayer = async (
       const scaledPattern = ctx.createPattern(patternCanvas, repeat);
       if (scaledPattern) {
         ctx.fillStyle = scaledPattern;
-      }
+      }// Establecer el punto de rotación en el centro
     } else {
       ctx.fillStyle = pattern;
     }
@@ -75,7 +75,7 @@ const renderPatternLayer = async (
 };
 
 // Render an image layer
-const renderImageLayer = async (
+export const renderImageLayer = async (
   ctx: CanvasRenderingContext2D,
   layer: Layer & {
     type: 'image';
@@ -122,7 +122,7 @@ const renderImageLayer = async (
 };
 
 // Render a text layer
-const renderTextLayer = (
+export const renderTextLayer = (
   ctx: CanvasRenderingContext2D,
   layer: Layer & {
     type: 'text';
@@ -171,7 +171,7 @@ const renderTextLayer = (
 };
 
 // Render a gradient layer
-const renderGradientLayer = (
+export const renderGradientLayer = (
   ctx: CanvasRenderingContext2D,
   layer: Layer & {
     type: 'gradient';
@@ -229,92 +229,4 @@ const renderGradientLayer = (
   ctx.fillStyle = gradient;
   ctx.fillRect(x, y, width, height);
   ctx.restore();
-};
-
-// Helper function to calculate position based on named position
-const calculatePosition = (
-  position: string,
-  layerWidth: number,
-  layerHeight: number,
-  canvasWidth: number,
-  canvasHeight: number,
-): { x: number; y: number } => {
-  switch (position) {
-    case 'center':
-      return {
-        x: (canvasWidth - layerWidth) / 2,
-        y: (canvasHeight - layerHeight) / 2,
-      };
-    case 'top-left':
-      return { x: 0, y: 0 };
-    case 'top-right':
-      return { x: canvasWidth - layerWidth, y: 0 };
-    case 'bottom-left':
-      return { x: 0, y: canvasHeight - layerHeight };
-    case 'bottom-right':
-      return { x: canvasWidth - layerWidth, y: canvasHeight - layerHeight };
-    default:
-      // Default to top-left if position is unknown
-      console.warn(`Unknown position: ${position}. Defaulting to top-left.`);
-      return { x: 0, y: 0 };
-  }
-};
-
-// Render a layer, recalculating positions if needed
-export const renderLayer = async (
-  ctx: CanvasRenderingContext2D,
-  layer: Layer,
-) => {
-  if (!layer.visible) return;
-
-  // Recalculate position if a named position is provided
-  if (layer.position) {
-    const { x, y } = calculatePosition(
-      layer.position,
-      layer.width,
-      layer.height,
-      ctx.canvas.width,
-      ctx.canvas.height,
-    );
-
-    // Only update if the position has changed
-    if (x !== layer.x || y !== layer.y) {
-      layer = { ...layer, x, y };
-    }
-  }
-
-  switch (layer.type) {
-    case 'background':
-      renderBackgroundLayer(
-        ctx,
-        layer as Layer & { type: 'background'; color: string },
-      );
-      break;
-    case 'pattern':
-      await renderPatternLayer(
-        ctx,
-        layer as Layer & { type: 'pattern'; color: string },
-      );
-      break;
-    case 'image':
-      await renderImageLayer(
-        ctx,
-        layer as Layer & { type: 'image'; src: string },
-      );
-      break;
-    case 'text':
-      renderTextLayer(ctx, layer as Layer & { type: 'text'; text: string });
-      break;
-    case 'gradient':
-      renderGradientLayer(
-        ctx,
-        layer as Layer & {
-          type: 'gradient';
-          colors: Array<{ offset: number; color: string }>;
-        },
-      );
-      break;
-    default:
-      console.warn(`Unknown layer type: ${(layer as Layer).type}`);
-  }
 };

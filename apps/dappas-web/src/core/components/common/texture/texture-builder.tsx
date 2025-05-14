@@ -2,14 +2,14 @@
 
 import { TextureBuilderConfig } from '@/server/3d/texture';
 import { useRef, useEffect, useState } from 'react';
-import { renderLayer } from './layer-render';
+import { TextureGenerator } from './texture-generator';
 
 interface TextureBuilderProps {
   config: TextureBuilderConfig;
   onTextureGenerated?: (dataUrl: string) => void;
   className?: string;
   canvasId?: string;
-  fitContainer?: boolean; // Nueva propiedad para ajustar el canvas al contenedor
+  fitContainer?: boolean;
 }
 
 export const TextureBuilder = ({
@@ -17,7 +17,7 @@ export const TextureBuilder = ({
   onTextureGenerated,
   className = '',
   canvasId,
-  fitContainer = false, // Por defecto es false para mantener compatibilidad
+  fitContainer = false,
 }: TextureBuilderProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,7 +43,7 @@ export const TextureBuilder = ({
 
       // Render each layer in order
       for (const layer of config.layers) {
-        await renderLayer(ctx, layer);
+        await TextureGenerator.renderLayer(ctx, layer);
       }
 
       // Generate the final texture as data URL

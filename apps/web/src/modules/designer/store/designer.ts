@@ -7,7 +7,6 @@ const initialBrand = {
   website: '',
   location: '',
   colors: [],
-  logo: '',
 };
 
 export const useDesignerStore = create<DesignerStoreType>((set) => ({

@@ -9,12 +9,12 @@ export const enum OnBoardingSteps {
     
 
 export type BrandInfo ={
-    name: string;
-    industry: string;
-    website: string;
-    location: string;
-    colors: string[];
-    logo: string;
+    name?: string;
+    industry?: string;
+    website?: string;
+    location?: string;
+    colors?: string[];
+    logo?: File;
 }
 
 export type DesignerStoreType = {

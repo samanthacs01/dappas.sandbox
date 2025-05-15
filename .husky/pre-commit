@@ -1,1 +1,1 @@
-turbo run lint typecheck test
+turbo run lint typecheck test build

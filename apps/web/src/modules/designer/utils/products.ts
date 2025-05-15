@@ -1,7 +1,8 @@
-import { PrintableProduct } from "../types/printable-product"
+import { PrintableProduct } from "../types/printable-product";
 
 // mocked impressible product service
 export const getProductById = (id: string): PrintableProduct => {
+    console.log('getProductById', id);
     return {
         id: 'coffee-cup',
         printableTemplateSrc: '/images/products/coffee-cup.pdf',

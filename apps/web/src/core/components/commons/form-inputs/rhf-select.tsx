@@ -43,49 +43,61 @@ const RHFSelect: FunctionComponent<FormSelectProps> = ({
       control={control}
       rules={{ required }}
       render={({ field, fieldState: { error } }) => (
-        <div
-          className={cn(
-            'flex',
-            labelOrientation === 'vertical'
-              ? 'flex-col gap-2'
-              : 'flex-row gap-10',
-          )}
-        >
-          {label && (
-            <Label
-              htmlFor={name}
-              className={`${labelOrientation === 'vertical' ? '' : 'w-1/3'}`}
+        <div className="flex flex-col">
+          <div
+            className={cn(
+              'flex',
+              labelOrientation === 'vertical'
+                ? 'flex-col gap-2'
+                : 'flex-row gap-10',
+            )}
+          >
+            {label && (
+              <Label
+                htmlFor={name}
+                className={cn(
+                  error && 'text-destructive',
+                  'font-medium',
+                  labelOrientation === 'vertical' ? '' : 'w-1/3',
+                )}
+              >
+                {typeof label === 'string' ? (
+                  <>
+                    {label}{' '}
+                    {required && <span className="text-gray-900">*</span>}
+                  </>
+                ) : (
+                  label
+                )}
+              </Label>
+            )}
+
+            <Select
+              onValueChange={field.onChange}
+              value={field.value}
+              {...rest}
             >
-              {typeof label === 'string' ? (
-                <>
-                  {label} {required && <span className="text-gray-900">*</span>}
-                </>
-              ) : (
-                label
-              )}
-            </Label>
-          )}
-
-          <Select onValueChange={field.onChange} value={field.value} {...rest}>
-            <SelectTrigger className={cn('w-full', className)}>
-              <SelectValue placeholder={placeholder || 'Select an option'} />
-            </SelectTrigger>
-            <SelectContent>
-              {options.length === 0 && (
-                <span className="p-2 text-center flex justify-center">
-                  No options found.
-                </span>
-              )}
-              {options.map(({ value, label }) => (
-                <SelectItem key={`item-${value}`} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
+              <SelectTrigger className={cn('w-full', className)}>
+                <SelectValue placeholder={placeholder || 'Select an option'} />
+              </SelectTrigger>
+              <SelectContent>
+                {options.length === 0 && (
+                  <span className="p-2 text-center flex justify-center">
+                    No options found.
+                  </span>
+                )}
+                {options.map(({ value, label }) => (
+                  <SelectItem key={`item-${value}`} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           {error && (
-            <p className="text-destructive text-sm mt-1">{error.message}</p>
+            <Label className="text-destructive text-xs mt-1 w-full flex justify-end">
+              {error.message}
+            </Label>
           )}
         </div>
       )}

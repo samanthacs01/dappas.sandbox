@@ -28,6 +28,9 @@ const RHFUploadLogo: FunctionComponent<UploadProps> = ({
             accept={{ 'image/*': ['.png', '.jpg', '.jpeg', '.svg'] }}
             error={!!error}
             helperText={error?.message}
+            onDrop={(acceptedFiles) => {
+              field.onChange(acceptedFiles[0]);
+            }}
             description="Upload an svg-file or a transparent png of at least 2000x2000 px"
             {...rest}
           />

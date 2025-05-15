@@ -1,6 +1,6 @@
 'use client';
 
-import ImageWithFallback from '@/core/commons/image-with-fallback';
+import ImageWithFallback from '@/core/components/commons/image-with-fallback';
 import { ChevronRight } from 'lucide-react';
 
 const OnboardingSidebar = () => {

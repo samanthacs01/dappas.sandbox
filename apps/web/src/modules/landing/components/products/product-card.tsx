@@ -1,4 +1,4 @@
-import Image from '@/core/commons/image-with-fallback';
+import Image from '@/core/components/commons/image-with-fallback';
 import { AmplitudeContext } from '@/core/providers/amplitude';
 import { Product } from '@/server/shopify/types';
 import { Button } from '@workspace/ui/components/button';

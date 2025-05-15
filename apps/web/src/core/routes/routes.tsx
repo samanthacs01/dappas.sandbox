@@ -2,6 +2,7 @@ import { getProducts } from '@/server/shopify';
 import { createBrowserRouter } from 'react-router';
 import BaseLayout from '../layout/base-layout';
 import {
+  DesignerContainer,
   LandingContainer,
   OnboardingChatContainer,
   WelcomeChatContainer,
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       {
         path: 'onboarding',
         Component: OnboardingChatContainer,
+      },
+      {
+        path: 'designer',
+        Component: DesignerContainer,
       },
     ],
   },

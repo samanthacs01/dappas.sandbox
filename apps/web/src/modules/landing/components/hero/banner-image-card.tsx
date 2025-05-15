@@ -1,4 +1,4 @@
-import Image from '@/core/commons/image-with-fallback';
+import Image from '@/core/components/commons/image-with-fallback';
 import { FC } from 'react';
 
 type BannerImageCardProps = {

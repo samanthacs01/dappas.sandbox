@@ -1,25 +1,27 @@
 'use client';
 
-import ImageWithFallback from '@/core/components/commons/image-with-fallback';
+import ChatAssistantIcon from '@/core/components/commons/icons/chat-assistant';
 import { Button } from '@workspace/ui/components/button';
 import { Textarea } from '@workspace/ui/components/textarea';
 import { ArrowUp } from 'lucide-react';
-import { Link } from 'react-router';
 
-const OnboardingChat = () => {
+type OnBoardingWelcomeProps = {
+  onChangeToManualStep: () => void;
+  activeProduct: string;
+};
+
+const OnBoardingWelcome: React.FC<OnBoardingWelcomeProps> = ({
+  activeProduct,
+  onChangeToManualStep,
+}) => {
   return (
-    <div className="flex flex-col h-full px-10 md:px-20 py-12 justify-between bg-white">
+    <div className="flex flex-col h-full justify-between">
       <div className="flex items-start gap-6">
-        <ImageWithFallback
-          src={'/assistant-logo.svg'}
-          alt="Assistant icon"
-          width={16}
-          height={16}
-          className="mt-1"
-        />
+        <ChatAssistantIcon width={16} height={16} />
         <div className="text-sm">
-          Let’s create a coffee cup with your brand on it. First I’ll need to
-          know some details about your company. <br />
+          Let’s create a <span className="font-bold">{activeProduct}</span> with
+          your brand on it. First I’ll need to know some details about your
+          company. <br />
           <br />
           If you give me your website, I can collect the information for you to
           validate.
@@ -47,12 +49,16 @@ const OnboardingChat = () => {
             <span className="sr-only">Send</span>
           </Button>
         </div>
-        <Link to={'/welcome'} className="underline text-center">
+        <Button
+          variant="ghost"
+          className="underline text-center"
+          onClick={onChangeToManualStep}
+        >
           Enter information manually
-        </Link>
+        </Button>
       </form>
     </div>
   );
 };
 
-export default OnboardingChat;
+export default OnBoardingWelcome;

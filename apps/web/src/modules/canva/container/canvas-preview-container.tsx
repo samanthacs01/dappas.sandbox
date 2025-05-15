@@ -1,6 +1,6 @@
-import { dotPattern } from '@/core/commons/patterns/dot-pattern';
-import CanvasPreviewEditorPanel from '../components/canvas-preview/canvas-preview-edittor-panel';
+import { dotPattern } from '@/core/components/commons/patterns/dot-pattern';
 import CanvasPreviewAdjustmentsPanel from '../components/canvas-preview/canvas-preview-adjustament-panel';
+import CanvasPreviewEditorPanel from '../components/canvas-preview/canvas-preview-edittor-panel';
 import CanvasPreviewModelView from '../components/canvas-preview/canvas-preview-model-view';
 
 const CanvasPreviewContainer = () => {

@@ -47,12 +47,12 @@ jobs:
           elif [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             REF_NAME="${GITHUB_REF_NAME}"
             echo "Tag name: $REF_NAME"
-            if [[ "$REF_NAME" =~ v ]]; then
-                echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-                echo "environment=prod" >> $GITHUB_OUTPUT
-            elif [[ "$REF_NAME" =~ rc-v ]]; then
+            if [[ "$REF_NAME" =~ ^rc-v[0-9.]+$ ]]; then
                 echo "ENVIRONMENT=staging" >> $GITHUB_ENV
                 echo "environment=staging" >> $GITHUB_OUTPUT
+            elif [[ "$REF_NAME" =~ ^v[0-9.]+$ ]]; then
+                echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+                echo "environment=prod" >> $GITHUB_OUTPUT
             else
                 echo "❌ Tag name does not match expected pattern"
                 exit 1

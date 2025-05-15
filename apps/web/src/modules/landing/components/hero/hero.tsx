@@ -1,4 +1,10 @@
 import { AmplitudeContext } from '@/core/providers/amplitude';
+import { getFileFromUrl } from '@/modules/canvas/utils/file';
+import {
+  downloadPdfBlob,
+  insertImageIntoPdf,
+} from '@/modules/canvas/utils/pdf';
+import { mmToPt } from '@/modules/canvas/utils/units';
 import { Button } from '@workspace/ui/components/button';
 import { use } from 'react';
 import { Link } from 'react-router';
@@ -6,6 +12,20 @@ import BannerImageCard from './banner-image-card';
 
 const LandingHero = () => {
   const { track } = use(AmplitudeContext);
+
+  const modifyAndDownloadPDF = async () => {
+    const image = await getFileFromUrl('/images/products/test.png');
+    const pdf = await getFileFromUrl(
+      '/products/paper-cup/12oz-single-wall-cup.pdf',
+    );
+    const modifiedPdf = await insertImageIntoPdf(pdf, image, {
+      width: mmToPt(192.5),
+      height: mmToPt(128.5),
+      x: 29,
+      y: 119,
+    });
+    await downloadPdfBlob(modifiedPdf, 'modifiedPdf.pdf');
+  };
   return (
     <div className="bg-white w-full py-18 px-20 relative h-[650px] flex items-center justify-center">
       <div className="hidden md:flex justify-between items-center w-full max-w-[70%] top-[12%] absolute opacity-30 lg:opacity-100 transition-all duration-500">
@@ -49,6 +69,13 @@ const LandingHero = () => {
               Start creating for free
             </Button>
           </Link>
+          <Button
+            variant={'default'}
+            className="px-20 py-2.5 h-12 rounded-none"
+            onClick={modifyAndDownloadPDF}
+          >
+            Modify PDF
+          </Button>
           <p className="text-sm leading-[120%] tracking-[-4%] text-gray-500">
             Start for free, no account needed
           </p>

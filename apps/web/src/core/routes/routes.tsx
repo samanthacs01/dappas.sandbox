@@ -1,9 +1,11 @@
-import OnboardingChatContainer from '@/modules/chat/onboarding-chat/containers/onboarding';
-import WelcomeChatContainer from '@/modules/chat/welcome/containers/welcome-chat-container';
-import LandingContainer from '@/modules/landing/containers/landing-container';
 import { getProducts } from '@/server/shopify';
 import { createBrowserRouter } from 'react-router';
 import BaseLayout from '../layout/base-layout';
+import {
+  LandingContainer,
+  OnboardingChatContainer,
+  WelcomeChatContainer,
+} from './exports';
 
 export const router = createBrowserRouter([
   {

@@ -5,7 +5,7 @@ export const getProductById = (id: string): PrintableProduct => {
     console.log('getProductById', id);
     return {
         id: 'coffee-cup',
-        printableTemplateSrc: '/images/products/coffee-cup.pdf',
+        printableTemplateSrc: '/products/paper-cup/12oz-single-wall-cup.pdf',
         printableArea: {
             x: 29,
             y: 119,

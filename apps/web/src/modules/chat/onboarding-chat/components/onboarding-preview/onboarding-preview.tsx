@@ -88,19 +88,14 @@ const OnboardingPreview = () => {
     initializeTextures();
   }, []);
 
-  const handleTextureChange = async (textureId: string) => {
+  const handleTextureChange = async (config: TextureBuilderConfig) => {
     try {
-      const canvas = document.querySelector(`#canvas-${textureId}`);
-
-      if (!(canvas instanceof HTMLCanvasElement)) {
-        throw new Error('Canvas missing');
-      }
-
-      const url = await TextureGenerator.textureToUrl(canvas, 'png');
-
-      setActiveTexture(textureId === activeTexture ? null : textureId);
+      const url = await generateTextureFromConfig(
+        config as TextureBuilderConfig,
+      );
 
       setSelectedTexture(url);
+      setActiveTexture(config.id);
     } catch (error) {
       console.error('Error changing texture:', error);
     }

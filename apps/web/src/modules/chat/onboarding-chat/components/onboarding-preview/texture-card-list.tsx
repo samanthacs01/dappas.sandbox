@@ -1,9 +1,9 @@
+import { TextureBuilderConfig } from '@/server/models/texture';
 import { FC } from 'react';
 import TextureCard from './texture-card';
-import { TextureBuilderConfig } from '@/server/models/texture';
 
 type TextureCardListProps = {
-  onSelect: (texture: string) => void;
+  onSelect: (texture: TextureBuilderConfig) => void;
   activeTexture: string | null;
   textures: TextureBuilderConfig[];
 };
@@ -19,7 +19,7 @@ const TextureCardList: FC<TextureCardListProps> = ({
         <TextureCard
           key={index}
           baseConfig={texture}
-          onSelect={() => onSelect(texture.id)}
+          onSelect={() => onSelect(texture)}
           selectedTexture={selectedTexture === texture.id}
         />
       ))}

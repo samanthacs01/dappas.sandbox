@@ -13,10 +13,7 @@ type Props = {
   onGenerateDesign?: () => void;
 };
 
-const ManualAttachmentForm: React.FC<Props> = ({
-  onSuccess,
-  onGenerateDesign,
-}) => {
+const ManualAttachmentForm: React.FC<Props> = ({ onSuccess, onGenerateDesign }) => {
   const brand = useDesignerStore((state) => state.brand);
   const setBrand = useDesignerStore((state) => state.setBrand);
   const methods = useForm<ColorsLogoType>({
@@ -83,14 +80,18 @@ const ManualAttachmentForm: React.FC<Props> = ({
         </div>
         {(brand.colors ?? []).length > 0 ? (
           <Button
-            type="button"
+            type="submit"
             className="rounded-none font-light"
             onClick={onGenerateDesign}
           >
             Generate Designs <ChevronRight />
           </Button>
         ) : (
-          <Button type="submit" className="rounded-none font-light">
+          <Button
+            type="submit"
+            className="rounded-none font-light"
+
+          >
             Continue <ChevronRight />
           </Button>
         )}

@@ -1,37 +1,63 @@
-import { CoffeeCupModel } from '@/core/components/3d-designer/models/coffe-cup-model';
 import MainScene from '@/core/components/3d-designer/scene/main-scene';
-import { TextureConverter } from '@/core/components/3d-designer/texture/texture-converter';
 import { TextureGenerator } from '@/core/components/3d-designer/texture/texture-generator';
+import { downloadPdfBlob } from '@/core/lib/pdf';
+import { mmToPx } from '@/core/lib/units';
 import TextureCardList from '@/modules/chat/onboarding-chat/components/onboarding-preview/texture-card-list';
-import { TextureBuilderConfig } from '@/server/models/texture';
-import { useEffect, useState } from 'react';
+import { AITextureConfig, TextureBuilderConfig } from '@/server/models/texture';
+import { Button } from '@workspace/ui/components/button';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import usePrintableProduct from '../../hooks/use-printable-product';
 import { useDesignerStore } from '../../store/designer';
-import { modelDictionary } from './models-dictionaary';
+import { PrintableProduct } from '../../types/printable-product';
+import { modelDictionary } from './models-dictionary';
 
-const DesignerPreview = () => {
+type Props = {
+  product: PrintableProduct;
+};
+
+const DesignerPreview: React.FC<Props> = ({ product }) => {
   const [variantTextures, setVariantTextures] = useState<
     TextureBuilderConfig[]
   >([]);
   const [selectedTexture, setSelectedTexture] = useState<string>('');
   const [activeTexture, setActiveTexture] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const product = useDesignerStore((state) => state.activeProduct);
-  const brand = useDesignerStore((state) => state.brand);
-  const [canRender, setCanRender] = useState(false);
 
-  const DEFAULT_JSON_CONFIG = `{
-    "width": ${product?.printableArea.width ?? 1000},
-    "height": ${product?.printableArea.height ?? 1000},
-    "layers": [
-      {
-        "type": "background",
-        "color": "#fff",
-        "height": ${product?.printableArea.height ?? 1000},
-        "position": "top",
-        "zIndex": 0
-      }
-    ]
-  }`;
+  const { getPrintableProductPdf } = usePrintableProduct();
+
+  const isOnboardingReady = useDesignerStore(
+    (state) => state.isOnBoardingReady,
+  );
+
+  const brand = useDesignerStore((state) => state.brand);
+
+  const DEFAULT_JSON_CONFIG: AITextureConfig = useMemo(() => {
+    const width = mmToPx(product?.printableArea.width);
+    const height = mmToPx(product?.printableArea.height);
+    return {
+      id: 'default',
+      width,
+      height,
+      layers: [
+        {
+          type: 'background',
+          color: '#fff',
+          width,
+          height,
+          position: 'center',
+          zIndex: 0,
+          visible: true,
+        },
+      ],
+    };
+  }, [product?.printableArea]);
+
+  const downloadPrintablePdf = async () => {
+    if (product && selectedTexture) {
+      const pdf = await getPrintableProductPdf(product, selectedTexture);
+      await downloadPdfBlob(pdf, `${product.id}.pdf`);
+    }
+  };
 
   const generateTextureFromConfig = async (
     config: TextureBuilderConfig,
@@ -42,70 +68,71 @@ const DesignerPreview = () => {
 
     const ctx = canvas.getContext('2d');
     if (!ctx) {
-      throw new Error('No se pudo obtener el contexto del canvas');
+      throw new Error('Failed to get canvas context');
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     for (const layer of config.layers) {
       await TextureGenerator.renderLayer(ctx, layer);
     }
 
     return canvas.toDataURL('image/png');
   };
-  const textureToUse = canRender ? selectedTexture : DEFAULT_JSON_CONFIG;
 
-  const renderModel = () => {
-    if (!product) return <CoffeeCupModel textureUrl={textureToUse} />;
+  const renderModel = useCallback(() => {
+    if (!product) return null;
 
-    return modelDictionary[product?.model.name as 'CoffeeCupModel']({
-      texture: textureToUse,
+    return modelDictionary[product?.model.name]({
+      texture: selectedTexture,
     });
-  };
+  }, [product, selectedTexture]);
 
   useEffect(() => {
     const initializeTextures = async () => {
       try {
         setIsLoading(true);
+        if (!isOnboardingReady || !brand.colors || !brand.logo) {
+          const defaultTextureUrl = await generateTextureFromConfig(
+            DEFAULT_JSON_CONFIG as TextureBuilderConfig,
+          );
+          setSelectedTexture(defaultTextureUrl);
+          setIsLoading(false);
+          return;
+        }
 
-        const variantConfigs =
-          TextureGenerator.generateVariants(DEFAULT_JSON_CONFIG);
+        const variantConfigs = await TextureGenerator.generateVariantsByParams(
+          DEFAULT_JSON_CONFIG,
+          brand.colors ?? [],
+          brand.logo ? [URL.createObjectURL(brand.logo)] : [],
+          3,
+        );
         setVariantTextures(variantConfigs);
 
-        const defaultConfig = TextureConverter.fromJSON(DEFAULT_JSON_CONFIG);
-        const defaultTextureUrl =
-          await generateTextureFromConfig(defaultConfig);
+        const defaultTextureUrl = await generateTextureFromConfig(
+          variantConfigs[0] as TextureBuilderConfig,
+        );
+
+        setActiveTexture(variantConfigs[0].id);
         setSelectedTexture(defaultTextureUrl);
 
         setIsLoading(false);
       } catch (error) {
-        console.error('Error al inicializar texturas:', error);
+        console.error('Error initializing the texture', error);
         setIsLoading(false);
       }
     };
 
     initializeTextures();
-  }, [canRender, DEFAULT_JSON_CONFIG]);
+  }, [isOnboardingReady, DEFAULT_JSON_CONFIG, brand.colors, brand.logo]);
 
-  useEffect(() => {
-    const canRenderVariants =
-      (brand.colors ?? []).length > 0 || !!brand.logo || brand.logo !== '';
-    setCanRender(canRenderVariants);
-  }, [brand]);
-
-  const handleTextureChange = async (textureId: string) => {
+  const handleTextureChange = async (config: TextureBuilderConfig) => {
     try {
-      const canvas = document.querySelector(`#canvas-${textureId}`);
-
-      if (!(canvas instanceof HTMLCanvasElement)) {
-        throw new Error('Canvas missing');
-      }
-
-      const url = await TextureGenerator.textureToUrl(canvas, 'png', 1);
-
-      setActiveTexture(textureId === activeTexture ? null : textureId);
+      const url = await generateTextureFromConfig(
+        config as TextureBuilderConfig,
+      );
 
       setSelectedTexture(url);
+      setActiveTexture(config.id);
     } catch (error) {
       console.error('Error changing texture:', error);
     }
@@ -120,9 +147,21 @@ const DesignerPreview = () => {
   }
 
   return (
-    <div className="w-full bg-white relative">
+    <div className="w-full bg-white relative max-h-[calc(100vh_-_64px)]">
+      {activeTexture && isOnboardingReady && (
+        <div className="absolute bottom-5 transform  left-1/2  -translate-x-1/2 -translate-y-1/2 bg-white z-20">
+          <Button
+            variant="default"
+            className="cursor-pointer"
+            onClick={downloadPrintablePdf}
+          >
+            <span className="text-sm">Download Printable PDF</span>
+          </Button>
+        </div>
+      )}
       <MainScene>{renderModel()}</MainScene>
-      {canRender && (
+
+      {isOnboardingReady && (
         <TextureCardList
           textures={variantTextures}
           onSelect={handleTextureChange}

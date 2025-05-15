@@ -1,4 +1,7 @@
+import { ColorUtils } from '@/core/lib/color';
+import { MathUtils } from '@/core/lib/math';
 import { calculatePosition } from '@/core/lib/texture';
+import { generateId } from '@/core/lib/utils';
 import {
   AIBackgroundLayer,
   AIGradientLayer,
@@ -17,8 +20,6 @@ import {
   renderTextLayer,
 } from './renders';
 import { TextureConverter } from './texture-converter';
-import { ColorUtils } from '@/core/lib/color';
-import { MathUtils } from '@/core/lib/math';
 
 /**
  * TextureGenerator Class
@@ -61,6 +62,160 @@ export class TextureGenerator {
     return variants;
   }
 
+  /**
+   * Generates three random variants of a texture configuration
+   * with emphasis on color changes
+   * @param jsonConfig JSON with the base texture configuration
+   * @param colors Array of colors to use in the variant
+   * @param images Array of images to use in the variant
+   * @param numberVariants Number of variants to generate
+   * @returns Array with three variant texture configurations
+   */
+  public static async generateVariantsByParams(
+    jsonConfig: AITextureConfig | string,
+    colors: string[],
+    images: string[],
+    numberVariants?: number,
+  ): Promise<TextureBuilderConfig[]> {
+    const variantsQuantity = numberVariants ? numberVariants : 3;
+    // If a string is received, try to parse it as JSON
+    const baseConfig: AITextureConfig =
+      typeof jsonConfig === 'string' ? JSON.parse(jsonConfig) : jsonConfig;
+
+    // Validate the base configuration
+    this.textureConverter.validateConfig(baseConfig);
+
+    // Create three random variants
+    const variants: TextureBuilderConfig[] = [];
+
+    for (let i = 0; i < variantsQuantity; i++) {
+      // Create a random variant with emphasis on color
+      const variant = await this.createRandomVariantByParams(
+        baseConfig,
+        colors,
+        images,
+      );
+      variants.push(this.textureConverter.fromJSON(variant));
+    }
+
+    return variants;
+  }
+
+  /**
+   * Creates a random variant with emphasis on color changes
+   * @param baseConfig Base configuration
+   * @returns Configuration with random variations
+   */
+  private static async createRandomVariantByParams(
+    baseConfig: AITextureConfig,
+    colors: string[],
+    images: string[],
+  ): Promise<AITextureConfig> {
+    const variant: AITextureConfig = {
+      id: generateId(),
+      width: baseConfig.width,
+      height: baseConfig.height,
+      layers: [],
+    };
+
+    // Generate background layers
+    // Pick one or two colors from the provided colors
+    // Pick 1 or 2 random colors from the array (not just the first ones)
+    let backgroundColors: string[] = [];
+    if (colors && colors.length > 0) {
+      const count = Math.random() < 0.7 ? 2 : 1; // 70% chance to select 2, 30% chance to select 1
+      const shuffled = [...colors].sort(() => Math.random() - 0.5);
+      backgroundColors = shuffled.slice(0, Math.min(count, shuffled.length));
+    } else {
+      backgroundColors = [this.colorManagement.getRandomColor('#ffffff')];
+    }
+    if (backgroundColors.length === 1) {
+      // Single color: full background
+      const backgroundLayer: AIBackgroundLayer = {
+        type: 'background',
+        color: backgroundColors[0],
+        width: baseConfig.width,
+        height: baseConfig.height,
+        position: 'top',
+        zIndex: 1,
+      };
+      variant.layers.push(backgroundLayer);
+    } else if (backgroundColors.length === 2) {
+      // Two colors: split top and bottom
+      const halfHeight = baseConfig.height / 2;
+      const topLayer: AIBackgroundLayer = {
+        type: 'background',
+        color: backgroundColors[0],
+        width: baseConfig.width,
+        height: halfHeight,
+        position: 'top',
+        zIndex: 1,
+      };
+      const bottomLayer: AIBackgroundLayer = {
+        type: 'background',
+        color: backgroundColors[1],
+        width: baseConfig.width,
+        height: halfHeight,
+        position: 'bottom',
+        zIndex: 1,
+      };
+      variant.layers.push(topLayer, bottomLayer);
+    }
+
+    // Generate image layers one per images
+    if (images && images.length > 0) {
+      const imageLayerPromises = images.map(
+        (imageSrc) =>
+          new Promise<AIImageLayer>((resolve) => {
+            const img = new window.Image();
+            img.src = imageSrc;
+
+            // Default target width and height
+            const targetWidth = baseConfig.width / 3;
+            const targetHeight = baseConfig.height / 3;
+
+            img.onload = () => {
+              // Calculate the aspect ratio
+              const aspectRatio = img.naturalWidth / img.naturalHeight;
+              let width = targetWidth;
+              let height = targetHeight;
+              if (aspectRatio > 1) {
+                width = targetWidth;
+                height = targetWidth / aspectRatio;
+              } else {
+                height = targetHeight;
+                width = targetHeight * aspectRatio;
+              }
+              const imageLayer: AIImageLayer = {
+                type: 'image',
+                url: imageSrc,
+                width,
+                height,
+                position: 'center',
+                zIndex: 1,
+              };
+              resolve(imageLayer);
+            };
+            img.onerror = () => {
+              // fallback if image fails to load
+              resolve({
+                type: 'image',
+                url: imageSrc,
+                width: targetWidth,
+                height: targetHeight,
+                position: 'center',
+                zIndex: 1,
+              });
+            };
+          }),
+      );
+      // Wait for all images to load and push layers
+      const imageLayers = await Promise.all(imageLayerPromises);
+      variant.layers.push(...imageLayers);
+    }
+
+    return variant;
+  }
   /**
    * Creates a random variant with emphasis on color changes
    * @param baseConfig Base configuration
@@ -284,6 +439,7 @@ export class TextureGenerator {
         layer = { ...layer, x, y };
       }
     }
+
     switch (layer.type) {
       case 'background':
         renderBackgroundLayer(

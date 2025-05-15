@@ -21,8 +21,10 @@ export type DesignerStoreType = {
     brand: BrandInfo;
     onBoardingStep: OnBoardingSteps;
     activeProduct: PrintableProduct | null;
+    isOnBoardingReady: boolean;
     setBrand: (brand: BrandInfo) => void;
     setOnBoardingStep: (step: OnBoardingSteps) => void;
     resetOnboarding: () => void;
     setActiveProduct: (product: PrintableProduct) => void;
+    setIsOnBoardingReady: (isReady: boolean) => void;
 }

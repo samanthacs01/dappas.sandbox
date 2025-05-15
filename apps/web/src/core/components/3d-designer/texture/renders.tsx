@@ -1,4 +1,4 @@
-import { Layer } from "@/server/models/texture";
+import { Layer } from '@/server/models/texture';
 
 // Helper function to load an image
 const loadImage = (src: string): Promise<HTMLImageElement> => {
@@ -62,7 +62,7 @@ export const renderPatternLayer = async (
       const scaledPattern = ctx.createPattern(patternCanvas, repeat);
       if (scaledPattern) {
         ctx.fillStyle = scaledPattern;
-      }// Establecer el punto de rotación en el centro
+      } // Establecer el punto de rotación en el centro
     } else {
       ctx.fillStyle = pattern;
     }

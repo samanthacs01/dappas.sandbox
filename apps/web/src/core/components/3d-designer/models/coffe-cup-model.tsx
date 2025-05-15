@@ -30,6 +30,7 @@ export function CoffeeCupModel({
     '/models/CoffeeCup.glb',
   ) as unknown as GLTFResult;
 
+
   const texture = useTexture(textureUrl);
 
   useEffect(() => {

@@ -1,16 +1,16 @@
-import { FC, PropsWithChildren, Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
 import {
+  BakeShadows,
+  Environment,
   OrbitControls,
   PerspectiveCamera,
-  Environment,
-  BakeShadows,
 } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { FC, PropsWithChildren, Suspense } from 'react';
 type MainSceneProps = PropsWithChildren;
 
 const MainScene: FC<MainSceneProps> = ({ children }) => {
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-b bg-white ">
+    <div className="h-full overflow-hidden bg-gradient-to-b bg-white">
       <Canvas shadows gl={{ preserveDrawingBuffer: true }}>
         <PerspectiveCamera
           makeDefault

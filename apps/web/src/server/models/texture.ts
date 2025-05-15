@@ -102,8 +102,8 @@ export type AILayer =
 // Main structure for the JSON that the AI will send
 export interface AITextureConfig {
   id: string; // Unique identifier for the texture
-  width?: number; // Canvas width (default: 512)
-  height?: number; // Canvas height (default: 512)
+  width: number; // Canvas width (default: 512)
+  height: number; // Canvas height (default: 512)
   layers: AILayer[]; // Array of layers
 }
 

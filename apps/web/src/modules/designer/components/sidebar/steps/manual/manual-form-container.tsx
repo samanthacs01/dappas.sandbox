@@ -24,60 +24,14 @@ const ManualOnboardingFormContainer = () => {
     }
   };
 
-  const isReadyToGenerate = false;
   const onSubmit = (data: any) => {
     console.log('Form submitted:', data);
     // Handle form submission logic here
   };
 
-  const renderSubmitButton = () => {
-    switch (step) {
-      case 1:
-        return (
-          <div className="flex flex-col gap-4 mt-6">
-            <Button
-              type="button"
-              className="rounded-none"
-              onClick={() => handleOnChangeStep(2)}
-            >
-              Continue <ChevronRight />
-            </Button>
-            {step > 1 && (
-              <Button
-                type="button"
-                variant={'link'}
-                onClick={() => handleOnChangeStep(1)}
-                className="rounded-none"
-              >
-                Back
-              </Button>
-            )}
-          </div>
-        );
-      case 2:
-        return (
-          <div className="flex flex-col gap-4 mt-6">
-            <Button
-              type="submit"
-              disabled={!isReadyToGenerate}
-              className="w-full"
-            >
-              Generate design <ChevronRight />
-            </Button>
-            {step > 1 && (
-              <Button
-                type="button"
-                variant={'link'}
-                onClick={() => handleOnChangeStep(1)}
-                className="rounded-none"
-              >
-                Back
-              </Button>
-            )}
-          </div>
-        );
-      default:
-        return null;
+  const changeStep = () => {
+    if (step === 1) {
+      setStep(2);
     }
   };
 
@@ -89,7 +43,9 @@ const ManualOnboardingFormContainer = () => {
         className="w-full h-full flex flex-col justify-between"
       >
         {renderStep(step)}
-        {renderSubmitButton()}
+        <Button type="button" className="rounded-none font-light" onClick={changeStep}>
+          Continue <ChevronRight />
+        </Button>
       </form>
     </FormProvider>
   );

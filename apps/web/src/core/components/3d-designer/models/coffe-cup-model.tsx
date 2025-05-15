@@ -26,7 +26,7 @@ export function CoffeeCupModel({
 }: CoffeeCupModelProps) {
   const group = useRef<THREE.Group>(null);
 
-  const { nodes, materials, animations } = useGLTF(
+  const { nodes, materials } = useGLTF(
     '/models/CoffeeCup.glb',
   ) as unknown as GLTFResult;
 
@@ -46,21 +46,6 @@ export function CoffeeCupModel({
       }
     }
   }, [texture, materials]);
-
-  const { actions } = useAnimations(animations, group);
-
-  useEffect(() => {
-    if (actions.ArmatureAction) {
-      actions.ArmatureAction.reset().play();
-      actions.ArmatureAction.setLoop(
-        THREE.LoopRepeat,
-        Number.POSITIVE_INFINITY,
-      );
-    }
-    return () => {
-      if (actions.ArmatureAction) actions.ArmatureAction.stop();
-    };
-  }, [actions]);
 
   useFrame((state) => {
     if (group.current) {

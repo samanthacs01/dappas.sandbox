@@ -8,5 +8,5 @@ type ModelComponentProps = {
 type ModelComponent = (props: ModelComponentProps) => JSX.Element;
 
 export const modelDictionary: Record<string, ModelComponent> = {
-  'coffee-cup': (props) => <CoffeeCupModel textureUrl={props.texture} />,
+  CoffeeCupModel: (props) => <CoffeeCupModel textureUrl={props.texture} />,
 };

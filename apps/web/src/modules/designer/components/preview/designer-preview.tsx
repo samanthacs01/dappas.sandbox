@@ -6,35 +6,7 @@ import { TextureBuilderConfig } from '@/server/models/texture';
 import { useEffect, useState } from 'react';
 import { useDesignerStore } from '../../store/designer';
 import { modelDictionary } from './models-dictionaary';
-
-const DEFAULT_JSON_CONFIG = `{
-  "width": 512,
-  "height": 512,
-  "layers": [
-    {
-      "type": "background",
-      "color": "#CC3E50",
-      "height": 256,
-      "position": "top",
-      "zIndex": 0
-    },
-    {
-      "type": "background",
-      "color": "#5ac8fa",
-      "y": 256,
-      "height": 256,
-      "zIndex": 1
-    },
-    {
-      "type": "image",
-      "url": "/logo.svg",
-      "width": 80,
-      "height": 120,
-      "position": "center",
-      "zIndex": 2
-    }
-  ]
-}`;
+import { CoffeeCupModel } from '@/core/components/3d-designer/models/coffe-cup-model';
 
 const DesignerPreview = () => {
   const [variantTextures, setVariantTextures] = useState<
@@ -44,8 +16,22 @@ const DesignerPreview = () => {
   const [activeTexture, setActiveTexture] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const product = useDesignerStore((state) => state.activeProduct);
+  const brand = useDesignerStore((state) => state.brand);
+  const [canRender, setCanRender] = useState(false);
 
-  console.log('product', product);
+  const DEFAULT_JSON_CONFIG = `{
+    "width": ${product?.printableArea.width ?? 1000},
+    "height": ${product?.printableArea.height ?? 1000},
+    "layers": [
+      {
+        "type": "background",
+        "color": "#fff",
+        "height": ${product?.printableArea.height ?? 1000},
+        "position": "top",
+        "zIndex": 0
+      }
+    ]
+  }`;
 
   const generateTextureFromConfig = async (
     config: TextureBuilderConfig,
@@ -66,6 +52,15 @@ const DesignerPreview = () => {
     }
 
     return canvas.toDataURL('image/png');
+  };
+  const textureToUse = canRender ? selectedTexture : DEFAULT_JSON_CONFIG;
+
+  const renderModel = () => {
+    if (!product) return <CoffeeCupModel textureUrl={textureToUse} />;
+
+    return modelDictionary[product?.model.name as 'CoffeeCupModel']({
+      texture: textureToUse,
+    });
   };
 
   useEffect(() => {
@@ -90,7 +85,13 @@ const DesignerPreview = () => {
     };
 
     initializeTextures();
-  }, []);
+  }, [canRender, DEFAULT_JSON_CONFIG]);
+
+  useEffect(() => {
+    const canRenderVariants =
+      brand.colors.length > 0 || !!brand.logo || brand.logo !== '';
+    setCanRender(canRenderVariants);
+  }, [brand]);
 
   const handleTextureChange = async (textureId: string) => {
     try {
@@ -120,17 +121,14 @@ const DesignerPreview = () => {
 
   return (
     <div className="w-full bg-white relative">
-      <MainScene>
-        {modelDictionary[product?.id as 'coffee-cup']({
-          texture: selectedTexture,
-        })}
-      </MainScene>
-
-      <TextureCardList
-        textures={variantTextures}
-        onSelect={handleTextureChange}
-        activeTexture={activeTexture}
-      />
+      <MainScene>{renderModel()}</MainScene>
+      {canRender && (
+        <TextureCardList
+          textures={variantTextures}
+          onSelect={handleTextureChange}
+          activeTexture={activeTexture}
+        />
+      )}
     </div>
   );
 };

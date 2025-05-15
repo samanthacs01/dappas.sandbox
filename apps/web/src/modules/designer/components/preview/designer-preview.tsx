@@ -1,3 +1,4 @@
+import { CoffeeCupModel } from '@/core/components/3d-designer/models/coffe-cup-model';
 import MainScene from '@/core/components/3d-designer/scene/main-scene';
 import { TextureConverter } from '@/core/components/3d-designer/texture/texture-converter';
 import { TextureGenerator } from '@/core/components/3d-designer/texture/texture-generator';
@@ -6,7 +7,6 @@ import { TextureBuilderConfig } from '@/server/models/texture';
 import { useEffect, useState } from 'react';
 import { useDesignerStore } from '../../store/designer';
 import { modelDictionary } from './models-dictionaary';
-import { CoffeeCupModel } from '@/core/components/3d-designer/models/coffe-cup-model';
 
 const DesignerPreview = () => {
   const [variantTextures, setVariantTextures] = useState<
@@ -89,7 +89,7 @@ const DesignerPreview = () => {
 
   useEffect(() => {
     const canRenderVariants =
-      brand.colors.length > 0 || !!brand.logo || brand.logo !== '';
+      (brand.colors ?? []).length > 0 || !!brand.logo || brand.logo !== '';
     setCanRender(canRenderVariants);
   }, [brand]);
 

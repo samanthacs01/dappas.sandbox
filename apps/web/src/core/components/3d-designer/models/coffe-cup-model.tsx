@@ -1,8 +1,8 @@
-import * as THREE from 'three';
-import { useRef, useEffect } from 'react';
-import { useGLTF, useAnimations, useTexture } from '@react-three/drei';
-import type { GLTF } from 'three-stdlib';
+import { useGLTF, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import type { GLTF } from 'three-stdlib';
 
 type GLTFResult = GLTF & {
   nodes: {

@@ -210,9 +210,23 @@ export class TextureGenerator {
     canvas: HTMLCanvasElement,
     format: 'png' | 'jpeg' | 'webp' = 'png',
     quality = 1,
+    scale = 1,
   ): Promise<string> {
+    let outputCanvas = canvas;
+    if (scale > 1) {
+      outputCanvas = document.createElement('canvas');
+      outputCanvas.width = canvas.width * scale;
+      outputCanvas.height = canvas.height * scale;
+      const ctx = outputCanvas.getContext('2d');
+      if (ctx) {
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(canvas, 0, 0, outputCanvas.width, outputCanvas.height);
+      }
+    }
+
     const promiseBlob = new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob(
+      outputCanvas.toBlob(
         (blob) => {
           if (blob) {
             resolve(blob);
@@ -225,12 +239,8 @@ export class TextureGenerator {
       );
     });
 
-    const blob_1 = await promiseBlob;
-    if (blob_1) {
-      return URL.createObjectURL(blob_1);
-    } else {
-      throw new Error('Failed to create blob from canvas');
-    }
+    const blob = await promiseBlob;
+    return URL.createObjectURL(blob);
   }
 
   /**

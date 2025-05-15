@@ -101,7 +101,7 @@ const DesignerPreview = () => {
         throw new Error('Canvas missing');
       }
 
-      const url = await TextureGenerator.textureToUrl(canvas, 'png');
+      const url = await TextureGenerator.textureToUrl(canvas, 'png', 1);
 
       setActiveTexture(textureId === activeTexture ? null : textureId);
 

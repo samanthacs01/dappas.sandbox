@@ -10,7 +10,7 @@ type MainSceneProps = PropsWithChildren;
 
 const MainScene: FC<MainSceneProps> = ({ children }) => {
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-b from-gray-50 to-gray-200">
+    <div className="h-screen overflow-hidden bg-gradient-to-b bg-white ">
       <Canvas shadows gl={{ preserveDrawingBuffer: true }}>
         <PerspectiveCamera
           makeDefault

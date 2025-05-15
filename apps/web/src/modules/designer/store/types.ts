@@ -1,3 +1,5 @@
+import { PrintableProduct } from "../types/printable-product";
+
 export const enum OnBoardingSteps {
     WELCOME = 0,
     CHAT = 1,
@@ -18,9 +20,9 @@ export type BrandInfo ={
 export type DesignerStoreType = {
     brand: BrandInfo;
     onBoardingStep: OnBoardingSteps;
-    activeProduct: string;
+    activeProduct: PrintableProduct | null;
     setBrand: (brand: BrandInfo) => void;
     setOnBoardingStep: (step: OnBoardingSteps) => void;
     resetOnboarding: () => void;
-    setActiveProduct: (product: string) => void;
+    setActiveProduct: (product: PrintableProduct) => void;
 }

@@ -18,7 +18,7 @@ const DesignerSidebar = () => {
             onChangeToManualStep={() =>
               setOnBoardingStep(OnBoardingSteps.MANUAL)
             }
-            activeProduct={activeProduct}
+            activeProduct={activeProduct?.id ?? ''}
           />
         );
       case OnBoardingSteps.CHAT:

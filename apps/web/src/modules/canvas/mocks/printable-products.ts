@@ -1,4 +1,4 @@
-import { PrintableProduct } from '../types/printable-product';
+import { PrintableProduct } from '../../designer/types/printable-product';
 
 export const printableProducts: PrintableProduct[] = [
   {

@@ -1,5 +1,5 @@
-import RHFSelect from '@/core/commons/form-inputs/rhf-select';
-import RHFTextField from '@/core/commons/form-inputs/rhf-text-field';
+import RHFSelect from '@/core/components/commons/form-inputs/rhf-select';
+import RHFTextField from '@/core/components/commons/form-inputs/rhf-text-field';
 
 const ManualCompanyInfoForm = () => {
   return (

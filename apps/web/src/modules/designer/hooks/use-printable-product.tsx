@@ -1,6 +1,6 @@
-import { PrintableProduct } from '../types/printable-product';
-import { getFileFromUrl } from '../utils/file';
-import { insertImageIntoPdf } from '../utils/pdf';
+import { getFileFromUrl } from '@/core/lib/file';
+import { insertImageIntoPdf } from '@/core/lib/pdf';
+import { PrintableProduct } from '../../designer/types/printable-product';
 
 const usePrintableProduct = () => {
   const getPrintableProductPdf = async (

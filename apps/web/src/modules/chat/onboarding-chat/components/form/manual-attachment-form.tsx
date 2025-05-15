@@ -1,5 +1,5 @@
-import RHFColorPicker from '@/core/commons/form-inputs/rhf-color-picker';
-import RHFUploadButton from '@/core/commons/form-inputs/rhf-upload-button';
+import RHFColorPicker from '@/core/components/commons/form-inputs/rhf-color-picker';
+import RHFUploadButton from '@/core/components/commons/form-inputs/rhf-upload-button';
 
 const ManualAttachmentForm = () => {
   return (

@@ -3,14 +3,16 @@ import { useSearchParams } from 'react-router';
 import DesignerPreview from '../components/preview/designer-preview';
 import DesignerSidebar from '../components/sidebar/designer-sidebar';
 import { useDesignerStore } from '../store/designer';
+import { getProductById } from '../utils/products';
 
 const ProductDesigner = () => {
   const [searchParams] = useSearchParams();
   const setActiveProduct = useDesignerStore((state) => state.setActiveProduct);
 
   useEffect(() => {
-    const product = searchParams.get('product');
-    if (product) {
+    const productId = searchParams.get('product');
+    if (productId) {
+      const product = getProductById(productId);
       setActiveProduct(product);
     }
   }, [searchParams, setActiveProduct]);

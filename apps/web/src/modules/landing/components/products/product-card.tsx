@@ -21,7 +21,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <div className="flex flex-row gap-4 px-2 justify-between items-center">
         <h3 className="text-xl font-medium truncate">{product.title}</h3>
         <Link
-          to="/welcome"
+          to={`/designer?product=${product.id}`}
           onClick={() =>
             track('product-card-click', {
               event_name: 'product-card-click',

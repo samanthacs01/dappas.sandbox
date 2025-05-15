@@ -1,4 +1,4 @@
-import { TextureBuilder } from '@/core/commons/texture/texture-builder';
+import { TextureBuilder } from '@/core/components/3d-designer/texture/texture-builder';
 import { TextureBuilderConfig } from '@/server/models/texture';
 import { FC } from 'react';
 

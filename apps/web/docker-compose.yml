@@ -1,0 +1,9 @@
+version: '3.9'
+
+services:
+  dappas-web-react:
+    container_name: dappas-web-react
+    image: dappas-web-react
+    build: .
+    ports:
+      - "8080:8080"

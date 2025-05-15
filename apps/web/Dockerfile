@@ -33,12 +33,17 @@ RUN pnpm install --frozen-lockfile
 # Build the project
 COPY --from=builder /app/out/full/ .
 RUN pnpm turbo run build
- 
+
+RUN ls -l /app/apps/web/dist
+
+
 # Use a lightweight server to serve the static assets
 FROM nginx:stable-alpine AS production
 
+COPY --from=installer /app/apps/web/dist /usr/share/nginx/html
+
 # Copy built assets from builder stage
-COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
+#COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
 
 EXPOSE 8080

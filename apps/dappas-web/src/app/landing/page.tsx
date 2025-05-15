@@ -1,17 +1,25 @@
 import { getProducts } from '@/server/shopify';
+import { Product } from '@/server/shopify/types';
 import { Button } from '@workspace/ui/components/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@workspace/ui/components/card';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default async function Home() {
-  const products = await getProducts({ first: 10 });
+  let products: Product[] = [];
+  try {
+    products = await getProducts({ first: 10 });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    products = [];
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
       <div className="container mx-auto px-4 py-16">

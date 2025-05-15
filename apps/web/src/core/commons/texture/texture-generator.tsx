@@ -1,0 +1,312 @@
+import { calculatePosition } from '@/core/lib/texture';
+import {
+  AIBackgroundLayer,
+  AIGradientLayer,
+  AIImageLayer,
+  AIPatternLayer,
+  AITextLayer,
+  AITextureConfig,
+  Layer,
+  TextureBuilderConfig,
+} from '@/server/models/texture';
+import {
+  renderBackgroundLayer,
+  renderGradientLayer,
+  renderImageLayer,
+  renderPatternLayer,
+  renderTextLayer,
+} from './renders';
+import { TextureConverter } from './texture-converter';
+import { ColorUtils } from '@/core/lib/color';
+import { MathUtils } from '@/core/lib/math';
+
+/**
+ * TextureGenerator Class
+ *
+ * This class is responsible for converting a JSON sent by the AI
+ * into a texture configuration that can be rendered.
+ */
+export class TextureGenerator {
+  private static colorManagement = ColorUtils;
+  private static mathUtils = MathUtils;
+  private static textureConverter = TextureConverter;
+
+  /**
+   * Generates three random variants of a texture configuration
+   * with emphasis on color changes
+   * @param jsonConfig JSON with the base texture configuration
+   * @returns Array with three variant texture configurations
+   */
+  public static generateVariants(
+    jsonConfig: AITextureConfig | string,
+    numberVariants?: number,
+  ): TextureBuilderConfig[] {
+    const variantsQuantity = numberVariants ? numberVariants : 3;
+    // If a string is received, try to parse it as JSON
+    const baseConfig: AITextureConfig =
+      typeof jsonConfig === 'string' ? JSON.parse(jsonConfig) : jsonConfig;
+
+    // Validate the base configuration
+    this.textureConverter.validateConfig(baseConfig);
+
+    // Create three random variants
+    const variants: TextureBuilderConfig[] = [];
+
+    for (let i = 0; i < variantsQuantity; i++) {
+      // Create a random variant with emphasis on color
+      const variant = this.createRandomVariant(baseConfig);
+      variants.push(this.textureConverter.fromJSON(variant));
+    }
+
+    return variants;
+  }
+
+  /**
+   * Creates a random variant with emphasis on color changes
+   * @param baseConfig Base configuration
+   * @returns Configuration with random variations
+   */
+  private static createRandomVariant(
+    baseConfig: AITextureConfig,
+  ): AITextureConfig {
+    const variant: AITextureConfig = {
+      id: baseConfig.id,
+      width: baseConfig.width,
+      height: baseConfig.height,
+      layers: [],
+    };
+
+    // Copy the layers and apply random changes
+    for (const layer of baseConfig.layers) {
+      const newLayer = { ...layer };
+
+      // Always modify colors (high probability)
+      if (this.textureConverter.isBackgroundLayer(layer)) {
+        // Change the background color
+        const backgroundLayer = layer as AIBackgroundLayer;
+        (newLayer as AIBackgroundLayer).color =
+          this.colorManagement.getRandomColor(backgroundLayer.color);
+      } else if (this.textureConverter.isTextLayer(layer)) {
+        // Change the text color
+        const textLayer = layer as AITextLayer;
+        if (textLayer.color) {
+          (newLayer as AITextLayer).color = this.colorManagement.getRandomColor(
+            textLayer.color,
+          );
+        }
+      } else if (this.textureConverter.isGradientLayer(layer)) {
+        // Change the gradient colors
+        const gradientLayer = layer as AIGradientLayer;
+        const newColors = gradientLayer.colors.map((colorStop) => ({
+          offset: colorStop.offset,
+          color: this.colorManagement.getRandomColor(colorStop.color),
+        }));
+        (newLayer as AIGradientLayer).colors = newColors;
+      }
+
+      // Possibility of modifying other aspects (low probability)
+      if (Math.random() < 0.4) {
+        // Modify opacity
+        if (layer.opacity !== undefined && layer.opacity > 0.3) {
+          newLayer.opacity = this.mathUtils.addVariation(
+            layer.opacity,
+            0.2,
+            0.2,
+            1,
+          );
+        }
+      }
+
+      if (Math.random() < 0.2) {
+        // Modify position if it doesn't have a named position
+        if (!layer.position) {
+          // Add a random variation to the position
+          if (layer.x !== undefined) {
+            newLayer.x = this.mathUtils.addVariation(
+              layer.x,
+              15,
+              0,
+              baseConfig.width || 512,
+            );
+          }
+          if (layer.y !== undefined) {
+            newLayer.y = this.mathUtils.addVariation(
+              layer.y,
+              15,
+              0,
+              baseConfig.height || 512,
+            );
+          }
+        }
+      }
+
+      if (Math.random() < 0.15) {
+        // Modify size (except for backgrounds that cover the entire canvas)
+        if (
+          layer.type !== 'background' ||
+          layer.width !== baseConfig.width ||
+          layer.height !== baseConfig.height
+        ) {
+          if (layer.width !== undefined) {
+            newLayer.width = this.mathUtils.addVariation(
+              layer.width,
+              0.15,
+              50,
+              baseConfig.width || 512,
+            );
+          }
+          if (layer.height !== undefined) {
+            newLayer.height = this.mathUtils.addVariation(
+              layer.height,
+              0.15,
+              50,
+              baseConfig.height || 512,
+            );
+          }
+        }
+      }
+
+      // Layer-specific modifications (very low probability)
+      if (Math.random() < 0.1) {
+        if (this.textureConverter.isImageLayer(layer)) {
+          const imageLayer = newLayer as AIImageLayer;
+          imageLayer.rotation =
+            (imageLayer.rotation || 0) + this.mathUtils.getRandomInt(-20, 20);
+        } else if (this.textureConverter.isPatternLayer(layer)) {
+          const patternLayer = newLayer as AIPatternLayer;
+          patternLayer.scale =
+            (patternLayer.scale || 1) * (0.8 + Math.random() * 0.4); // 0.8 to 1.2 times the original scale
+        } else if (this.textureConverter.isTextLayer(layer)) {
+          const textLayer = newLayer as AITextLayer;
+          textLayer.fontSize = Math.round(
+            (textLayer.fontSize || 24) * (0.9 + Math.random() * 0.2),
+          ); // 0.9 to 1.1 times the original size
+        } else if (
+          this.textureConverter.isGradientLayer(layer) &&
+          (layer as AIGradientLayer).gradientType === 'linear'
+        ) {
+          const gradientLayer = newLayer as AIGradientLayer;
+          gradientLayer.angle =
+            ((gradientLayer.angle || 0) + this.mathUtils.getRandomInt(15, 60)) %
+            360;
+        }
+      }
+
+      variant.layers.push(newLayer);
+    }
+
+    return variant;
+  }
+
+  /**
+   * Function to convert the texture to a Blob
+   * @param canvas Canvas element containing the texture
+   * @param format Image format (png, jpeg, webp)
+   * @param quality Image quality (0-1)
+   * @returns Promise that resolves with the Blob
+   */
+
+  public static async textureToUrl(
+    canvas: HTMLCanvasElement,
+    format: 'png' | 'jpeg' | 'webp' = 'png',
+    quality = 1,
+  ): Promise<string> {
+    const promiseBlob = new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('Failed to create blob from canvas'));
+          }
+        },
+        `image/${format === 'jpeg' ? 'jpeg' : format}`,
+        quality,
+      );
+    });
+
+    const blob_1 = await promiseBlob;
+    if (blob_1) {
+      return URL.createObjectURL(blob_1);
+    } else {
+      throw new Error('Failed to create blob from canvas');
+    }
+  }
+
+  /**
+   * Helper function to export the texture as an image
+   * @param canvas Canvas element containing the texture
+   * @param filename Name for the downloaded file
+   * @param format Image format (png, jpeg, webp)
+   */
+
+  public static exportTextureAsImage(
+    canvas: HTMLCanvasElement,
+    filename = 'texture.png',
+    format: 'png' | 'jpeg' | 'webp' = 'png',
+  ): void {
+    const mimeType = `image/${format === 'jpeg' ? 'jpeg' : format}`;
+
+    const dataUrl = canvas.toDataURL(mimeType, 0.9);
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  public static async renderLayer(ctx: CanvasRenderingContext2D, layer: Layer) {
+    if (!layer.visible) return;
+
+    //Recalculating the position
+    if (layer.position) {
+      const { x, y } = calculatePosition(
+        layer.position,
+        layer.width,
+        layer.height,
+        ctx.canvas.width,
+        ctx.canvas.height,
+      );
+      if (x !== layer.x || y !== layer.y) {
+        layer = { ...layer, x, y };
+      }
+    }
+    switch (layer.type) {
+      case 'background':
+        renderBackgroundLayer(
+          ctx,
+          layer as Layer & { type: 'background'; color: string },
+        );
+        break;
+      case 'pattern':
+        await renderPatternLayer(
+          ctx,
+          layer as Layer & { type: 'pattern'; color: string },
+        );
+        break;
+      case 'image':
+        await renderImageLayer(
+          ctx,
+          layer as Layer & { type: 'image'; src: string },
+        );
+        break;
+      case 'text':
+        renderTextLayer(ctx, layer as Layer & { type: 'text'; text: string });
+        break;
+      case 'gradient':
+        renderGradientLayer(
+          ctx,
+          layer as Layer & {
+            type: 'gradient';
+            colors: Array<{ offset: number; color: string }>;
+          },
+        );
+        break;
+      default:
+        console.warn(`Unknown layer type: ${(layer as Layer).type}`);
+    }
+  }
+}

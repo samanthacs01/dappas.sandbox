@@ -6,8 +6,8 @@ on:
     branches:
       - main    # dev enviroment
     tags:
-      - 'release-staging*'  # staging enviroment
-      - 'release-prod*'     # production enviroment
+      - 'rc-v*'  # staging enviroment
+      - 'v*'     # production enviroment
     paths:
       - apps/**
       - iac/**
@@ -47,10 +47,10 @@ jobs:
           elif [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             REF_NAME="${GITHUB_REF_NAME}"
             echo "Tag name: $REF_NAME"
-            if [[ "$REF_NAME" =~ release-prod ]]; then
+            if [[ "$REF_NAME" =~ v ]]; then
                 echo "ENVIRONMENT=prod" >> $GITHUB_ENV
                 echo "environment=prod" >> $GITHUB_OUTPUT
-            elif [[ "$REF_NAME" =~ release-staging ]]; then
+            elif [[ "$REF_NAME" =~ rc-v ]]; then
                 echo "ENVIRONMENT=staging" >> $GITHUB_ENV
                 echo "environment=staging" >> $GITHUB_OUTPUT
             else

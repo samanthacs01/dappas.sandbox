@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
@@ -7,10 +5,10 @@ import {
   PerspectiveCamera,
   ContactShadows,
 } from '@react-three/drei';
-import Loader from '../../../../core/components/common/loader/loader';
-import Box3DModel from '@/core/components/models/box-3d-model';
+import Loader from '@/core/commons/loader/loader';
+import BoxModel from './box-model';
 
-const ModelViewer: React.FC = () => {
+const CanvasPreviewModelView: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [showLoader, setShowLoader] = useState(true);
@@ -38,7 +36,6 @@ const ModelViewer: React.FC = () => {
 
   return (
     <div className="w-[60%] h-full min-h-screen relative">
-      {/* Overlay de carga que no interrumpe el Canvas */}
       {showLoader && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
           <Loader />
@@ -74,7 +71,7 @@ const ModelViewer: React.FC = () => {
 
         <PerspectiveCamera makeDefault position={[0, 0, 8]} />
 
-        <Box3DModel onLoadingChange={handleLoadingChange} />
+        <BoxModel onLoadingChange={handleLoadingChange} />
 
         {/* Subtle ground shadow to enhance depth perception */}
         <ContactShadows
@@ -97,4 +94,4 @@ const ModelViewer: React.FC = () => {
   );
 };
 
-export default ModelViewer;
+export default CanvasPreviewModelView;

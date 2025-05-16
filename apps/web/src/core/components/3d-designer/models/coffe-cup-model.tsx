@@ -1,18 +1,25 @@
 import { useGLTF, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
+import {
+  Bone,
+  Group,
+  Mesh,
+  MeshStandardMaterial,
+  SkinnedMesh,
+  SRGBColorSpace,
+} from 'three';
 import type { GLTF } from 'three-stdlib';
 
 type GLTFResult = GLTF & {
   nodes: {
-    Circle: THREE.Mesh;
-    Circle001: THREE.SkinnedMesh;
-    Bone: THREE.Bone;
+    Circle: Mesh;
+    Circle001: SkinnedMesh;
+    Bone: Bone;
   };
   materials: {
-    Material: THREE.MeshStandardMaterial;
-    ['Material.001']: THREE.MeshStandardMaterial;
+    Material: MeshStandardMaterial;
+    ['Material.001']: MeshStandardMaterial;
   };
 };
 
@@ -24,7 +31,7 @@ export function CoffeeCupModel({
   textureUrl = '/images/textures/texture1.png',
   ...props
 }: CoffeeCupModelProps) {
-  const group = useRef<THREE.Group>(null);
+  const group = useRef<Group>(null);
 
   const { nodes, materials } = useGLTF(
     '/models/CoffeeCup.glb',
@@ -35,7 +42,7 @@ export function CoffeeCupModel({
   useEffect(() => {
     if (texture) {
       texture.flipY = true;
-      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.colorSpace = SRGBColorSpace;
 
       texture.rotation = Math.PI;
       texture.center.set(0.5, 0.5);

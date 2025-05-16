@@ -172,8 +172,8 @@ export class TextureGenerator {
             img.src = imageSrc;
 
             // Default target width and height
-            const targetWidth = baseConfig.width / 3;
-            const targetHeight = baseConfig.height / 3;
+            const targetWidth = baseConfig.width / 4;
+            const targetHeight = baseConfig.height / 4;
 
             img.onload = () => {
               // Calculate the aspect ratio

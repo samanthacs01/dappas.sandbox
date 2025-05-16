@@ -66,11 +66,11 @@ const UploadLogo: FunctionComponent<UploadBoxProps> = ({
         <div {...getRootProps()}>
           <input {...getInputProps()} />
           {acceptedFiles.length > 0 ? (
-            <div className="flex gap-2">
+            <div className="flex gap-2 ">
               <ImageWithFallback
                 src={URL.createObjectURL(acceptedFiles[0])}
                 alt="Uploaded logo"
-                className="w-24 h-auto object-cover  aspect-square rounded"
+                className="w-32 h-auto object-cover rounded aspect-auto"
               />
               <Button
                 variant="ghost"

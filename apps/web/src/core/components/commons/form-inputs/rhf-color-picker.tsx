@@ -124,18 +124,20 @@ const RHFColorPicker = ({
                         <div className="flex flex-col gap-2">
                           <button
                             type="button"
-                            className="size-20 rounded-full border border-gray-300 flex items-center justify-center overflow-hidden"
+                            className="cursor-pointer size-20 rounded-full border border-gray-300 flex items-center justify-center overflow-hidden hover:border hover:border-2 hover:border-dashed"
                             style={{ backgroundColor: temporalColors[index] }}
+                            onClick={() => setActiveColorIndex(index)}
                           />
                           <div className="flex w-full items-center justify-between">
                             <span className="text-sm">Color {index + 1}</span>
                             <PopoverTrigger asChild>
-                              <button
+                              <Button
+                                variant="ghost"
                                 className="size-3"
                                 onClick={() => setActiveColorIndex(index)}
                               >
                                 <Pencil className="size-3" />
-                              </button>
+                              </Button>
                             </PopoverTrigger>
                           </div>
                           <input

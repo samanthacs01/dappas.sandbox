@@ -2,7 +2,6 @@ import { ImageWithFallback } from '@/core/components/commons/image/image-with-fa
 import { useEffect, useState } from 'react';
 
 const LoadingDesign = () => {
-  const [loading, setLoading] = useState<boolean>(true);
   const [dots, setDots] = useState<number>(0);
 
   useEffect(() => {
@@ -13,12 +12,6 @@ const LoadingDesign = () => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setLoading(false), 5000);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (!loading) return null;
   return (
     <div className="flex flex-col w-full h-full gap-5 items-center">
       <ImageWithFallback

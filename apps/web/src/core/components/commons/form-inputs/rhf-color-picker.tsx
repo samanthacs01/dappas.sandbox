@@ -1,5 +1,14 @@
 'use client';
 
+import { Button } from '@workspace/ui/components/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@workspace/ui/components/dialog';
 import { Label } from '@workspace/ui/components/label';
 import {
   Popover,
@@ -7,7 +16,7 @@ import {
   PopoverTrigger,
 } from '@workspace/ui/components/popover';
 import { cn } from '@workspace/ui/lib/utils';
-import { Plus, X } from 'lucide-react';
+import { Pencil, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -30,27 +39,25 @@ const RHFColorPicker = ({
   required,
 }: ColorPickerProps) => {
   const [activeColorIndex, setActiveColorIndex] = useState<number | null>(null);
+  const [temporalColors, setTemporalColors] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
   const { control, setValue, watch } = useFormContext();
   const colors = watch(name) || defaultColors || [];
 
-  const handleAddColor = () => {
-    if (colors.length < maxColors) {
-      const newColors = [...colors, '#ffffff'];
-      setValue(name, newColors, { shouldValidate: true, shouldDirty: true });
-      setActiveColorIndex(newColors.length - 1);
-    }
-  };
-
-  const handleRemoveColor = (index: number) => {
-    const newColors = colors.filter((_: string, i: number) => i !== index);
-    setValue(name, newColors, { shouldValidate: true, shouldDirty: true });
-    setActiveColorIndex(null);
-  };
-
   const handleColorChange = (color: string, index: number) => {
-    const newColors = [...colors];
+    const newColors = [...temporalColors];
     newColors[index] = color;
-    setValue(name, newColors, { shouldValidate: true, shouldDirty: true });
+    setTemporalColors(newColors);
+  };
+
+  const handleSave = () => {
+    setValue(name, temporalColors, { shouldValidate: true, shouldDirty: true });
+    setOpen(false);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+    setTemporalColors(colors);
   };
 
   return (
@@ -59,85 +66,114 @@ const RHFColorPicker = ({
       control={control}
       defaultValue={defaultColors}
       render={({ field, fieldState: { error } }) => (
-        <div className="flex flex-col">
-          <div
-            className={cn(
-              'flex',
-              labelOrientation === 'vertical'
-                ? 'flex-col gap-2'
-                : 'flex-row gap-10',
-            )}
-          >
-            {label ? (
-              typeof label === 'string' ? (
-                <Label
-                  htmlFor={name}
-                  className={cn(
-                    error && 'text-destructive',
-                    'font-medium',
-                    labelOrientation === 'vertical' ? '' : 'w-1/3',
-                  )}
-                >
-                  {label} {required && '*'}
-                </Label>
-              ) : (
-                label
-              )
-            ) : null}
-            <div className="space-y-4">
-              <input type="hidden" {...field} />
-              <div className="flex flex-wrap gap-2">
-                {colors.map((color: string, index: number) => (
-                  <div key={index} className="relative">
-                    <Popover
-                      open={activeColorIndex === index}
-                      onOpenChange={(open) =>
-                        setActiveColorIndex(open ? index : null)
-                      }
-                    >
-                      <PopoverTrigger asChild>
-                        <button
-                          type="button"
-                          className="h-10 w-10 rounded-full border border-gray-300 flex items-center justify-center overflow-hidden"
-                          style={{ backgroundColor: color }}
-                          onClick={() => setActiveColorIndex(index)}
-                        />
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-3">
-                        <HexColorPicker
-                          color={color}
-                          onChange={(newColor) =>
-                            handleColorChange(newColor, index)
-                          }
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveColor(index)}
-                      className="absolute -top-1 -right-1 bg-white rounded-full h-5 w-5 flex items-center justify-center border border-gray-300 shadow-sm"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
+        <div
+          className={cn(
+            'flex',
+            labelOrientation === 'vertical'
+              ? 'flex-col gap-2'
+              : 'flex-row gap-10',
+          )}
+        >
+          {label ? (
+            typeof label === 'string' ? (
+              <Label
+                htmlFor={name}
+                className={cn(
+                  error && 'text-destructive',
+                  'font-medium',
+                  labelOrientation === 'vertical' ? '' : 'w-1/3',
+                )}
+              >
+                {label} {required && '*'}
+              </Label>
+            ) : (
+              label
+            )
+          ) : null}
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger>
+              <div className="flex gap-6">
+                {Array.from({ length: maxColors }).map((_, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      'size-9 rounded-full flex items-center justify-center cursor-pointer border border-dashed border-primary',
+                    )}
+                    style={{ backgroundColor: colors[index] }}
+                  >
+                    {!colors[index] && <Plus size={16} />}
                   </div>
                 ))}
-                {colors.length < maxColors && (
-                  <button
-                    type="button"
-                    onClick={handleAddColor}
-                    className="h-10 w-10 rounded-full border border-dashed border-gray-600 flex items-center justify-center"
-                  >
-                    <Plus className="h-4 w-4 text-gray-600" />
-                  </button>
-                )}
               </div>
-            </div>
-          </div>
-          {error && (
-            <Label className="text-destructive text-xs mt-1 w-full flex justify-end">
-              {error.message}
-            </Label>
-          )}
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Select brand color</DialogTitle>
+              </DialogHeader>
+              <div className="">
+                <input type="hidden" {...field} />
+                <div className="flex flex-wrap justify-around gap-2 py-8">
+                  {Array.from({ length: maxColors }).map((_, index) => (
+                    <div key={index} className="relative">
+                      <Popover
+                        open={activeColorIndex === index}
+                        onOpenChange={(open) =>
+                          setActiveColorIndex(open ? index : null)
+                        }
+                      >
+                        <div className="flex flex-col gap-2">
+                          <button
+                            type="button"
+                            className="size-20 rounded-full border border-gray-300 flex items-center justify-center overflow-hidden"
+                            style={{ backgroundColor: temporalColors[index] }}
+                          />
+                          <div className="flex w-full items-center justify-between">
+                            <span className="text-sm">Color {index + 1}</span>
+                            <PopoverTrigger asChild>
+                              <button
+                                className="size-3"
+                                onClick={() => setActiveColorIndex(index)}
+                              >
+                                <Pencil className="size-3" />
+                              </button>
+                            </PopoverTrigger>
+                          </div>
+                          <input
+                            type="text"
+                            value={temporalColors[index] ?? '#'}
+                            className="border w-[90px] px-2"
+                            onChange={(e) =>
+                              handleColorChange(e.target.value, index)
+                            }
+                          />
+                        </div>
+                        <PopoverContent className="w-auto p-3">
+                          <HexColorPicker
+                            color={temporalColors[index]}
+                            onChange={(newColor) =>
+                              handleColorChange(newColor, index)
+                            }
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <DialogFooter className="w-full grid grid-cols-2">
+                <Button
+                  variant="outline"
+                  onClick={handleCancel}
+                  className="rounded-none border-black"
+                >
+                  Cancel
+                </Button>
+                <Button onClick={handleSave} className="rounded-none">
+                  Save
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       )}
     />

@@ -77,6 +77,7 @@ export class TextureGenerator {
     images: string[],
     numberVariants?: number,
   ): Promise<TextureBuilderConfig[]> {
+    
     const variantsQuantity = numberVariants ? numberVariants : 3;
     // If a string is received, try to parse it as JSON
     const baseConfig: AITextureConfig =

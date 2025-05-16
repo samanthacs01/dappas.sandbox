@@ -3,6 +3,7 @@ import { TextureGenerator } from '@/core/components/3d-designer/texture/texture-
 import { downloadPdfBlob } from '@/core/lib/pdf';
 import { mmToPx } from '@/core/lib/units';
 import TextureCardList from '@/modules/chat/onboarding-chat/components/onboarding-preview/texture-card-list';
+import LoadingDesign from '@/modules/common/loading-design';
 import { AITextureConfig, TextureBuilderConfig } from '@/server/models/texture';
 import { Button } from '@workspace/ui/components/button';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -140,8 +141,10 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
 
   if (isLoading) {
     return (
-      <div className="w-1/2 flex items-center justify-center">
-        <div className="text-lg">Loading textures...</div>
+      <div className="w-full bg-white relative max-h-[calc(100vh_-_64px)]">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <LoadingDesign />
+        </div>
       </div>
     );
   }

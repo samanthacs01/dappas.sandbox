@@ -30,7 +30,6 @@ export function CoffeeCupModel({
     '/models/CoffeeCup.glb',
   ) as unknown as GLTFResult;
 
-
   const texture = useTexture(textureUrl);
 
   useEffect(() => {
@@ -72,8 +71,6 @@ export function CoffeeCupModel({
         >
           <skinnedMesh
             name="Circle001"
-            castShadow
-            receiveShadow
             geometry={nodes.Circle001.geometry}
             material={materials['Material.001']}
             skeleton={nodes.Circle001.skeleton}

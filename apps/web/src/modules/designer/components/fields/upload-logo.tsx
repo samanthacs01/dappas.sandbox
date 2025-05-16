@@ -119,7 +119,7 @@ const UploadLogo: FunctionComponent<UploadBoxProps> = ({
       </div>
 
       {hasError && error && (
-        <Label className="text-destructive text-xs">{rest.helperText}</Label>
+        <Label className="text-destructive text-xs flex justify-end w-full">{rest.helperText}</Label>
       )}
     </div>
   );

@@ -10,7 +10,6 @@ import { BrandBasicInfoSchema, BrandBasicInfoType } from './schemas';
 
 type Props = {
   onSuccess?: () => void;
-  
 };
 
 const ManualCompanyInfoForm: React.FC<Props> = ({ onSuccess }) => {
@@ -47,36 +46,43 @@ const ManualCompanyInfoForm: React.FC<Props> = ({ onSuccess }) => {
             />
           </div>
           <div className="flex flex-col space-y-1.5 grow">
-            <h4 className="pb-8">First, tell me about your company</h4>
-            <RHFTextField
-              name="name"
-              label="Company Name"
-              placeholder="Enter company name"
-              labelOrientation="horizontal"
-              className="rounded-none"
-            />
-            <RHFSelect
-              name="industry"
-              label="Industry"
-              placeholder="Select an industry"
-              options={[{ label: 'Coffee Shop/Café', value: 'coffee-shop' }]}
-              labelOrientation="horizontal"
-              className="rounded-none"
-            />
-            <RHFTextField
-              name="location"
-              placeholder="Enter location"
-              label="Location"
-              labelOrientation="horizontal"
-              className="rounded-none"
-            />
-            <RHFTextField
-              name="website"
-              placeholder="Enter website"
-              label="Website"
-              labelOrientation="horizontal"
-              className="rounded-none"
-            />
+            <h4 className="pb-8 text-reveal">
+              First, tell me about your company
+            </h4>
+            <div
+              className="animate-reveal-y flex flex-col  space-y-1.5"
+              style={{ '--delay': '0.2s' } as React.CSSProperties}
+            >
+              <RHFTextField
+                name="name"
+                label="Company Name"
+                placeholder="Enter company name"
+                labelOrientation="horizontal"
+                className="rounded-none"
+              />
+              <RHFSelect
+                name="industry"
+                label="Industry"
+                placeholder="Select an industry"
+                options={[{ label: 'Coffee Shop/Café', value: 'coffee-shop' }]}
+                labelOrientation="horizontal"
+                className="rounded-none"
+              />
+              <RHFTextField
+                name="location"
+                placeholder="Enter location"
+                label="Location"
+                labelOrientation="horizontal"
+                className="rounded-none"
+              />
+              <RHFTextField
+                name="website"
+                placeholder="Enter website"
+                label="Website"
+                labelOrientation="horizontal"
+                className="rounded-none"
+              />
+            </div>
           </div>
         </div>
         <Button type="submit" className="rounded-none font-light">

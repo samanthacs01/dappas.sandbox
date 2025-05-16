@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const ColorsLogoSchema = z.object({
-  colors: z.array(z.string(), { required_error: 'Color is required' }).min(1, {
+  colors: z.array(z.string(), { required_error: 'The colors field is required' }).min(1, {
     message: 'At least one color is required',
   }),
   logo: z.instanceof(File, { message: "The logo is required" }).refine(

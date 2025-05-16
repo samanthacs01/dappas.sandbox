@@ -13,7 +13,10 @@ type Props = {
   onGenerateDesign?: () => void;
 };
 
-const ManualAttachmentForm: React.FC<Props> = ({ onSuccess, onGenerateDesign }) => {
+const ManualAttachmentForm: React.FC<Props> = ({
+  onSuccess,
+  onGenerateDesign,
+}) => {
   const brand = useDesignerStore((state) => state.brand);
   const setBrand = useDesignerStore((state) => state.setBrand);
   const methods = useForm<ColorsLogoType>({
@@ -47,19 +50,25 @@ const ManualAttachmentForm: React.FC<Props> = ({ onSuccess, onGenerateDesign }) 
             </div>
 
             <div className="flex flex-col space-y-10 grow">
-              <h4>
+              <h4 className="text-reveal">
                 Now I need some visual assets to be able to generate design
                 suggestions for you. Fill in your brand colors and upload your
                 logo to continue.
               </h4>
-              <RHFColorPicker name="colors" label="Brand colors" />
 
-              <RHFUploadLogo
-                name="logo"
-                label="Logotype"
-                placeholder={'Drop your logo here or Choose File'}
-                labelOrientation="horizontal"
-              />
+              <div
+                className="animate-reveal-y flex flex-col  space-y-10"
+                style={{ '--delay': '0.8s' } as React.CSSProperties}
+              >
+                <RHFColorPicker name="colors" label="Brand colors" />
+
+                <RHFUploadLogo
+                  name="logo"
+                  label="Logotype"
+                  placeholder={'Drop your logo here or Choose File'}
+                  labelOrientation="horizontal"
+                />
+              </div>
             </div>
           </div>
           {(brand.colors ?? []).length > 0 && (
@@ -71,7 +80,7 @@ const ManualAttachmentForm: React.FC<Props> = ({ onSuccess, onGenerateDesign }) 
                   className="min-w-4 min-h-4 mt-1"
                 />
               </div>
-              <h4>
+              <h4 className="text-reveal">
                 Great, now im ready to generate some more elaborate design
                 suggestions for you!
               </h4>
@@ -87,11 +96,7 @@ const ManualAttachmentForm: React.FC<Props> = ({ onSuccess, onGenerateDesign }) 
             Generate Designs <ChevronRight />
           </Button>
         ) : (
-          <Button
-            type="submit"
-            className="rounded-none font-light"
-
-          >
+          <Button type="submit" className="rounded-none font-light">
             Continue <ChevronRight />
           </Button>
         )}

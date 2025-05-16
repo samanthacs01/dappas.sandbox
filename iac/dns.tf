@@ -27,7 +27,7 @@ resource "google_dns_record_set" "cloud_run_fe_react" {
   type         = "A"
   ttl          = 3600
   managed_zone = google_dns_managed_zone.managed_zone.name
-  rrdatas      = [module.load-balancing-fe.load_balancer_ip]
+  rrdatas      = [module.load-balancing-fe-react.load_balancer_ip]
   lifecycle {
     prevent_destroy = false
   }

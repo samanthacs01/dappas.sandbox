@@ -53,7 +53,6 @@ module "load-balancing-fe" {
 
   # Env variables
   env_vars = {
-    NEXT_PUBLIC_APP_ENV             = terraform.workspace
     GOOGLE_GENERATIVE_AI_API_KEY    = data.google_secret_manager_secret_version.ai_api_key.secret_data
     NEXT_PUBLIC_AMPLITUDE_API_KEY   = data.google_secret_manager_secret_version.next_public_amplitude_api_key.secret_data
     SHOPIFY_STORE_DOMAIN            = data.google_secret_manager_secret_version.shopify_store_domain.secret_data
@@ -68,7 +67,7 @@ module "load-balancing-fe-react" {
   source                 = "./modules/cloud-run" 
   project_id             = var.gcp_project
   region                 = "us-east1"
-  name                   = "web-${var.dappas_web_name_react}-${terraform.workspace}"
+  name                   = "web-${var.dappas_web_name}-${terraform.workspace}"
   custom_domain          = "web.${terraform.workspace}.${var.full_domain}"
   service_account        = "${data.google_project.project.number}-compute@developer.gserviceaccount.com"
   #connector             = google_sql_database_instance.db_dappas_instance.connection_name
@@ -87,6 +86,10 @@ module "load-balancing-fe-react" {
 
   # Env variables
   env_vars = {
-    NEXT_PUBLIC_APP_ENV             = terraform.workspace
+    GOOGLE_GENERATIVE_AI_API_KEY    = data.google_secret_manager_secret_version.ai_api_key.secret_data
+    VITE_AMPLITUDE_API_KEY   = data.google_secret_manager_secret_version.next_public_amplitude_api_key.secret_data
+    VITE_SHOPIFY_STORE_DOMAIN            = data.google_secret_manager_secret_version.shopify_store_domain.secret_data
+    VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN = data.google_secret_manager_secret_version.shopify_storefront_acces_token.secret_data
+    VITE_VERCEL_PROJECT_PRODUCTION_URL   = data.google_secret_manager_secret_version.vercel_project_production_url.secret_data
   }
 }

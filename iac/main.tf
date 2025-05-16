@@ -29,6 +29,11 @@ data "google_secret_manager_secret_version" "vercel_project_production_url" {
   version = "latest"
 }
 
+data "google_secret_manager_secret_version" "vercel_project_production_url_react" {
+  secret  = "vercel_project_production_url__react_${terraform.workspace}"
+  version = "latest"
+}
+
 
 #Create Load Balancing Frontend
 module "load-balancing-fe" {
@@ -90,6 +95,6 @@ module "load-balancing-fe-react" {
     VITE_AMPLITUDE_API_KEY   = data.google_secret_manager_secret_version.next_public_amplitude_api_key.secret_data
     VITE_SHOPIFY_STORE_DOMAIN            = data.google_secret_manager_secret_version.shopify_store_domain.secret_data
     VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN = data.google_secret_manager_secret_version.shopify_storefront_acces_token.secret_data
-    VITE_VERCEL_PROJECT_PRODUCTION_URL   = data.google_secret_manager_secret_version.vercel_project_production_url.secret_data
+    VITE_VERCEL_PROJECT_PRODUCTION_URL   = data.google_secret_manager_secret_version.vercel_project_production_url_react.secret_data
   }
 }

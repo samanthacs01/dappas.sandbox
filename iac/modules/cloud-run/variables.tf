@@ -84,7 +84,7 @@ variable "bucket_name" {
 }
 
 variable "volumes_config" {
-  description = "Configura qué volúmenes incluir en el servicio"
+  description = "Configure the volumens to include in the service"
   type = object({
     cloudsql_enabled = optional(bool, false)
     gcs_enabled      = optional(bool, false)
@@ -95,3 +95,7 @@ variable "volumes_config" {
   }
 }
 
+variable "container_port" {
+   description = "Cantainer Port"
+   default = "8080"
+}

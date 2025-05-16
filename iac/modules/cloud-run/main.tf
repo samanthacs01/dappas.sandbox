@@ -35,7 +35,9 @@ resource "google_cloud_run_v2_service" "default" {
 
     containers {
       image = var.image
-
+      ports{
+        container_port = var.container_port
+      }
       # Variables de entorno
       dynamic "env" {
         for_each = var.env_vars

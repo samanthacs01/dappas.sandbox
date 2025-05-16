@@ -40,15 +40,16 @@ RUN ls -l /app/apps/web/dist
 # Use a lightweight server to serve the static assets
 FROM nginx:stable-alpine AS production
 
-COPY --from=installer /app/apps/web/dist /usr/share/nginx/html 
 
-# Copy built assets from builder stage
+
+# Copy built assets from isntaller stage
+COPY --from=installer /app/apps/web/dist /usr/share/nginx/html 
 #COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
 
-EXPOSE 8080
+EXPOSE 80
 
-ENV PORT=8080
+ENV PORT=80
 ENV HOSTNAME="0.0.0.0"
 
 # Run the server

@@ -42,7 +42,7 @@ module "load-balancing-fe" {
   connector              = google_vpc_access_connector.priv_sql_dappas.id
   INSTANCE_CONNECTION_NAME = google_sql_database_instance.db_dappas_instance.connection_name
   #image                  = "gcr.io/google-samples/hello-app:1.0"
-  #image                  = "us-docker.pkg.dev/dappas/dappas/dappas-web-staging:latest"
+  #image                  = "us-docker.pkg.dev/dappas-459214/dappas/dappas-web-staging:latest"
   image                   = "us-docker.pkg.dev/${var.gcp_project}/dappas/${var.dappas_web_name}-${terraform.workspace}:FRONTEND_NEXT_TAG"
   allow_unauthenticated  = true
 
@@ -68,15 +68,16 @@ module "load-balancing-fe-react" {
   source                 = "./modules/cloud-run" 
   project_id             = var.gcp_project
   region                 = "us-east1"
-  name                   = "web-${var.dappas_web_name}-${terraform.workspace}"
+  name                   = "web-${var.dappas_web_name_react}-${terraform.workspace}"
   custom_domain          = "web.${terraform.workspace}.${var.full_domain}"
   service_account        = "${data.google_project.project.number}-compute@developer.gserviceaccount.com"
   #connector             = google_sql_database_instance.db_dappas_instance.connection_name
   connector              = google_vpc_access_connector.priv_sql_dappas.id
   INSTANCE_CONNECTION_NAME = google_sql_database_instance.db_dappas_instance.connection_name
+  container_port         = "80"
   #image                  = "gcr.io/google-samples/hello-app:1.0"
-  #image                  = "us-docker.pkg.dev/dappas/dappas/dappas-web-staging:latest"
-  image                   = "us-docker.pkg.dev/${var.gcp_project}/dappas/${var.dappas_web_name}-${terraform.workspace}:FRONTEND_REACT_TAG"
+  #image                  = "us-docker.pkg.dev/dappas-459214/dappas/dappas-web-react-dev:latest"
+  image                   = "us-docker.pkg.dev/${var.gcp_project}/dappas/${var.dappas_web_name_react}-${terraform.workspace}:FRONTEND_REACT_TAG"
   allow_unauthenticated  = true
 
   volumes_config = {

@@ -30,7 +30,7 @@ data "google_secret_manager_secret_version" "vercel_project_production_url" {
 }
 
 data "google_secret_manager_secret_version" "vercel_project_production_url_react" {
-  secret  = "vercel_project_production_url__react_${terraform.workspace}"
+  secret  = "vercel_project_production_url_react_${terraform.workspace}"
   version = "latest"
 }
 

@@ -2,7 +2,7 @@
 import { init, track as trackAmplitude } from '@amplitude/analytics-browser';
 import { createContext, useEffect } from 'react';
 
-const AMPLITUDE_API_KEY = import.meta.env.VITE_AMPLITUDE_API_KEY ?? 'a911a2775d7bbb13ead2400fefaf47ed';
+const AMPLITUDE_API_KEY = import.meta.env.VITE_AMPLITUDE_API_KEY ?? '';
 
 export const AmplitudeContext = createContext({
   track: (eventName: string, eventProperties: Record<string, string>) => {

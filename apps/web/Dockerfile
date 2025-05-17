@@ -21,6 +21,17 @@ RUN pnpm turbo prune web @workspace/ui --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
+
+# Declare ARGs at the top (all VITE_ variables you expect)
+ARG VITE_AMPLITUDE_API_KEY
+ARG VITE_SHOPIFY_STORE_DOMAIN
+ARG VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN
+
+# Make them available as ENV for Vite
+ENV VITE_AMPLITUDE_API_KEY=${VITE_AMPLITUDE_API_KEY}
+ENV VITE_SHOPIFY_STORE_DOMAIN=${VITE_SHOPIFY_STORE_DOMAIN}
+ENV VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN=${VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN}
+
 RUN apk update
 RUN apk add --no-cache libc6-compat
 WORKDIR /app

@@ -135,6 +135,9 @@ jobs:
     if: needs.detect_changes.outputs.fe_react_changes == 'true' || needs.setup.outputs.environment == 'staging' || needs.setup.outputs.environment == 'prod'
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+      VITE_AMPLITUDE_API_KEY: ${{ secrets.VITE_AMPLITUDE_API_KEY }}
+      VITE_SHOPIFY_STORE_DOMAIN: ${{ secrets.VITE_SHOPIFY_STORE_DOMAIN }}
+      VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -147,6 +150,15 @@ jobs:
           project_id: ${{ vars.GOOGLE_PROJECT }}
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
+      - name: Generate build args
+        id: build-args
+        run: |
+          BUILD_ARGS=""
+          for VAR in $(env | grep '^VITE_' | cut -d= -f1); do
+            BUILD_ARGS="$BUILD_ARGS --build-arg $VAR=${!VAR}"
+          done
+          echo "BUILD_ARGS=$BUILD_ARGS" >> $GITHUB_OUTPUT
+          
       - name: Login to artifact registry
         uses: ./.github/actions/login-artifact-registry
 
@@ -157,7 +169,7 @@ jobs:
 
       - name: Build and Push Frontend Docker Image
         run: |
-          docker build -t us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:${{ github.sha }} -f apps/web/Dockerfile .
+          docker build ${{ steps.build-args.outputs.BUILD_ARGS }} -t us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:${{ github.sha }} -f apps/web/Dockerfile .
           docker tag us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:${{ github.sha }} us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:latest
           docker push us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:${{ github.sha }}
           docker push us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:latest

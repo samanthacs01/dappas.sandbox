@@ -1,4 +1,4 @@
-import RHFColorPicker from '@/core/components/commons/form-inputs/rhf-color-picker';
+import RHFColorPickerInline from '@/core/components/commons/form-inputs/rhf-color-picker-inline';
 import ChatAssistantIcon from '@/core/components/commons/icons/chat-assistant';
 import RHFUploadLogo from '@/modules/designer/components/fields/rhf-upload-logo';
 import { useDesignerStore } from '@/modules/designer/store/designer';
@@ -60,7 +60,7 @@ const ManualAttachmentForm: React.FC<Props> = ({
                 className="animate-reveal-y flex flex-col  space-y-10"
                 style={{ '--delay': '0.8s' } as React.CSSProperties}
               >
-                <RHFColorPicker name="colors" label="Brand colors" />
+                <RHFColorPickerInline name="colors" label="Brand colors" />
 
                 <RHFUploadLogo
                   name="logo"

@@ -5,10 +5,12 @@ on:
   push:
     branches:
       - main    # dev enviroment (with change detection)
+      - main-sandbox
     tags:
       - 'rc-v*'  # staging enviroment (always build)
       - 'v*'     # production enviroment (always build)
     paths:
+      - .github/**
       - apps/**
       - iac/**
 

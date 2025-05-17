@@ -41,10 +41,11 @@ RUN ls -l /app/apps/web/dist
 FROM nginx:stable-alpine AS production
 
 
+# Copy custom nginx config
+COPY --from=installer /app/apps/web/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy built assets from isntaller stage
-COPY --from=installer /app/apps/web/dist /usr/share/nginx/html 
-#COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
+# Copy built assets from installer stage
+COPY --from=installer /app/apps/web/dist /usr/share/nginx/html
 
 
 EXPOSE 80

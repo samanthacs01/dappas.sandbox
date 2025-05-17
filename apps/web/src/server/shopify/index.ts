@@ -3,7 +3,6 @@ import {
   SHOPIFY_GRAPHQL_API_ENDPOINT,
 } from '@/server/constants';
 import { isShopifyError } from '@/server/type-guards';
-import { ensureStartsWith } from '@/server/utils';
 
 import { createCartMutation } from './mutations/cart';
 import {
@@ -43,11 +42,13 @@ import {
 
 const getShopifyConfigs = async () => {
   'use server';
-  const domain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN
-    ? ensureStartsWith(import.meta.env.VITE_SHOPIFY_STORE_DOMAIN, 'https://')
-    : 'chm0q3-id.myshopify.com';
+  // const domain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN
+  //   ? ensureStartsWith(import.meta.env.VITE_SHOPIFY_STORE_DOMAIN, 'https://')
+  //   : 'chm0q3-id.myshopify.com';
+  const domain = 'https://chm0q3-id.myshopify.com';
   const endpoint = `${domain}${SHOPIFY_GRAPHQL_API_ENDPOINT}`;
-  const key = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN ?? '60c051ded14bb401fccc5ed3bf9a1e85';
+  // const key = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN ?? '60c051ded14bb401fccc5ed3bf9a1e85';
+  const key = '60c051ded14bb401fccc5ed3bf9a1e85';
   return { domain, endpoint, key };
 };
 

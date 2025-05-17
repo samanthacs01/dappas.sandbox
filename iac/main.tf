@@ -29,12 +29,6 @@ data "google_secret_manager_secret_version" "vercel_project_production_url" {
   version = "latest"
 }
 
-data "google_secret_manager_secret_version" "vercel_project_production_url_react" {
-  secret  = "vercel_project_production_url_react_${terraform.workspace}"
-  version = "latest"
-}
-
-
 #Create Load Balancing Frontend
 module "load-balancing-fe" {
   source                 = "./modules/cloud-run" 

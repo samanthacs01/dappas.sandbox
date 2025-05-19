@@ -26,7 +26,8 @@ const ManualCompanyInfoForm: React.FC<Props> = ({ onSuccess }) => {
   });
 
   const onSubmit = (data: BrandBasicInfoType) => {
-    setBrand({ ...brand, ...data });
+    const urlParsed = `https://${data.website}`;
+    setBrand({ ...brand, ...data, website: urlParsed });
     onSuccess?.();
   };
 

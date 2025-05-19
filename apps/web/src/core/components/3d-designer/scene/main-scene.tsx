@@ -1,43 +1,77 @@
+'use client';
+
+import React, { FC, PropsWithChildren, Suspense, useRef } from 'react';
+import { Canvas } from '@react-three/fiber';
 import {
-  BakeShadows,
-  ContactShadows,
   OrbitControls,
   PerspectiveCamera,
+  BakeShadows,
+  CameraControls,
 } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { FC, PropsWithChildren, Suspense } from 'react';
-import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
+import CameraPresets from './camera-preset';
+import CameraInfo from '@/core/components/3d-designer/scene/camera-info';
 
-type MainSceneProps = PropsWithChildren;
+type MainSceneProps = PropsWithChildren & {
+  showCameraInfo?: boolean;
+  enableCameraControls?: boolean;
+};
 
-const MainScene: FC<MainSceneProps> = ({ children }) => {
+const MainScene: FC<MainSceneProps> = ({
+  children,
+  showCameraInfo = true,
+  enableCameraControls = true,
+}) => {
+  const cameraControlsRef = useRef<CameraControls>(null);
+
   return (
-    <div className="h-full overflow-hidden bg-white">
-      <Canvas
-        shadows
-        gl={{
-          preserveDrawingBuffer: true,
-          toneMapping: ACESFilmicToneMapping,
-          toneMappingExposure: 1.0,
-        }}
-        onCreated={({ gl }) => {
-          gl.shadowMap.enabled = true;
-          gl.shadowMap.type = PCFSoftShadowMap;
-        }}
-      >
+    <div className="h-screen overflow-hidden bg-gradient-to-b from-gray-50 to-gray-200 relative">
+      {/* Camera presets overlay - OUTSIDE Canvas */}
+      {enableCameraControls && (
+        <CameraPresets
+          cameraControlsRef={
+            cameraControlsRef as React.RefObject<CameraControls>
+          }
+        />
+      )}
+
+      <Canvas shadows gl={{ preserveDrawingBuffer: true, toneMapping: 0 }}>
         <PerspectiveCamera
           makeDefault
-          position={[0, 1, 8]}
-          fov={35}
-          near={0.1}
-          far={100}
+          position={[4, 2, 4]}
+          fov={45}
+          near={0.2}
+          far={1000}
         />
 
-        <ambientLight intensity={0.7} color="#ffffff" />
+        {enableCameraControls ? (
+          <CameraControls
+            ref={cameraControlsRef}
+            makeDefault
+            smoothTime={0.25}
+            polarRotateSpeed={0.3}
+            azimuthRotateSpeed={0.3}
+            dollySpeed={0.3}
+            truckSpeed={0.5}
+            minPolarAngle={0}
+            maxPolarAngle={Math.PI}
+            minDistance={1}
+            maxDistance={50}
+          />
+        ) : (
+          <OrbitControls
+            enablePan={true}
+            enableZoom={true}
+            minPolarAngle={Math.PI / 6}
+            maxPolarAngle={Math.PI / 2}
+            minDistance={3}
+            maxDistance={10}
+          />
+        )}
+        <ambientLight intensity={0.4} color="#ffffff" />
 
         <directionalLight
           position={[5, 5, 5]}
-          intensity={1.4}
+          intensity={1}
           castShadow
           shadow-mapSize={[2048, 2048]}
           shadow-bias={-0.0001}
@@ -57,34 +91,29 @@ const MainScene: FC<MainSceneProps> = ({ children }) => {
         />
 
         <pointLight position={[-5, 5, -5]} intensity={0.6} color="#fff" />
-        <pointLight position={[3, 3, 3]} intensity={0.4} color="#ffe0b3" />
+        <pointLight position={[3, 3, 3]} intensity={0.2} color="#ffe0b3" />
 
         <hemisphereLight
           args={['#sky', '#ground', 0.5]}
           position={[0, 50, 0]}
         />
 
-        <OrbitControls
-          enablePan={true}
-          enableZoom={true}
-          minPolarAngle={Math.PI / 6}
-          maxPolarAngle={Math.PI / 2}
-          minDistance={3}
-          maxDistance={10}
-        />
-
-        <ContactShadows
-          position={[0, -3.5, 0]}
-          opacity={0.5}
-          scale={20}
-          blur={2.5}
-          far={4.5}
-          resolution={1024}
-          color="#000000"
-        />
+        {/* Camera information - INSIDE Canvas using Html component */}
+        {showCameraInfo && <CameraInfo />}
 
         <Suspense fallback={null}>
           {children}
+
+          {/* Add some basic lighting for better visualization */}
+          <ambientLight intensity={0.4} />
+          <directionalLight
+            position={[10, 10, 5]}
+            intensity={1}
+            castShadow
+            shadow-mapSize-width={2048}
+            shadow-mapSize-height={2048}
+          />
+
           <BakeShadows />
         </Suspense>
       </Canvas>

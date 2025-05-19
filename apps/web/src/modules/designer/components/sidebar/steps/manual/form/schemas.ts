@@ -1,10 +1,12 @@
 import { z } from 'zod';
 
 const ColorsLogoSchema = z.object({
-  colors: z.array(z.string(), { required_error: 'The colors field is required' }).min(1, {
-    message: 'At least one color is required',
-  }),
-  logo: z.instanceof(File, { message: "The logo is required" }).refine(
+  colors: z
+    .array(z.string(), { required_error: 'The colors field is required' })
+    .min(1, {
+      message: 'At least one color is required',
+    }),
+  logo: z.instanceof(File, { message: 'The logo is required' }).refine(
     (file) => {
       console.log('file', file);
       const validTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
@@ -23,9 +25,12 @@ const BrandBasicInfoSchema = z.object({
   industry: z.string().min(1, {
     message: 'Industry is required',
   }),
-  website: z.string().url({
-    message: 'Website must be a valid URL',
-  }),
+  website: z
+    .string()
+    .min(1, { message: 'Website is required' })
+    .refine((val) => /\.[a-zA-Z]{2,}$/.test(val), {
+      message: 'Website must contain a valid domain (e.g., google.com)',
+    }),
   location: z.string().min(1, {
     message: 'Location is required',
   }),
@@ -35,4 +40,3 @@ export type ColorsLogoType = z.infer<typeof ColorsLogoSchema>;
 export type BrandBasicInfoType = z.infer<typeof BrandBasicInfoSchema>;
 
 export { BrandBasicInfoSchema, ColorsLogoSchema };
-

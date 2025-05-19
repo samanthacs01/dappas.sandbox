@@ -1,4 +1,3 @@
-import RHFColorPickerInline from '@/core/components/commons/form-inputs/rhf-color-picker-inline';
 import ChatAssistantIcon from '@/core/components/commons/icons/chat-assistant';
 import RHFUploadLogo from '@/modules/designer/components/fields/rhf-upload-logo';
 import { useDesignerStore } from '@/modules/designer/store/designer';
@@ -7,6 +6,7 @@ import { Button } from '@workspace/ui/components/button';
 import { ChevronRight } from 'lucide-react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ColorsLogoSchema, ColorsLogoType } from './schemas';
+import RHFColorPicker from '@/core/components/commons/form-inputs/rhf-color-picker';
 
 type Props = {
   onSuccess?: () => void;
@@ -60,7 +60,7 @@ const ManualAttachmentForm: React.FC<Props> = ({
                 className="animate-reveal-y flex flex-col  space-y-10"
                 style={{ '--delay': '0.8s' } as React.CSSProperties}
               >
-                <RHFColorPickerInline name="colors" label="Brand colors" />
+                <RHFColorPicker name="colors" label="Brand colors" />
 
                 <RHFUploadLogo
                   name="logo"
@@ -93,7 +93,7 @@ const ManualAttachmentForm: React.FC<Props> = ({
             className="rounded-none font-light"
             onClick={onGenerateDesign}
           >
-            Generate Designs <ChevronRight />
+            Generate designs <ChevronRight />
           </Button>
         ) : (
           <Button type="submit" className="rounded-none font-light">

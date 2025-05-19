@@ -11,6 +11,7 @@ import usePrintableProduct from '../../hooks/use-printable-product';
 import { useDesignerStore } from '../../store/designer';
 import { PrintableProduct } from '../../types/printable-product';
 import { modelDictionary } from './models-dictionary';
+import PreviewControlPanel from './previer-control-panel';
 
 type Props = {
   product: PrintableProduct;
@@ -23,6 +24,8 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
   const [selectedTexture, setSelectedTexture] = useState<string>('');
   const [activeTexture, setActiveTexture] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [playAnimation, setPlayAnimation] = useState<boolean>(false);
+  const [playRotation, setPlayRotation] = useState<boolean>(true);
 
   const { getPrintableProductPdf } = usePrintableProduct();
 
@@ -85,8 +88,10 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
 
     return modelDictionary[product?.model.name]({
       texture: selectedTexture,
+      playRotation,
+      playAnimation,
     });
-  }, [product, selectedTexture]);
+  }, [product, selectedTexture, playRotation, playAnimation]);
 
   useEffect(() => {
     const initializeTextures = async () => {
@@ -139,6 +144,14 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
     }
   };
 
+  const onPlayAnimation = useCallback(() => {
+    setPlayAnimation((prev) => !prev);
+  }, []);
+
+  const onStopModelRotation = useCallback(() => {
+    setPlayRotation((prev) => !prev);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="w-full bg-white relative max-h-[calc(100vh_-_64px)]">
@@ -155,14 +168,14 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
         <div className="absolute bottom-5 transform  left-1/2  -translate-x-1/2 -translate-y-1/2 bg-white z-20">
           <Button
             variant="default"
-            className="cursor-pointer"
+            className="cursor-pointer rounded-none"
             onClick={downloadPrintablePdf}
           >
-            <span className="text-sm">Download Printable PDF</span>
+            <span className="text-sm">Download printable PDF</span>
           </Button>
         </div>
       )}
-      <MainScene>{renderModel()}</MainScene>
+      <MainScene enableCameraControls={false} showCameraInfo={false} >{renderModel()}</MainScene>
 
       {isOnboardingReady && (
         <TextureCardList
@@ -171,6 +184,12 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
           activeTexture={activeTexture}
         />
       )}
+      <PreviewControlPanel
+        onPlay={onPlayAnimation}
+        isPlaying={playAnimation}
+        onStop={onStopModelRotation}
+        isRotating={playRotation}
+      />
     </div>
   );
 };

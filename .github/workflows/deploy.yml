@@ -161,17 +161,16 @@ jobs:
       - name: Create .env.local file
         run: |
           cat <<EOF > ./apps/web/.env.local
-          GOOGLE_GENERATIVE_AI_API_KEY=${{ vars.GOOGLE_GENERATIVE_AI_API_KEY }}
-          VITE_AMPLITUDE_API_KEY=${{ vars.VITE_AMPLITUDE_API_KEY }}
-          VITE_SHOPIFY_STORE_DOMAIN=${{ vars.VITE_SHOPIFY_STORE_DOMAIN }}
-          VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN=${{ vars.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+          GOOGLE_GENERATIVE_AI_API_KEY=${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+          VITE_AMPLITUDE_API_KEY=${{ secrets.VITE_AMPLITUDE_API_KEY }}
+          VITE_SHOPIFY_STORE_DOMAIN=${{ secrets.VITE_SHOPIFY_STORE_DOMAIN }}
+          VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN=${{ secrets.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
           EOF
           ls -la ./apps/web/
-          cat ./apps/web/.env.local
 
       - name: Build and Push Frontend Docker Image
         run: |
-          docker build ${{ steps.build-args.outputs.BUILD_ARGS }} -t us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:${{ github.sha }} -f apps/web/Dockerfile .
+          docker build -t us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:${{ github.sha }} -f apps/web/Dockerfile .
           docker tag us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:${{ github.sha }} us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:latest
           docker push us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:${{ github.sha }}
           docker push us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${{ env.ENVIRONMENT }}:latest

@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main    # dev enviroment (with change detection)
-      - main-sandbox
     tags:
       - 'rc-v*'  # staging enviroment (always build)
       - 'v*'     # production enviroment (always build)
@@ -43,9 +42,10 @@ jobs:
       - name: Extract Environment
         id: extract_env
         run: |
-          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-          echo "environment=dev" >> $GITHUB_OUTPUT
-          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+          if [[ "${GITHUB_REF_TYPE}" == "branch" && "${GITHUB_REF_NAME}" == "main" ]]; then
+            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             REF_NAME="${GITHUB_REF_NAME}"
             echo "Tag name: $REF_NAME"
             if [[ "$REF_NAME" =~ ^rc-v[0-9.]+$ ]]; then
@@ -58,6 +58,9 @@ jobs:
                 echo "❌ Tag name does not match expected pattern"
                 exit 1
             fi
+          else
+            echo "❌ Unsupported ref type: ${GITHUB_REF_TYPE}"
+            exit 1
           fi
 
   detect_changes:
@@ -135,9 +138,6 @@ jobs:
     if: needs.detect_changes.outputs.fe_react_changes == 'true' || needs.setup.outputs.environment == 'staging' || needs.setup.outputs.environment == 'prod'
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-      VITE_AMPLITUDE_API_KEY: ${{ secrets.VITE_AMPLITUDE_API_KEY }}
-      VITE_SHOPIFY_STORE_DOMAIN: ${{ secrets.VITE_SHOPIFY_STORE_DOMAIN }}
-      VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN: ${{ secrets.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -149,15 +149,6 @@ jobs:
         with:
           project_id: ${{ vars.GOOGLE_PROJECT }}
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-
-      - name: Generate build args
-        id: build-args
-        run: |
-          BUILD_ARGS=""
-          for VAR in $(env | grep '^VITE_' | cut -d= -f1); do
-            BUILD_ARGS="$BUILD_ARGS --build-arg $VAR=${!VAR}"
-          done
-          echo "BUILD_ARGS=$BUILD_ARGS" >> $GITHUB_OUTPUT
           
       - name: Login to artifact registry
         uses: ./.github/actions/login-artifact-registry
@@ -166,6 +157,17 @@ jobs:
         run: |
           echo "ENVIRONMENT=${ENVIRONMENT}"
           echo "Tag: us-docker.pkg.dev/${{ vars.GOOGLE_PROJECT }}/dappas/dappas-web-react-${ENVIRONMENT}:${{ github.sha }}"
+
+      - name: Create .env.local file
+        run: |
+          cat <<EOF > ./apps/web/.env.local
+          GOOGLE_GENERATIVE_AI_API_KEY=${{ vars.GOOGLE_GENERATIVE_AI_API_KEY }}
+          VITE_AMPLITUDE_API_KEY=${{ vars.VITE_AMPLITUDE_API_KEY }}
+          VITE_SHOPIFY_STORE_DOMAIN=${{ vars.VITE_SHOPIFY_STORE_DOMAIN }}
+          VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN=${{ vars.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN }}
+          EOF
+          ls -la ./apps/web/
+          cat ./apps/web/.env.local
 
       - name: Build and Push Frontend Docker Image
         run: |

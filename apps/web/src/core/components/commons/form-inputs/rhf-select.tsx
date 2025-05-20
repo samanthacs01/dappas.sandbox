@@ -80,7 +80,7 @@ const RHFSelect: FunctionComponent<FormSelectProps> = ({
               <SelectTrigger className={cn('w-full', className)}>
                 <SelectValue placeholder={placeholder || 'Select an option'} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="h-[200px] overflow-y-auto">
                 {options.length === 0 && (
                   <span className="p-2 text-center flex justify-center">
                     No options found.

@@ -1,4 +1,4 @@
-import { PrintableProduct } from "../types/printable-product";
+import { PrintableProduct } from "../types/product";
 
 export const enum OnBoardingSteps {
     WELCOME = 0,

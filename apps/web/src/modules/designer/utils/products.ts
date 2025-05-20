@@ -1,23 +1,37 @@
-import { PrintableProduct } from "../types/printable-product";
+import { PrintableProduct } from '../types/product';
 
 // mocked impressible product service
 export const getProductById = (id: string): PrintableProduct => {
-    console.log('getProductById', id);
-    return {
-        id: 'coffee-cup',
-        printableTemplateSrc: '/products/paper-cup/12on-single-wall-cup.pdf',
-        printableArea: {
-            x: 29,
-            y: 119,
-            // this is the size of the image in mm
-            // 192.5mm x 128.5mm
+  console.log('getProductById', id);
+  return {
+    id: 'coffee-cup',
+    printable: {
+      id: 'CoffeeCup',
+      name: 'CoffeeCup',
+      templateSrc: '/products/paper-cup/12on-single-wall-cup.pdf',
+      // this is the size of the image in mm
+      // 192.5mm x 128.5mm
+      layers: [
+        {
+          id: 'coffee-cup',
+          name: 'Coffee Cup',
+          size: {
             width: 192.5,
             height: 128.5,
+          },
+          position: {
+            x: 29,
+            y: 119,
+          },
         },
-        model: {
-            name: 'CoffeeCupModel',
-            src: '/models/CoffeeCup.glb',
-        },
-        metadata: {}
-    }
-}
+      ],
+    },
+    model: {
+      id: 'CoffeeCupModel',
+      name: 'CoffeeCupModel',
+      src: '/models/CoffeeCup.glb',
+      layers: [],
+    },
+    metadata: {},
+  };
+};

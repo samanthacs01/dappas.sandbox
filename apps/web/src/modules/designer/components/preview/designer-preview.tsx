@@ -9,7 +9,7 @@ import { Button } from '@workspace/ui/components/button';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import usePrintableProduct from '../../hooks/use-printable-product';
 import { useDesignerStore } from '../../store/designer';
-import { PrintableProduct } from '../../types/printable-product';
+import { PrintableProduct } from '../../types/product';
 import { modelDictionary } from './models-dictionary';
 import PreviewControlPanel from './previer-control-panel';
 
@@ -36,8 +36,8 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
   const brand = useDesignerStore((state) => state.brand);
 
   const DEFAULT_JSON_CONFIG: AITextureConfig = useMemo(() => {
-    const width = mmToPx(product?.printableArea.width);
-    const height = mmToPx(product?.printableArea.height);
+    const width = mmToPx(product?.printable.layers[0].size.width ?? 100);
+    const height = mmToPx(product?.printable.layers[0].size.height ?? 100);
     return {
       id: 'default',
       width,
@@ -54,7 +54,7 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
         },
       ],
     };
-  }, [product?.printableArea]);
+  }, [product?.printable.layers]);
 
   const downloadPrintablePdf = async () => {
     if (product && selectedTexture) {
@@ -175,7 +175,9 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
           </Button>
         </div>
       )}
-      <MainScene enableCameraControls={false} showCameraInfo={false} >{renderModel()}</MainScene>
+      <MainScene enableCameraControls={false} showCameraInfo={false}>
+        {renderModel()}
+      </MainScene>
 
       {isOnboardingReady && (
         <TextureCardList

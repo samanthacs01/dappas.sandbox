@@ -21,7 +21,7 @@ func NotFound(err error) Result {
 func BadRequest(err error) Result {
 	return Result{
 		Data: problemDetails{
-			Type:     "https://example.com/probs/invalid-request",
+			Type:     "bad-request",
 			Title:    "Bad Request",
 			Status:   http.StatusBadRequest,
 			Detail:   err.Error(),
@@ -34,7 +34,7 @@ func BadRequest(err error) Result {
 func BadRequestWithCode(err error, code int) Result {
 	return Result{
 		Data: problemDetails{
-			Type:     "https://example.com/probs/invalid-request",
+			Type:     "bad-request",
 			Title:    "Bad Request",
 			Status:   code,
 			Detail:   err.Error(),
@@ -47,7 +47,7 @@ func BadRequestWithCode(err error, code int) Result {
 func Unauthorized(err error) Result {
 	return Result{
 		Data: problemDetails{
-			Type:     "https://example.com/probs/invalid-request",
+			Type:     "unauthorized",
 			Title:    "Unauthorized",
 			Status:   http.StatusUnauthorized,
 			Detail:   err.Error(),
@@ -87,7 +87,7 @@ func NoContent() Result {
 
 func InternalServerError(err error) Result {
 	problem := problemDetails{
-		Type:     "https://example.com/probs/internal-server-error",
+		Type:     "internal-server-error",
 		Title:    "Internal Server Error",
 		Status:   http.StatusInternalServerError,
 		Detail:   err.Error(),
@@ -96,5 +96,15 @@ func InternalServerError(err error) Result {
 	return Result{
 		Data: problem,
 		Status: http.StatusInternalServerError,
+	}
+}
+
+func Redirect(url string) Result {
+	return Result{
+		Data:   nil,
+		Status: http.StatusFound,
+		Headers: &map[string]string{
+			"Location": url,
+		},
 	}
 }

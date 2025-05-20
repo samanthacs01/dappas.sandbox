@@ -23,34 +23,53 @@ const (
 type IAppConfig interface {
 	GetConnectionString() string
 	GetEnvironment() Environment
-	GetShopifySharedSecret() string
-	GetShopifyApiKey() string
-	GetShopifySecret() string
-	GetShopifyShopName() string
-	GetShopifyAccessToken() string
+}
+
+type IShopifyConfig interface {
+	GetSharedSecret() string
+	GetApiKey() string
+	GetSecret() string
+	GetShopName() string
+	GetAccessToken() string
+	GetScopes() string
+	GetRedirectUri() string
 }
 
 type config struct {
 }
 
+// GetRedirectUri implements IShopifyConfig.
+func (c *config) GetRedirectUri() string {
+	return getEnv("SHOPIFY_API_REDIRECT_URI", "")
+}
+
+// GetScopes implements IShopifyConfig.
+func (c *config) GetScopes() string {
+	return getEnv("SHOPIFY_API_SCOPES", "")
+}
+
 // GetShopifyApiKey implements IAppConfig.
-func (c *config) GetShopifyApiKey() string {
+func (c *config) GetApiKey() string {
 	return getEnv("SHOPIFY_API_KEY", "")
 }
+
 // GetShopifyApiKey implements IAppConfig.
-func (c *config) GetShopifyShopName() string {
+func (c *config) GetShopName() string {
 	return getEnv("SHOPIFY_SHOP_NAME", "")
 }
+
 // GetShopifyApiKey implements IAppConfig.
-func (c *config) GetShopifyAccessToken() string {
+func (c *config) GetAccessToken() string {
 	return getEnv("SHOPIFY_SHOP_ACCESS_TOKEN", "")
 }
+
 // GetShopifyApiKey implements IAppConfig.
-func (c *config) GetShopifySecret() string {
+func (c *config) GetSecret() string {
 	return getEnv("SHOPIFY_API_SECRET", "")
 }
+
 // GetShopifySharedSecret implements IAppConfig.
-func (c *config) GetShopifySharedSecret() string {
+func (c *config) GetSharedSecret() string {
 	return getEnv("SHOPIFY_SHARED_SECRET", "")
 }
 
@@ -131,6 +150,10 @@ func NewSecurityConfig() security.ISecurityConfig {
 }
 
 func NewAppConfig() IAppConfig {
+	return &config{}
+}
+
+func NewShopifyConfig() IShopifyConfig {
 	return &config{}
 }
 

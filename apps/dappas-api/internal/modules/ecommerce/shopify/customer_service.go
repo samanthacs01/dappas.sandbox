@@ -15,11 +15,11 @@ type ECommerceCustomerService interface {
 }
 
 type shopifyCustomerService struct {
-	config config.IAppConfig
+	config config.IShopifyConfig
 	logger *zap.Logger
 }
 
-func NewShopifyCustomerService(c config.IAppConfig, l *zap.Logger) ECommerceCustomerService {
+func NewShopifyCustomerService(c config.IShopifyConfig, l *zap.Logger) ECommerceCustomerService {
 	return &shopifyCustomerService{
 		config: c,
 		logger: l,
@@ -27,20 +27,20 @@ func NewShopifyCustomerService(c config.IAppConfig, l *zap.Logger) ECommerceCust
 }
 func (s *shopifyCustomerService) Save(customers *entities.Customer) (*uint64, error) {
 	app := spf.App{
-		ApiKey:    s.config.GetShopifyApiKey(),
-		ApiSecret: s.config.GetShopifySecret(),
+		ApiKey:    s.config.GetApiKey(),
+		ApiSecret: s.config.GetSecret(),
 		Scope:     "read_customers,write_customers",
 	}
 
-	client, err := spf.NewClient(app, s.config.GetShopifyShopName(), s.config.GetShopifyAccessToken(), spf.WithRetry(3))
+	client, err := spf.NewClient(app, s.config.GetShopName(), s.config.GetAccessToken(), spf.WithRetry(3))
 	if err != nil {
 		s.logger.Error("Error creating Shopify client", zap.Error(err))
 		return nil, fmt.Errorf("error creating Shopify client: %w", err)
 	}
 	newCustomer := spf.Customer{
-		//FirstName: customers.FirstName,
-		//LastName:  customers.LastName,
-		//Email:     customers.Email,
+		FirstName: customers.User.FirstName,
+		LastName:  customers.User.LastName,
+		Email:     customers.User.Email,
 	}
 
 	customer, err := client.Customer.Create(context.Background(), newCustomer)

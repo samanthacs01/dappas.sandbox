@@ -14,6 +14,10 @@ services:
       - ENV=development
       - DAPPAS_ADMIN_PASSWORD=admin
       - DAPPAS_ADMIN_EMAIL=admin@dappas.com
+      - SHOPIFY_API_KEY=6a7e77c25e50cc700cb06a1353bddbb4
+      - SHOPIFY_API_SECRET=6338c1682ff7a9c0933cb80aed090b36
+      - SHOPIFY_API_SCOPES=read_products,write_products
+      - SHOPIFY_API_REDIRECT_URI=http://localhost:8080/v1/ecommerce/shopify/auth-callback
     depends_on:
       postgres:
         condition: service_healthy
@@ -36,6 +40,11 @@ services:
       - DAPPAS_ADMIN_EMAIL=admin@dappas.com
       - DAPPAS_ADMIN_FIRST_NAME=Dappas 
       - DAPPAS_ADMIN_LAST_NAME=Admin
+      - SHOPIFY_API_KEY=6a7e77c25e50cc700cb06a1353bddbb4
+      - SHOPIFY_API_SECRET=6338c1682ff7a9c0933cb80aed090b36
+      - SHOPIFY_API_SCOPES=read_products,write_products
+      - SHOPIFY_API_REDIRECT_URI=http://localhost:8080/v1/ecommerce/shopify/auth-callback
+      
     depends_on:
       postgres:
         condition: service_healthy

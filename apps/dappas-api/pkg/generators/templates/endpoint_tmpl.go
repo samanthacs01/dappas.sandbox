@@ -28,7 +28,7 @@ func New{{.Name}}Endpoint(useCase usecases.I{{.Name}}UseCase) *{{.Name}}Endpoint
 // @Success 200 {object} {{.Name}}Input
 // @Failure 500 {object} ProblemDetails
 // @Router /v1/{{.Module}}/{{.ModuleName}}/{{.Name}} [post]
-func (e *{{.Name}}Endpoint) Handler(input *models.{{.Name}}Request) webapi.Result {
+func (e *{{.Name}}Endpoint) Handler(input *models.{{.Name}}Input) webapi.Result {
     success, fail := e.useCase.Run(input)
 	if fail != nil {
 		return webapi.InternalServerError(fail)

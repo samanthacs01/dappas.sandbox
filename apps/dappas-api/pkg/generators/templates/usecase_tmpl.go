@@ -14,12 +14,12 @@ type I{{.Name}}UseCase interface {
 }
 
 type {{.InternalName}}UseCase struct {
-	Repository repositories.{{.Feature}}Repository
+	repository repositories.{{.Feature}}Repository
 }
 
 func New{{.Name}}UseCase(repository repositories.{{.Feature}}Repository) I{{.Name}}UseCase {
 	return &{{.InternalName}}UseCase{
-		Repository: repository,
+		repository: repository,
 	}
 }
 

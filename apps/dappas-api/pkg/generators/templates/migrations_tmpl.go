@@ -17,7 +17,7 @@ func up{{.Name}}Models(db *gorm.DB) error {
 	return err
 }
 	
-func down{{.Name}}Models(db gorm.DB) error {
+func down{{.Name}}Models(db *gorm.DB) error {
 	// This code is executed when the migration is rolled back.
 	err := db.Migrator().DropTable(&entities.{{.Name}}{})
 	return err

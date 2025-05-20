@@ -12,6 +12,9 @@ import (
 type User struct {
 	*gorm.Model
 	Email      string `json:"email" gorm:"unique;not null"`
+	FirstName  string `json:"first_name" gorm:"not null"`
+	LastName   string `json:"last_name" gorm:"not null"`
+	Phone      *string `json:"phone" gorm:"null"`
 	Password   string `json:"password" gorm:"null"` // Null for social network users
 	Role       string `json:"role" gorm:"not null"`
 	IsExternal bool   `json:"is_external" gorm:"default:false"` // True for social network users

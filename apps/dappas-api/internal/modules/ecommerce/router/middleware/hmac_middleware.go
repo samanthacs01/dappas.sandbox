@@ -8,10 +8,10 @@ import (
 	"selector.dev/dappas/internal/app/config"
 )
 
-func HmacValidationMiddleware(config config.IAppConfig) gin.HandlerFunc {
+func HmacValidationMiddleware(config config.IShopifyConfig) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		app := &spf.App{
-			ApiSecret: config.GetShopifySharedSecret(),
+			ApiSecret: config.GetSharedSecret(),
 		}
 		if (!app.VerifyWebhookRequest(c.Request)) {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid HMAC signature"})

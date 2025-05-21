@@ -8,12 +8,17 @@ import {
   SelectValue,
 } from '@workspace/ui/components/select';
 import { CartProduct } from '@/core/store/cart/type';
+import { useDesignerStore } from '@/core/store/cart/store';
 
 interface CartProductProps {
   product: CartProduct;
 }
 
 const CartProductComponent: React.FC<CartProductProps> = ({ product }) => {
+  const updateProductQuantity = useDesignerStore(
+    (state) => state.updateProductQuantity,
+  );
+  const removeProduct = useDesignerStore((state) => state.removeProduct);
   const quantityList = [
     '50',
     '100',
@@ -26,14 +31,6 @@ const CartProductComponent: React.FC<CartProductProps> = ({ product }) => {
     '450',
     '500',
   ];
-
-  //These functions are taken from store
-  const updateProductQuantity = (id: string, value: string) => {
-    console.log(id, value);
-  };
-  const removeProduct = (id: string) => {
-    console.log('Removed product: ', id);
-  };
 
   return (
     <div className="flex items-center h-[120px] gap-4">
@@ -50,7 +47,9 @@ const CartProductComponent: React.FC<CartProductProps> = ({ product }) => {
           <span className="font-light">{product.description}</span>
         </div>
         <Select
-          onValueChange={(value) => updateProductQuantity(product.id, value)}
+          onValueChange={(value) =>
+            updateProductQuantity(product.id, Number(value))
+          }
         >
           <SelectTrigger className="rounded-none border-0 border-b-2 shadow-none p-0 w-fit min-w-[83px]">
             <SelectValue placeholder="Amount" />

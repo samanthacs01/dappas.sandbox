@@ -23,6 +23,8 @@ export type NamedPosition =
   | 'bottom-left'
   | 'bottom-right';
 
+export type Position = NamedPosition | { x: number; y: number };
+
 // Base layer interface - common properties for all layer types
 export interface BaseLayer {
   id: string; // Unique identifier for the layer
@@ -34,19 +36,17 @@ export interface BaseLayer {
   width: number; // Layer width
   height: number; // Layer height
   zIndex: number; // Layer order (lower values are rendered first)
-  position?: NamedPosition; // Named position (optional)
+  position?: Position; // Named position (optional)
 }
 
 // Base properties for all layers
 export interface AILayerBase {
   visible?: boolean; // Whether the layer is visible
   opacity?: number; // Layer opacity (0-1)
-  x?: number; // X position
-  y?: number; // Y position
   width?: number; // Layer width
   height?: number; // Layer height
   zIndex?: number; // Layer order (lower values are rendered first)
-  position?: string; // Named position (e.g., "top", "center")
+  position?: Position; // Named position (e.g., "top", "center")
 }
 
 // Background layer

@@ -77,7 +77,7 @@ export class TextureGenerator {
     images: string[],
     numberVariants?: number,
   ): Promise<TextureBuilderConfig[]> {
-    
+
     const variantsQuantity = numberVariants ? numberVariants : 3;
     // If a string is received, try to parse it as JSON
     const baseConfig: AITextureConfig =
@@ -102,11 +102,6 @@ export class TextureGenerator {
     return variants;
   }
 
-  /**
-   * Creates a random variant with emphasis on color changes
-   * @param baseConfig Base configuration
-   * @returns Configuration with random variations
-   */
   private static async createRandomVariantByParams(
     baseConfig: AITextureConfig,
     colors: string[],
@@ -119,64 +114,25 @@ export class TextureGenerator {
       layers: [],
     };
 
-    // Generate background layers
-    // Pick one or two colors from the provided colors
-    // Pick 1 or 2 random colors from the array (not just the first ones)
-    let backgroundColors: string[] = [];
-    if (colors && colors.length > 0) {
-      const count = Math.random() < 0.7 ? 2 : 1; // 70% chance to select 2, 30% chance to select 1
-      const shuffled = [...colors].sort(() => Math.random() - 0.5);
-      backgroundColors = shuffled.slice(0, Math.min(count, shuffled.length));
-    } else {
-      backgroundColors = [this.colorManagement.getRandomColor('#ffffff')];
-    }
-    if (backgroundColors.length === 1) {
-      // Single color: full background
-      const backgroundLayer: AIBackgroundLayer = {
-        type: 'background',
-        color: backgroundColors[0],
-        width: baseConfig.width,
-        height: baseConfig.height,
-        position: 'top',
-        zIndex: 1,
-      };
-      variant.layers.push(backgroundLayer);
-    } else if (backgroundColors.length === 2) {
-      // Two colors: split top and bottom
-      const halfHeight = baseConfig.height / 2;
-      const topLayer: AIBackgroundLayer = {
-        type: 'background',
-        color: backgroundColors[0],
-        width: baseConfig.width,
-        height: halfHeight,
-        position: 'top',
-        zIndex: 1,
-      };
-      const bottomLayer: AIBackgroundLayer = {
-        type: 'background',
-        color: backgroundColors[1],
-        width: baseConfig.width,
-        height: halfHeight,
-        position: 'bottom',
-        zIndex: 1,
-      };
-      variant.layers.push(topLayer, bottomLayer);
+    // Copy and modified the layer background from a baseConfig
+    for (const layer of baseConfig.layers) {
+      const newLayer = { ...layer };
+      if (layer.type === 'background' && colors.length > 0) {
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        (newLayer as AIBackgroundLayer).color = randomColor;
+      }
+      variant.layers.push(newLayer);
     }
 
-    // Generate image layers one per images
     if (images && images.length > 0) {
       const imageLayerPromises = images.map(
         (imageSrc) =>
           new Promise<AIImageLayer>((resolve) => {
             const img = new window.Image();
             img.src = imageSrc;
-
-            // Default target width and height
             const targetWidth = baseConfig.width / 4;
             const targetHeight = baseConfig.height / 4;
-
             img.onload = () => {
-              // Calculate the aspect ratio
               const aspectRatio = img.naturalWidth / img.naturalHeight;
               let width = targetWidth;
               let height = targetHeight;
@@ -198,7 +154,6 @@ export class TextureGenerator {
               resolve(imageLayer);
             };
             img.onerror = () => {
-              // fallback if image fails to load
               resolve({
                 type: 'image',
                 url: imageSrc,
@@ -210,7 +165,6 @@ export class TextureGenerator {
             };
           }),
       );
-      // Wait for all images to load and push layers
       const imageLayers = await Promise.all(imageLayerPromises);
       variant.layers.push(...imageLayers);
     }
@@ -274,25 +228,32 @@ export class TextureGenerator {
       }
 
       if (Math.random() < 0.2) {
-        // Modify position if it doesn't have a named position
-        if (!layer.position) {
-          // Add a random variation to the position
-          if (layer.x !== undefined) {
-            newLayer.x = this.mathUtils.addVariation(
-              layer.x,
-              15,
-              0,
-              baseConfig.width || 512,
-            );
+        if (!layer.position || typeof layer.position !== 'string') {
+          let currentX: number;
+          let currentY: number;
+
+          if (layer.position && typeof layer.position === 'object') {
+            currentX = layer.position.x;
+            currentY = layer.position.y;
+          } else {
+            currentX = 0;
+            currentY = 0;
           }
-          if (layer.y !== undefined) {
-            newLayer.y = this.mathUtils.addVariation(
-              layer.y,
-              15,
-              0,
-              baseConfig.height || 512,
-            );
-          }
+
+          const newX = this.mathUtils.addVariation(
+            currentX,
+            15,
+            0,
+            baseConfig.width || 512,
+          );
+          const newY = this.mathUtils.addVariation(
+            currentY,
+            15,
+            0,
+            baseConfig.height || 512,
+          );
+
+          newLayer.position = { x: newX, y: newY };
         }
       }
 
@@ -427,46 +388,62 @@ export class TextureGenerator {
   public static async renderLayer(ctx: CanvasRenderingContext2D, layer: Layer) {
     if (!layer.visible) return;
 
-    //Recalculating the position
+    let x: number;
+    let y: number;
+
     if (layer.position) {
-      const { x, y } = calculatePosition(
-        layer.position,
-        layer.width,
-        layer.height,
-        ctx.canvas.width,
-        ctx.canvas.height,
-      );
-      if (x !== layer.x || y !== layer.y) {
-        layer = { ...layer, x, y };
+      if (typeof layer.position === 'string') {
+        const position = calculatePosition(
+          layer.position,
+          layer.width,
+          layer.height,
+          ctx.canvas.width,
+          ctx.canvas.height,
+        );
+        x = position.x;
+        y = position.y;
+      } else {
+        x = layer.position.x;
+        y = layer.position.y;
       }
+    } else {
+      x = 0;
+      y = 0;
     }
 
     switch (layer.type) {
       case 'background':
         renderBackgroundLayer(
           ctx,
-          layer as Layer & { type: 'background'; color: string },
+          { ...layer, x, y } as Layer & { type: 'background'; color: string },
         );
         break;
       case 'pattern':
         await renderPatternLayer(
           ctx,
-          layer as Layer & { type: 'pattern'; color: string },
+          { ...layer, x, y } as Layer & { type: 'pattern'; patternUrl: string },
         );
         break;
       case 'image':
         await renderImageLayer(
           ctx,
-          layer as Layer & { type: 'image'; src: string },
+          { ...layer, x, y } as Layer & { type: 'image'; imageUrl: string },
         );
         break;
       case 'text':
-        renderTextLayer(ctx, layer as Layer & { type: 'text'; text: string });
+        renderTextLayer(
+          ctx,
+          { ...layer, x, y } as Layer & { type: 'text'; text: string },
+        );
         break;
       case 'gradient':
         renderGradientLayer(
           ctx,
-          layer as Layer & {
+          {
+            ...layer,
+            x,
+            y,
+          } as Layer & {
             type: 'gradient';
             colors: Array<{ offset: number; color: string }>;
           },

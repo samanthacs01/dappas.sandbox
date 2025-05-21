@@ -30,7 +30,32 @@ export const getProductById = (id: string): PrintableProduct => {
       id: 'CoffeeCupModel',
       name: 'CoffeeCupModel',
       src: '/models/CoffeeCup.glb',
-      layers: [],
+      layers: [
+        {
+          id: 'coffee-cup',
+          name: 'Coffee Cup',
+          size: {
+            width: 192.5,
+            height: 128.5,
+          },
+          position: {
+            x: 0,
+            y: 0,
+          },
+        },
+        {
+          id: 'coffee-cup',
+          name: 'Coffee Cup',
+          size: {
+            width: 1000,
+            height: 100,
+          },
+          position: {
+            x: 100,
+            y: 100,
+          },
+        },
+      ],
     },
     metadata: {},
   };

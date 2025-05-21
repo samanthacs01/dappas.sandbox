@@ -4,9 +4,9 @@ import { downloadPdfBlob } from '@/core/lib/pdf';
 import { mmToPx } from '@/core/lib/units';
 import TextureCardList from '@/modules/chat/onboarding-chat/components/onboarding-preview/texture-card-list';
 import LoadingDesign from '@/modules/common/loading-design';
-import { AITextureConfig, TextureBuilderConfig } from '@/server/models/texture';
+import { AIBackgroundLayer, AITextureConfig, TextureBuilderConfig } from '@/server/models/texture';
 import { Button } from '@workspace/ui/components/button';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import usePrintableProduct from '../../hooks/use-printable-product';
 import { useDesignerStore } from '../../store/designer';
 import { PrintableProduct } from '../../types/product';
@@ -36,26 +36,23 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
   const brand = useDesignerStore((state) => state.brand);
 
   const DEFAULT_JSON_CONFIG: AITextureConfig = useMemo(() => {
-    const width = mmToPx(product?.printable.layers[0].size.width ?? 100);
-    const height = mmToPx(product?.printable.layers[0].size.height ?? 100);
+    const layers = product.model.layers.map((layer, index) => ({
+      type: 'background',
+      color: '#fff',
+      width: mmToPx(layer.size.width),
+      height: mmToPx(layer.size.height),
+      position: layer.position || 'center',
+      zIndex: index,
+      visible: true,
+    } as AIBackgroundLayer));
+
     return {
       id: 'default',
-      width,
-      height,
-      layers: [
-        {
-          type: 'background',
-          color: '#fff',
-          width,
-          height,
-          position: 'center',
-          zIndex: 0,
-          visible: true,
-        },
-      ],
+      width: 1920,
+      height: 1080,
+      layers,
     };
-  }, [product?.printable.layers]);
-
+  }, [product.model.layers]);
   const downloadPrintablePdf = async () => {
     if (product && selectedTexture) {
       const pdf = await getPrintableProductPdf(product, selectedTexture);

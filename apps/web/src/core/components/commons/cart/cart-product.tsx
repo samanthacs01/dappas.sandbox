@@ -1,6 +1,5 @@
 import { ImageWithFallback } from '../image/image-with-fallback';
 import { Trash2 } from 'lucide-react';
-import { CartProduct } from './type';
 import {
   Select,
   SelectContent,
@@ -8,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@workspace/ui/components/select';
+import { CartProduct } from '@/core/store/cart/type';
 
 interface CartProductProps {
   product: CartProduct;

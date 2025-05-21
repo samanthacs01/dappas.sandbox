@@ -5,7 +5,7 @@ import {
   SheetFooter,
 } from '@workspace/ui/components/sheet';
 import CartProductComponent from './cart-product';
-import { CartProduct } from './type';
+import { CartProduct } from '@/core/store/cart/type';
 
 interface CartSheetProps {
   open: boolean;

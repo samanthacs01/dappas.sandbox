@@ -1,4 +1,4 @@
-import { CartProduct } from '@/core/components/commons/cart/type';
+import { CartProduct } from '@/core/store/cart/type';
 
 export const _products: CartProduct[] = [
   {

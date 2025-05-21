@@ -36,7 +36,14 @@ const BrandBasicInfoSchema = z.object({
   }),
 });
 
+const CartInfoSchema = z.object({
+  quantity: z.number({
+    message: 'Quantity is required',
+  }),
+});
+
 export type ColorsLogoType = z.infer<typeof ColorsLogoSchema>;
 export type BrandBasicInfoType = z.infer<typeof BrandBasicInfoSchema>;
+export type CartInfoType = z.infer<typeof CartInfoSchema>;
 
-export { BrandBasicInfoSchema, ColorsLogoSchema };
+export { CartInfoSchema, BrandBasicInfoSchema, ColorsLogoSchema };

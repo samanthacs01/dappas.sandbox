@@ -1,4 +1,6 @@
-export const _products = [
+import { CartProduct } from '@/core/components/commons/cart/type';
+
+export const _products: CartProduct[] = [
   {
     id: '1',
     name: 'Coffee Cup',

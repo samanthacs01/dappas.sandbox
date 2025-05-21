@@ -1,33 +1,30 @@
-import RHFSelect from '../form-inputs/rhf-select';
 import { ImageWithFallback } from '../image/image-with-fallback';
 import { Trash2 } from 'lucide-react';
-
-//This type is taken from store
-type CartProduct = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  image: string;
-};
+import { CartProduct } from './type';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@workspace/ui/components/select';
 
 interface CartProductProps {
   product: CartProduct;
 }
 
-const CartProduct: React.FC<CartProductProps> = ({ product }) => {
-  const quantitySelectionList = [
-    { label: '50', value: '50' },
-    { label: '100', value: '100' },
-    { label: '150', value: '150' },
-    { label: '200', value: '200' },
-    { label: '250', value: '250' },
-    { label: '300', value: '300' },
-    { label: '350', value: '350' },
-    { label: '400', value: '400' },
-    { label: '450', value: '450' },
-    { label: '500', value: '500' },
+const CartProductComponent: React.FC<CartProductProps> = ({ product }) => {
+  const quantityList = [
+    '50',
+    '100',
+    '150',
+    '200',
+    '250',
+    '300',
+    '350',
+    '400',
+    '450',
+    '500',
   ];
 
   //These functions are taken from store
@@ -52,14 +49,20 @@ const CartProduct: React.FC<CartProductProps> = ({ product }) => {
           <span className="font-semibold">{product.name}</span>
           <span className="font-light">{product.description}</span>
         </div>
-        <RHFSelect
-          name={product.id}
-          placeholder="Account"
-          options={quantitySelectionList}
-          labelOrientation="horizontal"
+        <Select
           onValueChange={(value) => updateProductQuantity(product.id, value)}
-          className="rounded-none border-0 border-b-2 shadow-none p-0 w-fit min-w-[83px]"
-        />
+        >
+          <SelectTrigger className="rounded-none border-0 border-b-2 shadow-none p-0 w-fit min-w-[83px]">
+            <SelectValue placeholder="Amount" />
+          </SelectTrigger>
+          <SelectContent className="h-[200px] overflow-y-auto">
+            {quantityList.map((value) => (
+              <SelectItem key={`item-${value}`} value={value}>
+                {value}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex flex-col h-full justify-between items-end">
         <span className="font-semibold">
@@ -76,4 +79,4 @@ const CartProduct: React.FC<CartProductProps> = ({ product }) => {
   );
 };
 
-export default CartProduct;
+export default CartProductComponent;

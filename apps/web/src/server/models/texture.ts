@@ -31,8 +31,8 @@ export interface BaseLayer {
   type: string; // Type of layer (background, pattern, image, etc.)
   visible: boolean; // Whether the layer is visible
   opacity: number; // Layer opacity (0-1)
-  x: number; // X position
-  y: number; // Y position
+  x: number
+  y: number; // Layer position on the canvas
   width: number; // Layer width
   height: number; // Layer height
   zIndex: number; // Layer order (lower values are rendered first)
@@ -44,6 +44,8 @@ export interface AILayerBase {
   visible?: boolean; // Whether the layer is visible
   opacity?: number; // Layer opacity (0-1)
   width?: number; // Layer width
+  x?: number
+  y?: number; // Layer position on the canvas
   height?: number; // Layer height
   zIndex?: number; // Layer order (lower values are rendered first)
   position?: Position; // Named position (e.g., "top", "center")

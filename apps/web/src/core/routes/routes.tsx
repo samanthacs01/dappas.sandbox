@@ -4,7 +4,6 @@ import BaseLayout from '../layout/base-layout';
 import {
   DesignerContainer,
   LandingContainer,
-  OnboardingChatContainer,
   WelcomeChatContainer,
 } from './exports';
 
@@ -23,10 +22,6 @@ export const router = createBrowserRouter([
       {
         path: 'welcome',
         Component: WelcomeChatContainer,
-      },
-      {
-        path: 'onboarding',
-        Component: OnboardingChatContainer,
       },
       {
         path: 'designer',

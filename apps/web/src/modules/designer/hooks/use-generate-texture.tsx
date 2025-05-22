@@ -5,7 +5,7 @@ import {
   AITextureConfig,
   TextureBuilderConfig,
 } from '@/server/models/texture';
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDesignerStore } from '../store/designer';
 
 const useGenerateTexture = () => {
@@ -17,14 +17,9 @@ const useGenerateTexture = () => {
   const setVariantTextures = useDesignerStore(
     (state) => state.setVariantTextures,
   );
-  const setSelectedTexture = useDesignerStore(
-    (state) => state.setSelectedTexture,
-  );
+  const setActiveTexture = useDesignerStore((state) => state.setActiveTexture);
 
-  const setaActiveTexture = useDesignerStore((state) => state.setActiveTexture);
-
-  const { selectedTexture, variantTextures, activeTexture } =
-    useDesignerStore();
+  const { variantTextures, activeTexture } = useDesignerStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const DEFAULT_JSON_CONFIG: AITextureConfig = useMemo(() => {
@@ -84,7 +79,7 @@ const useGenerateTexture = () => {
         const defaultTextureUrl = await generateTextureFromConfig(
           DEFAULT_JSON_CONFIG as TextureBuilderConfig,
         );
-        setSelectedTexture(defaultTextureUrl);
+        setActiveTexture(defaultTextureUrl);
         setIsLoading(false);
         return;
       }
@@ -108,8 +103,7 @@ const useGenerateTexture = () => {
         variantConfigs[0] as TextureBuilderConfig,
       );
 
-      setaActiveTexture(variantConfigs[0].id);
-      setSelectedTexture(defaultTextureUrl);
+      setActiveTexture(defaultTextureUrl);
 
       setIsLoading(false);
     } catch (error) {
@@ -122,8 +116,7 @@ const useGenerateTexture = () => {
     try {
       const texture = variantTextures.find((texture) => texture === t);
 
-      setSelectedTexture(texture ?? '');
-      setaActiveTexture(texture ?? '');
+      setActiveTexture(texture ?? '');
     } catch (error) {
       console.error('Error changing texture:', error);
     }
@@ -134,7 +127,6 @@ const useGenerateTexture = () => {
 
   return {
     isLoading,
-    selectedTexture,
     variantTextures,
     activeTexture,
     handleTextureChange,

@@ -34,7 +34,7 @@ const SizeSelection: React.FC<SizeSelectionProps> = ({
             )}
             onClick={() => handleSizeSelect(size)}
           >
-            {size} oz
+            {size}
           </Button>
         ))}
       </div>

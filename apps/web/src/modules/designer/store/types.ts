@@ -22,16 +22,16 @@ export type DesignerStoreType = {
   onBoardingStep: OnBoardingSteps;
   activeProduct: PrintableProduct | null;
   isOnBoardingReady: boolean;
-  selectedTexture: string;
   variantTextures: string[];
-  activeTexture: string | null;
+  activeTexture: string;
+  isDesigning: boolean;
 
   setBrand: (brand: BrandInfo) => void;
   setOnBoardingStep: (step: OnBoardingSteps) => void;
   resetOnboarding: () => void;
   setActiveProduct: (product: PrintableProduct) => void;
   setIsOnBoardingReady: (isReady: boolean) => void;
-  setSelectedTexture: (texture: string) => void;
   setVariantTextures: (textures: string[]) => void;
   setActiveTexture: (texture: string) => void;
+  setIsDesigning: (is: boolean) => void;
 };

@@ -1,3 +1,4 @@
+import { getImageDimensions } from '@/core/lib/image';
 import { generateImage } from '@/server/ai/google/image';
 import { TextureBuilderConfig } from '@/server/models/texture';
 import useTextureDesigner from './use-texture-designer';
@@ -10,7 +11,7 @@ type GenerateNPatternsOptions = {
     width: number;
     height: number;
   };
-  logo: string;
+  logo: File;
 };
 
 const useAIDesigner = () => {
@@ -23,79 +24,82 @@ const useAIDesigner = () => {
     size: { width, height },
     logo,
   }: GenerateNPatternsOptions): Promise<string[]> => {
-    // select the 3 background colors from the colors array, pick n random colors without repeating
-    const selectedColors = colors
-      .sort(() => 0.5 - Math.random())
-      .slice(0, nVariants);
     const patterns: string[] = [];
 
-    if (selectedColors.length > 0) {
-      selectedColors.forEach(async (color, key) => {
-        const pattern: TextureBuilderConfig = {
-          id: `variant-${key}`,
-          width,
-          height,
-          layers: [
-            {
-              id: `background-${key}`,
-              type: 'background',
-              color,
-              x: 0,
-              y: 0,
-              visible: true,
-              opacity: 1,
-              width: width,
-              height: height,
-              zIndex: 0,
-            },
-            {
-              id: `logo-${key}`,
-              type: 'image',
-              position: 'center',
-              width: 100,
-              height: 100,
-              x: width / 2 - 50,
-              y: height / 2 - 50,
-              visible: true,
-              opacity: 1,
-              imageUrl: logo,
-              zIndex: 2,
-            },
-          ],
-        };
-        try {
-          const prompt = getPatternsPrompt(
-            colors,
-            color,
-            styles,
-            `${width}x${height}`,
-          );
+    for (let key = 0; key < nVariants; key++) {
+      const pattern: TextureBuilderConfig = {
+        id: `variant-${key}`,
+        width,
+        height,
+        layers: [],
+      };
+      try {
+        const prompt = getPatternsPrompt(colors, styles, `${width}x${height}`);
 
-          const image = await generateImage(
-            'Act as a graphic designer specialized in packaging.',
-            prompt,
-          );
+        const image = await generateImage(prompt);
 
-          if (image) {
-            pattern.layers.push({
-              id: `image-pattern-${key}`,
-              type: 'image',
-              imageUrl: image.base64,
-              width: width,
-              height: height,
-              x: 0,
-              y: 0,
-              opacity: 1,
-              visible: true,
-              zIndex: 1,
-            });
-          }
-        } catch (e) {
-          console.error(e);
+        if (image) {
+          pattern.layers.push({
+            id: `image-pattern-${key}`,
+            type: 'image',
+            imageUrl: `data:${image.mimeType};base64,${image.base64}`,
+            width: width,
+            height: height,
+            x: 0,
+            y: 0,
+            opacity: 1,
+            visible: true,
+            zIndex: 0,
+          });
         }
-        const texture = await generateTextureFromConfig(pattern);
-        patterns.push(texture);
-      });
+      } catch (e) {
+        console.error(e);
+        pattern.layers.push({
+          id: `error-pattern-${key}`,
+          type: 'background',
+          color: colors[Math.floor(Math.random() * colors.length)],
+          width: width,
+          height: height,
+          x: 0,
+          y: 0,
+          opacity: 1,
+          visible: true,
+          zIndex: 0,
+        });
+      }
+      const logoUrl = URL.createObjectURL(logo);
+      const size = await getImageDimensions(logo);
+      const aspectRatio = size.width / size.height;
+      const targetWidth = width / 4;
+      const targetHeight = height / 4;
+      let imgWidth = targetWidth;
+      let imgHeight = targetHeight;
+      if (aspectRatio > 1) {
+        imgWidth = targetWidth;
+        imgHeight = targetWidth / aspectRatio;
+      } else {
+        imgHeight = targetHeight;
+        imgWidth = targetHeight * aspectRatio;
+      }
+
+      if (logo) {
+        pattern.layers.push({
+          id: `logo-${key}`,
+          type: 'image',
+          imageUrl: logoUrl,
+          width: imgWidth,
+          height: imgHeight,
+          x: (width - imgWidth) / 2,
+          y: (height - imgHeight) / 2,
+          position: 'center',
+          opacity: 1,
+          visible: true,
+          zIndex: 2,
+        });
+      }
+
+      const texture = await generateTextureFromConfig(pattern);
+      patterns.push(texture);
     }
 
     return patterns;
@@ -106,19 +110,18 @@ const useAIDesigner = () => {
 
 const getPatternsPrompt = (
   colors: string[],
-  bgColor: string,
   styles: string[],
   resolution: string,
 ) => {
   return `
-Generate visual decorators in SVG or PNG format for flat rectangular packaging (some may also be used on curved surfaces like cups, but you don’t need to apply any distortion).
+Act as a graphic designer specialized in packaging. Generate visual decorators in SVG or PNG format for flat rectangular packaging (some may also be used on curved surfaces like cups, but you don’t need to apply any distortion).
 
 Design Rules:
-- Do not apply any background color. I will provide the background color separately in the final design.
-- The design must consist only of a visual pattern or decorative geometric figure (such as lines, diagonals, chevrons, bands, zigzags, frames, etc.) in a single accent color from this list ${colors.join(', ')}, take in account that the background color of the product is ${bgColor}.
+- Select a background color from this list ${colors.join(', ')}
+- Not add any text or logos to the design.
+- The design must consist only of a visual pattern or decorative geometric figure (such as lines, diagonals, chevrons, bands, zigzags, frames, etc.) in a single accent color from this list ${colors.join(', ')}
 - The style must be clean, professional, and modern—suitable for products like cups, boxes, or bags.
 - The user brand styles are ${styles.join(', ')}.
-- The design should consider that a centered logo will be placed on top, so leave a visually clear area (either empty or minimally interfered with).
 - The output format must be SVG (preferred) or PNG with a transparent background and a minimum resolution of ${resolution} px.
     `;
 };

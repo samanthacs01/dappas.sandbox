@@ -7,6 +7,7 @@ import { useDesignerStore } from '@/modules/designer/store/designer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@workspace/ui/components/button';
 import { ChevronRight } from 'lucide-react';
+import { useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ColorsLogoSchema, ColorsLogoType } from './schemas';
 
@@ -23,6 +24,7 @@ const ManualAttachmentForm: React.FC<Props> = ({
 }) => {
   const brand = useDesignerStore((state) => state.brand);
   const setBrand = useDesignerStore((state) => state.setBrand);
+  const ref = useRef<HTMLDivElement>(null);
   const methods = useForm<ColorsLogoType>({
     defaultValues: {
       colors: brand.colors || [],
@@ -35,6 +37,9 @@ const ManualAttachmentForm: React.FC<Props> = ({
   const onSubmit = (data: ColorsLogoType) => {
     setBrand({ ...brand, ...data });
     onSuccess?.();
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -44,7 +49,7 @@ const ManualAttachmentForm: React.FC<Props> = ({
         onSubmit={methods.handleSubmit(onSubmit)}
         className="w-full h-full flex flex-col justify-between"
       >
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full grow overflow-y-auto pb-6">
           <div className="w-full space-y-10 flex gap-6">
             <div className="flex items-start gap-6">
               <ChatAssistantIcon
@@ -99,6 +104,7 @@ const ManualAttachmentForm: React.FC<Props> = ({
               </h4>
             </div>
           )}
+          <div ref={ref} />
         </div>
         {(brand.colors ?? []).length > 0 ? (
           <Button

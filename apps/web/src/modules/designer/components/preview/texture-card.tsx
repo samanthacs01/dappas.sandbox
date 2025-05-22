@@ -19,12 +19,6 @@ const TextureCard: FC<TextureCardProps> = ({
       onClick={onSelect}
     >
       <img src={baseConfig} className="w-full h-full object-cover" />
-      {/* <TextureBuilder
-        config={baseConfig}
-        className="w-full h-full object-cover rounded-lg"
-        canvasId={`canvas-${baseConfig.id}`}
-        fitContainer={true}
-      /> */}
     </div>
   );
 };

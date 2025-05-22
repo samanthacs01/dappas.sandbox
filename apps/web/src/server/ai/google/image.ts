@@ -1,20 +1,20 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { GeneratedFile, generateText, GenerateTextResult, ToolSet } from 'ai';
 
-export const generateImage = async (system: string, prompt: string): Promise<GeneratedFile> => {
+export const generateImage = async (prompt: string): Promise<GeneratedFile> => {
   try {
     const google = createGoogleGenerativeAI({
-      apiKey: import.meta.env.VITE_GOOGLE_API_KEY,
+      apiKey: import.meta.env.VITE_GOOGLE_GENERATIVE_AI_API_KEY,
     });
 
     const result = await generateText({
       model: google('gemini-2.0-flash-exp'),
       providerOptions: {
-        google: { responseModalities: ['IMAGE'] },
+        google: { responseModalities: ['TEXT','IMAGE'] },
       },
-      prompt,
-      system
+      prompt
     });
+
     const image = getImageFromResponse(result);
     if (!image) {
       throw new Error('No image found in response');

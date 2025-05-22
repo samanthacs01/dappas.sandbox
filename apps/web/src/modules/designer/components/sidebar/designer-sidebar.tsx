@@ -34,7 +34,7 @@ const DesignerSidebar = () => {
   };
 
   return (
-    <div className="flex flex-col h-full mb-4  px-14 py-12 bg-white min-w-[40%] max-w-[40%]">
+    <div className="flex flex-col h-full mb-4  px-14 py-12 bg-white min-w-[40%] max-w-[40%] ">
       {getStepComponent()}
     </div>
   );

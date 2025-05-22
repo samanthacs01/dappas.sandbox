@@ -10,6 +10,7 @@ const DesignerSidebar = () => {
     (state) => state.setOnBoardingStep,
   );
 
+
   const getStepComponent = () => {
     switch (onboardingStep) {
       case OnBoardingSteps.WELCOME:

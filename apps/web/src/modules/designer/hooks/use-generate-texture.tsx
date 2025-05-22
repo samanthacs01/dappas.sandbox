@@ -1,3 +1,5 @@
+import { TextureGenerator } from '@/core/components/3d-designer/texture/texture-generator';
+import { mmToPx } from '@/core/lib/units';
 import {
   AIBackgroundLayer,
   AITextureConfig,
@@ -5,8 +7,6 @@ import {
 } from '@/server/models/texture';
 import { useEffect, useMemo, useState } from 'react';
 import { useDesignerStore } from '../store/designer';
-import { mmToPx } from '@/core/lib/units';
-import { TextureGenerator } from '@/core/components/3d-designer/texture/texture-generator';
 
 const useGenerateTexture = () => {
   const product = useDesignerStore((state) => state.activeProduct);

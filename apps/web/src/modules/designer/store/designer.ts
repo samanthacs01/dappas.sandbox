@@ -15,10 +15,14 @@ export const useDesignerStore = create<DesignerStoreType>((set) => ({
   onBoardingStep: 0,
   activeProduct: null,
   isOnBoardingReady: false,
+  selectedTexture: '',
+  variantTextures: [],
   setBrand: (brand) => set({ brand }),
   setOnBoardingStep: (step) => set({ onBoardingStep: step }),
   resetOnboarding: () =>
     set({ onBoardingStep: 0, brand: initialBrand, activeProduct: null }),
   setActiveProduct: (product) => set({ activeProduct: product }),
   setIsOnBoardingReady: (isReady) => set({ isOnBoardingReady: isReady }),
+  setSelectedTexture: (texture) => set({ selectedTexture: texture }),
+  setVariantTextures: (textures) => set({ variantTextures: textures }),
 }));

@@ -23,9 +23,13 @@ export type DesignerStoreType = {
     onBoardingStep: OnBoardingSteps;
     activeProduct: PrintableProduct | null;
     isOnBoardingReady: boolean;
+    selectedTexture: string;
+    variantTextures: string[];
     setBrand: (brand: BrandInfo) => void;
     setOnBoardingStep: (step: OnBoardingSteps) => void;
     resetOnboarding: () => void;
     setActiveProduct: (product: PrintableProduct) => void;
     setIsOnBoardingReady: (isReady: boolean) => void;
+    setSelectedTexture: (texture: string) => void;
+    setVariantTextures: (textures: string[]) => void;
 }

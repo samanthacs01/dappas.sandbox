@@ -1,5 +1,6 @@
 'use client';
 
+import useAIDesigner from '@/modules/designer/hooks/use-ai-designer';
 import { useDesignerStore } from '@/modules/designer/store/designer';
 import { useState } from 'react';
 import ManualAttachmentForm from './form/manual-attachment-form';
@@ -10,8 +11,27 @@ const ManualOnboardingFormContainer = () => {
   const setIsOnBoardingReady = useDesignerStore(
     (state) => state.setIsOnBoardingReady,
   );
+  const setTextures = useDesignerStore((state) => state.setVariantTextures);
 
+  const brand = useDesignerStore((state) => state.brand);
 
+  const { generateAITextures } = useAIDesigner();
+
+  const onGenerateDesign = async () => {
+    if (!brand || !brand.logo) return;
+
+    const textures = await generateAITextures({
+      nVariants: 2,
+      colors: brand?.colors ?? [],
+      logo: URL.createObjectURL(brand.logo),
+      size: {
+        width: 1920,
+        height: 1080,
+      },
+      styles: brand?.styles ?? [],
+    });
+    setTextures(textures);
+  };
 
   const renderStep = (step: number) => {
     switch (step) {
@@ -20,7 +40,7 @@ const ManualOnboardingFormContainer = () => {
       case 2:
         return (
           <ManualAttachmentForm
-            // onGenerateDesign={() => setIsOnBoardingReady(true)}
+            onGenerateDesign={onGenerateDesign}
             onGenerateLocalDesign={() => setIsOnBoardingReady(true)}
           />
         );

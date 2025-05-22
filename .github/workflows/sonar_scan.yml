@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '30 19 * * *'
-  push:
-    branches:
-      - main
 
 jobs:
   sonar_test:

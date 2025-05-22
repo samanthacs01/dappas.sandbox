@@ -1,15 +1,14 @@
-'use client';
-
 import React, { FC, PropsWithChildren, Suspense, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   OrbitControls,
   PerspectiveCamera,
   BakeShadows,
-  CameraControls,
+  CameraControls, Html
 } from '@react-three/drei';
 import CameraPresets from './camera-preset';
 import CameraInfo from '@/core/components/3d-designer/scene/camera-info';
+import { Loader2 } from 'lucide-react';
 
 type MainSceneProps = PropsWithChildren & {
   showCameraInfo?: boolean;
@@ -101,7 +100,13 @@ const MainScene: FC<MainSceneProps> = ({
         {/* Camera information - INSIDE Canvas using Html component */}
         {showCameraInfo && <CameraInfo />}
 
-        <Suspense fallback={null}>
+        <Suspense
+          fallback={
+            <Html center>
+              <Loader2 className="animate-spin size-10 text-blue-500" />
+            </Html>
+          }
+        >
           {children}
 
           {/* Add some basic lighting for better visualization */}

@@ -1,8 +1,11 @@
 name: SonarQube Scan
 
 on:
-  schedule:
-    - cron: '0 5 * * *' # Ajusta el horario según tu necesidad (UTC)
+  push:
+    branches:
+      - test-sq    
+#   schedule:
+#     - cron: '0 5 * * *' # Ajusta el horario según tu necesidad (UTC)
   workflow_dispatch:
 
 jobs:
@@ -13,9 +16,9 @@ jobs:
       SONAR_PROJECT_KEY: Dappas
       SONAR_PROJECT_NAME: Dappas
       SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
-      TELEGRAM_MGS_TID: "2"
-      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-      TELEGRAM_CHAT: "-1002377763189"
+    #   TELEGRAM_MGS_TID: "2"
+    #   TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+    #   TELEGRAM_CHAT: "-1002377763189"
 
     steps:
       - name: Checkout code

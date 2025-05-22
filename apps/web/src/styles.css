@@ -1,0 +1,41 @@
+body {
+  font-family: 'Inter', sans-serif;
+  font-optical-sizing: auto;
+}
+
+@layer utilities {
+  @keyframes revealY {
+    from {
+      transform: scaleY(0);
+      opacity: 0;
+    }
+    to {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes revealFullText {
+    to {
+      background-size: 100% 100%;
+    }
+  }
+
+  .text-reveal {
+    display: inline-block;
+    color: transparent;
+    background: linear-gradient(to right, #000, #000) no-repeat;
+    background-size: 0% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: revealFullText 1s ease-in-out forwards;
+    animation-delay: var(--delay);
+  }
+
+  .animate-reveal-y {
+    transform-origin: top;
+    animation: revealY 0.5s ease-in-out forwards;
+    animation-delay: var(--delay);
+    transform: scaleY(0);
+  }
+}

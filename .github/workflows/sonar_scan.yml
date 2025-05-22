@@ -1,9 +1,12 @@
 name: SonarQube Scan
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 13 * * 1' 
-  workflow_dispatch:
+  push:
+    branches:
+      - test-sq
 
 jobs:
   sonar_test:

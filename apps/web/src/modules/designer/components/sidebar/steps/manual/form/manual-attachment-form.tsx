@@ -7,6 +7,8 @@ import { ChevronRight } from 'lucide-react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ColorsLogoSchema, ColorsLogoType } from './schemas';
 import RHFColorPicker from '@/core/components/commons/form-inputs/rhf-color-picker';
+import { RHFBadgeOverflow } from '@/core/components/commons/form-inputs/rhf-badge-overflow';
+import { styleOptions } from '@/core/mocks/styles-options';
 
 type Props = {
   onSuccess?: () => void;
@@ -68,6 +70,8 @@ const ManualAttachmentForm: React.FC<Props> = ({
                   placeholder={'Drop your logo here or Choose File'}
                   labelOrientation="horizontal"
                 />
+
+                <RHFBadgeOverflow name={'style'} options={styleOptions} maxVisible={4} />
               </div>
             </div>
           </div>

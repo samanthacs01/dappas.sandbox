@@ -1,9 +1,7 @@
-import { TextureBuilder } from '@/core/components/3d-designer/texture/texture-builder';
-import { TextureBuilderConfig } from '@/server/models/texture';
 import { FC } from 'react';
 
 type TextureCardProps = {
-  baseConfig: TextureBuilderConfig;
+  baseConfig: string;
   onSelect: VoidFunction;
   selectedTexture: boolean;
 };
@@ -20,12 +18,13 @@ const TextureCard: FC<TextureCardProps> = ({
       }`}
       onClick={onSelect}
     >
-      <TextureBuilder
+      <img src={baseConfig} className="w-full h-full object-cover" />
+      {/* <TextureBuilder
         config={baseConfig}
         className="w-full h-full object-cover rounded-lg"
         canvasId={`canvas-${baseConfig.id}`}
         fitContainer={true}
-      />
+      /> */}
     </div>
   );
 };

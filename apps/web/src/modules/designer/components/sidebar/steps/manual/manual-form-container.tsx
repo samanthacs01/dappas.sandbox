@@ -5,6 +5,7 @@ import { useDesignerStore } from '@/modules/designer/store/designer';
 import { useState } from 'react';
 import ManualAttachmentForm from './form/manual-attachment-form';
 import ManualCompanyInfoForm from './form/manual-company-info-form';
+import useGenerateTexture from '@/modules/designer/hooks/use-generate-texture';
 
 const ManualOnboardingFormContainer = () => {
   const [step, setStep] = useState(1);
@@ -13,6 +14,7 @@ const ManualOnboardingFormContainer = () => {
   );
   const setTextures = useDesignerStore((state) => state.setVariantTextures);
 
+  const { initTexturesConfig } = useGenerateTexture();
   const brand = useDesignerStore((state) => state.brand);
 
   const { generateAITextures } = useAIDesigner();
@@ -33,6 +35,11 @@ const ManualOnboardingFormContainer = () => {
     setTextures(textures);
   };
 
+  const handleOnLocalDesign = async () => {
+    setIsOnBoardingReady(true);
+    initTexturesConfig();
+  };
+
   const renderStep = (step: number) => {
     switch (step) {
       case 1:
@@ -41,7 +48,7 @@ const ManualOnboardingFormContainer = () => {
         return (
           <ManualAttachmentForm
             onGenerateDesign={onGenerateDesign}
-            onGenerateLocalDesign={() => setIsOnBoardingReady(true)}
+            onGenerateLocalDesign={handleOnLocalDesign}
           />
         );
       default:

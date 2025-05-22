@@ -5,7 +5,7 @@ import {
   AITextureConfig,
   TextureBuilderConfig,
 } from '@/server/models/texture';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useDesignerStore } from '../store/designer';
 
 const useGenerateTexture = () => {
@@ -14,12 +14,18 @@ const useGenerateTexture = () => {
   const isOnboardingReady = useDesignerStore(
     (state) => state.isOnBoardingReady,
   );
+  const setVariantTextures = useDesignerStore(
+    (state) => state.setVariantTextures,
+  );
+  const setSelectedTexture = useDesignerStore(
+    (state) => state.setSelectedTexture,
+  );
+
+  const setaActiveTexture = useDesignerStore((state) => state.setActiveTexture);
+
+  const { selectedTexture, variantTextures, activeTexture } =
+    useDesignerStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectedTexture, setSelectedTexture] = useState<string>('');
-  const [variantTextures, setVariantTextures] = useState<
-    TextureBuilderConfig[]
-  >([]);
-  const [activeTexture, setActiveTexture] = useState<string | null>(null);
 
   const DEFAULT_JSON_CONFIG: AITextureConfig = useMemo(() => {
     if (!product) {
@@ -71,7 +77,7 @@ const useGenerateTexture = () => {
     return canvas.toDataURL('image/png');
   };
 
-  const initializeTextures = async () => {
+  const initializeTextures = useCallback(async () => {
     try {
       setIsLoading(true);
       if (!isOnboardingReady || !brand.colors || !brand.logo) {
@@ -89,13 +95,20 @@ const useGenerateTexture = () => {
         brand.logo ? [URL.createObjectURL(brand.logo)] : [],
         3,
       );
-      setVariantTextures(variantConfigs);
+
+      const textures = await Promise.all(
+        variantConfigs.map((config) =>
+          generateTextureFromConfig(config as TextureBuilderConfig),
+        ),
+      );
+
+      setVariantTextures(textures);
 
       const defaultTextureUrl = await generateTextureFromConfig(
         variantConfigs[0] as TextureBuilderConfig,
       );
 
-      setActiveTexture(variantConfigs[0].id);
+      setaActiveTexture(variantConfigs[0].id);
       setSelectedTexture(defaultTextureUrl);
 
       setIsLoading(false);
@@ -103,30 +116,29 @@ const useGenerateTexture = () => {
       console.error('Error initializing the texture', error);
       setIsLoading(false);
     }
-  };
+  }, [isOnboardingReady, DEFAULT_JSON_CONFIG, brand.colors, brand.logo]);
 
-  const handleTextureChange = async (config: TextureBuilderConfig) => {
+  const handleTextureChange = async (t: string) => {
     try {
-      const url = await generateTextureFromConfig(
-        config as TextureBuilderConfig,
-      );
+      const texture = variantTextures.find((texture) => texture === t);
 
-      setSelectedTexture(url);
-      setActiveTexture(config.id);
+      setSelectedTexture(texture ?? '');
+      setaActiveTexture(texture ?? '');
     } catch (error) {
       console.error('Error changing texture:', error);
     }
   };
-
   useEffect(() => {
     initializeTextures();
-  }, [isOnboardingReady, DEFAULT_JSON_CONFIG, brand.colors, brand.logo]);
+  }, [initializeTextures]);
+
   return {
     isLoading,
     selectedTexture,
     variantTextures,
     activeTexture,
     handleTextureChange,
+    initTexturesConfig: initializeTextures,
   };
 };
 

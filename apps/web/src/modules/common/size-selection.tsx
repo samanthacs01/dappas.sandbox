@@ -4,14 +4,24 @@ import React, { useState } from 'react';
 
 interface SizeSelectionProps {
   sizeList: string[];
+  onSelectSize?: (size: string) => void;
 }
 
-const SizeSelection: React.FC<SizeSelectionProps> = ({ sizeList }) => {
+const SizeSelection: React.FC<SizeSelectionProps> = ({
+  sizeList,
+  onSelectSize,
+}) => {
   const [selectedSize, setSelectedSize] = useState<string>('');
+
+  const handleSizeSelect = (size: string) => {
+    setSelectedSize(size);
+    onSelectSize?.(size);
+  };
+
   return (
     <div className="flex flex-col max-w-[460px] gap-6">
       <p>Select size</p>
-      <div className="flex justify-around gap-2 overflow-x-auto border-b border-zinc-400 pb-4">
+      <div className="flex justify-around gap-2 overflow-x-auto">
         {sizeList.map((size) => (
           <Button
             key={size}
@@ -22,7 +32,7 @@ const SizeSelection: React.FC<SizeSelectionProps> = ({ sizeList }) => {
                 'border-black text-black': selectedSize === size,
               },
             )}
-            onClick={() => setSelectedSize(size)}
+            onClick={() => handleSizeSelect(size)}
           >
             {size} oz
           </Button>

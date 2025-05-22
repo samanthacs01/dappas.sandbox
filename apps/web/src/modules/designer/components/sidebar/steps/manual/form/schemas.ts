@@ -16,6 +16,7 @@ const ColorsLogoSchema = z.object({
       message: 'Logo must be a valid image file (JPEG, PNG, SVG)',
     },
   ),
+  styles: z.array(z.string()).optional(),
 });
 
 const BrandBasicInfoSchema = z.object({
@@ -46,4 +47,5 @@ export type ColorsLogoType = z.infer<typeof ColorsLogoSchema>;
 export type BrandBasicInfoType = z.infer<typeof BrandBasicInfoSchema>;
 export type CartInfoType = z.infer<typeof CartInfoSchema>;
 
-export { CartInfoSchema, BrandBasicInfoSchema, ColorsLogoSchema };
+export { BrandBasicInfoSchema, CartInfoSchema, ColorsLogoSchema };
+

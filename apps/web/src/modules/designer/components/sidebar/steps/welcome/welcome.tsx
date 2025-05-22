@@ -1,9 +1,10 @@
 'use client';
-
 import ChatAssistantIcon from '@/core/components/commons/icons/chat-assistant';
+import SizeSelection from '@/modules/common/size-selection';
 import { Button } from '@workspace/ui/components/button';
-import { Textarea } from '@workspace/ui/components/textarea';
-import { ArrowUp } from 'lucide-react';
+import { Separator } from '@workspace/ui/components/separator';
+import { motion } from 'motion/react';
+import { useState } from 'react';
 
 type OnBoardingWelcomeProps = {
   onChangeToManualStep: () => void;
@@ -14,59 +15,73 @@ const OnBoardingWelcome: React.FC<OnBoardingWelcomeProps> = ({
   activeProduct,
   onChangeToManualStep,
 }) => {
+  const [size, setSize] = useState<string | null>(null);
+  const handleSizeSelect = (selectedSize: string) => {
+    setSize(selectedSize);
+  };
   return (
-    <div className="flex flex-col h-full justify-between">
-      <div className="flex items-start gap-6">
-        <ChatAssistantIcon
-          width={16}
-          height={16}
-          className="min-w-4 min-h-4 mt-1"
-        />
-        <div className="text-sm flex flex-col space-y-2 ">
-          <span className="text-reveal">
-            Let’s create a <span className="font-bold">{activeProduct}</span>{' '}
-            with your brand on it. First I’ll need to know some details about
-            your company.
-          </span>
-          <span
-            className="text-reveal"
-            style={{ '--delay': '0.8s' } as React.CSSProperties}
-          >
-            If you give me your website, I can collect the information for you
-            to validate.
-          </span>
-        </div>
-      </div>
-      <form className="flex flex-col gap-4 p-4">
-        <div className="flex items-start gap-2 border border-zinc-300">
-          <Textarea
-            placeholder="Type in your website"
-            className="min-h-[40px] resize-none border-0 shadow-none focus-visible:ring-0"
-            rows={1}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                console.log(e);
-              }
-            }}
+    <div className="flex flex-col h-full justify-between w-full">
+      <div className="flex flex-col items-start gap-6 w-full">
+        <div className="flex items-start gap-6 w-full">
+          <ChatAssistantIcon
+            width={16}
+            height={16}
+            className="min-w-4 min-h-4 mt-1"
           />
-          <Button
-            type="submit"
-            size="sm"
-            className="bg-transparent hover:bg-transparent shadow-none"
-          >
-            <ArrowUp className="text-black dark:text-white" />
-            <span className="sr-only">Send</span>
-          </Button>
+          <div className="text-sm flex flex-col space-y-2 w-full ">
+            <span className="text-reveal">
+              Let’s create a <span className="font-bold">{activeProduct}</span>{' '}
+              with your brand on it.
+            </span>
+            <span
+              className="text-reveal"
+              style={{ '--delay': '0.4s' } as React.CSSProperties}
+            >
+              First I’ll need to know the size you want
+            </span>
+            <div
+              className="animate-reveal-y flex flex-col  space-y-10"
+              style={{ '--delay': '0.8s' } as React.CSSProperties}
+            >
+              <Separator className="my-4" />
+              <SizeSelection
+                sizeList={['8oz', '12oz', '16oz']}
+                onSelectSize={handleSizeSelect}
+              />
+              <Separator className="my-2 !w-[80%]" />
+            </div>
+          </div>
         </div>
-        <Button
-          variant="ghost"
-          className="underline text-center"
-          onClick={onChangeToManualStep}
+        {size && (
+          <div className="flex items-start gap-6">
+            <ChatAssistantIcon
+              width={16}
+              height={16}
+              className="min-w-4 min-h-4 mt-1"
+            />
+            <div className="text-sm flex flex-col space-y-2 w-full ">
+              <span
+                className="text-reveal"
+                style={{ '--delay': '0.4s' } as React.CSSProperties}
+              >
+                Now I’ll need to know a bit about your brand
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {size && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          Enter information manually
-        </Button>
-      </form>
+          <Button className="text-center w-full rounded-none" onClick={onChangeToManualStep}>
+            Enter information manually
+          </Button>
+        </motion.div>
+      )}
     </div>
   );
 };

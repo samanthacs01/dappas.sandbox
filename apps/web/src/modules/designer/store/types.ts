@@ -15,6 +15,7 @@ export type BrandInfo ={
     location?: string;
     colors?: string[];
     logo?: File;
+    styles?: string[];
 }
 
 export type DesignerStoreType = {

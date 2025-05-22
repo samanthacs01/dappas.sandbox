@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router';
+
 import DesignerPreview from '../components/preview/designer-preview';
 import DesignerSidebar from '../components/sidebar/designer-sidebar';
 import { useDesignerStore } from '../store/designer';
@@ -17,6 +18,8 @@ const ProductDesigner = () => {
       setActiveProduct(product);
     }
   }, [searchParams, setActiveProduct]);
+
+
 
   return (
     <div className="w-full max-h-[calc(100vh_-_64px)] lg:max-h-screen lg:h-[calc(100vh_-_64px)] overflow-y-auto p-3">

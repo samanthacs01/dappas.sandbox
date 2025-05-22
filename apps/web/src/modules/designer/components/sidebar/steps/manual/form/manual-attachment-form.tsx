@@ -1,4 +1,7 @@
+import { RHFBadgeOverflow } from '@/core/components/commons/form-inputs/rhf-badge-overflow';
+import RHFColorPicker from '@/core/components/commons/form-inputs/rhf-color-picker';
 import ChatAssistantIcon from '@/core/components/commons/icons/chat-assistant';
+import { styleOptions } from '@/core/mocks/styles-options';
 import RHFUploadLogo from '@/modules/designer/components/fields/rhf-upload-logo';
 import { useDesignerStore } from '@/modules/designer/store/designer';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,17 +9,16 @@ import { Button } from '@workspace/ui/components/button';
 import { ChevronRight } from 'lucide-react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ColorsLogoSchema, ColorsLogoType } from './schemas';
-import RHFColorPicker from '@/core/components/commons/form-inputs/rhf-color-picker';
-import { RHFBadgeOverflow } from '@/core/components/commons/form-inputs/rhf-badge-overflow';
-import { styleOptions } from '@/core/mocks/styles-options';
 
 type Props = {
   onSuccess?: () => void;
   onGenerateDesign?: () => void;
+  onGenerateLocalDesign?: () => void;
 };
 
 const ManualAttachmentForm: React.FC<Props> = ({
   onSuccess,
+  onGenerateLocalDesign,
   onGenerateDesign,
 }) => {
   const brand = useDesignerStore((state) => state.brand);
@@ -25,6 +27,7 @@ const ManualAttachmentForm: React.FC<Props> = ({
     defaultValues: {
       colors: brand.colors || [],
       logo: brand.logo,
+      styles: brand.styles || [],
     },
     resolver: zodResolver(ColorsLogoSchema),
   });
@@ -71,7 +74,13 @@ const ManualAttachmentForm: React.FC<Props> = ({
                   labelOrientation="horizontal"
                 />
 
-                <RHFBadgeOverflow name={'style'} options={styleOptions} maxVisible={4} />
+                <RHFBadgeOverflow
+                  label="Brand Styles"
+                  name="styles"
+                  options={styleOptions}
+                  maxVisible={4}
+                  badgeContainerClassName="border border-black p-4"
+                />
               </div>
             </div>
           </div>
@@ -93,14 +102,18 @@ const ManualAttachmentForm: React.FC<Props> = ({
         </div>
         {(brand.colors ?? []).length > 0 ? (
           <Button
-            type="submit"
+            type="button"
             className="rounded-none font-light"
             onClick={onGenerateDesign}
           >
             Generate designs <ChevronRight />
           </Button>
         ) : (
-          <Button type="submit" className="rounded-none font-light">
+          <Button
+            type="submit"
+            className="rounded-none font-light"
+            onClick={onGenerateLocalDesign}
+          >
             Continue <ChevronRight />
           </Button>
         )}

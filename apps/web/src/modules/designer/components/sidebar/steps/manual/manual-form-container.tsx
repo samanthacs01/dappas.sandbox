@@ -20,7 +20,8 @@ const ManualOnboardingFormContainer = () => {
       case 2:
         return (
           <ManualAttachmentForm
-            onGenerateDesign={() => setIsOnBoardingReady(true)}
+            // onGenerateDesign={() => setIsOnBoardingReady(true)}
+            onGenerateLocalDesign={() => setIsOnBoardingReady(true)}
           />
         );
       default:

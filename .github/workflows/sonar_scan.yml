@@ -1,11 +1,8 @@
 name: SonarQube Scan
 
 on:
-  push:
-    branches:
-      - test-sq    
-#   schedule:
-#     - cron: '0 5 * * *' # Ajusta el horario según tu necesidad (UTC)
+  schedule:
+    - cron: '0 13 * * 1' 
   workflow_dispatch:
 
 jobs:
@@ -16,20 +13,20 @@ jobs:
       SONAR_PROJECT_KEY: Dappas
       SONAR_PROJECT_NAME: Dappas
       SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
-    #   TELEGRAM_MGS_TID: "2"
-    #   TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-    #   TELEGRAM_CHAT: "-1002377763189"
+      TELEGRAM_MGS_TID: "2"
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+      TELEGRAM_CHAT: "-1002620794508"
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-    #   - name: Notify Telegram - Start
-    #     run: |
-    #       curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
-    #         -d "chat_id=${TELEGRAM_CHAT}" \
-    #         -d "message_thread_id=${TELEGRAM_MGS_TID}" \
-    #         -d "text=🚀Pipeline for YT-web DEV Sonarqube scan started"
+      - name: Notify Telegram - Start
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT}" \
+            -d "message_thread_id=${TELEGRAM_MGS_TID}" \
+            -d "text=🚀Pipeline for YT-web DEV Sonarqube scan started"
 
       - name: Install Java 11
         uses: actions/setup-java@v4
@@ -93,26 +90,26 @@ jobs:
             -Dsonar.exclusions=**/*.test.ts,**/*.test.js,node_modules/**,**/*_test.go \
             -Dsonar.javascript.tsconfigPaths=dappas/apps/web/tsconfig.json,dappas/apps/dappas-web/tsconfig.json
 
-    #   - name: Send HTML report to Telegram
-    #     run: |
-    #       curl -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument" \
-    #         -F "chat_id=${TELEGRAM_CHAT}" \
-    #         -F "document=@/home/runner/SCA/dependency-check-report.html" \
-    #         -F "caption=YT-web Sonarqube scan on branch main https://secure.generalsoftwareinc.com/dashboard?id=Dappas" \
-    #         -F "message_thread_id=${TELEGRAM_MGS_TID}"
+      - name: Send HTML report to Telegram
+        run: |
+          curl -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument" \
+            -F "chat_id=${TELEGRAM_CHAT}" \
+            -F "document=@/home/runner/SCA/dependency-check-report.html" \
+            -F "caption=YT-web Sonarqube scan on branch main https://secure.generalsoftwareinc.com/dashboard?id=Dappas" \
+            -F "message_thread_id=${TELEGRAM_MGS_TID}"
 
       - name: Cleanup
         run: rm -rf /home/runner/SCA
 
-    #   - name: Notify Telegram - Status
-    #     if: always()
-    #     run: |
-    #       if [ "${{ job.status }}" == "success" ]; then
-    #         EMOJI=✅
-    #       else
-    #         EMOJI=❌
-    #       fi
-    #       curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
-    #         -d "chat_id=${TELEGRAM_CHAT}" \
-    #         -d "message_thread_id=${TELEGRAM_MGS_TID}" \
-    #         -d "text=${EMOJI} Pipeline for YT-web DEV Sonarqube scan status: ${{ job.status }}"
+      - name: Notify Telegram - Status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            EMOJI=✅
+          else
+            EMOJI=❌
+          fi
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT}" \
+            -d "message_thread_id=${TELEGRAM_MGS_TID}" \
+            -d "text=${EMOJI} Pipeline for YT-web DEV Sonarqube scan status: ${{ job.status }}"

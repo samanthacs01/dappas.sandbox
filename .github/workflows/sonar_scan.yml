@@ -1,0 +1,115 @@
+name: SonarQube Scan
+
+on:
+  schedule:
+    - cron: '0 5 * * *' # Ajusta el horario según tu necesidad (UTC)
+  workflow_dispatch:
+
+jobs:
+  sonar_test:
+    runs-on: ubuntu-latest
+
+    env:
+      SONAR_PROJECT_KEY: Dappas
+      SONAR_PROJECT_NAME: Dappas
+      SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
+      TELEGRAM_MGS_TID: "2"
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+      TELEGRAM_CHAT: "-1002377763189"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+    #   - name: Notify Telegram - Start
+    #     run: |
+    #       curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+    #         -d "chat_id=${TELEGRAM_CHAT}" \
+    #         -d "message_thread_id=${TELEGRAM_MGS_TID}" \
+    #         -d "text=🚀Pipeline for YT-web DEV Sonarqube scan started"
+
+      - name: Install Java 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+    #   - name: Install dependencies - React
+    #     run: |
+    #       cd frontend
+    #       npm ci
+
+    #   - name: Install dependencies - Next.js (admin)
+    #     run: |
+    #       cd admin
+    #       npm ci          
+
+      - name: Install SonarScanner
+        run: |
+          export SONAR_SCANNER_VERSION=6.2.0.4584
+          export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64
+          curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip \
+            https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux-x64.zip
+          unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
+          echo "$SONAR_SCANNER_HOME/bin" >> $GITHUB_PATH
+
+      - name: Download and run OWASP Dependency Check
+        run: |
+          mkdir -p /home/runner/SCA
+          cd /home/runner/
+          wget https://secure.generalsoftwareinc.com/owasp-dependency-check/SCA.tar.gz
+          tar -xvf SCA.tar.gz
+          chmod -R 775 SCA/dependency-check/bin/dependency-check.sh
+          ./SCA/dependency-check/bin/dependency-check.sh -n \
+            --project "Dappas" \
+            --format JSON --prettyPrint --enableExperimental \
+            --out /home/runner/SCA/ --scan $GITHUB_WORKSPACE || true
+          ./SCA/dependency-check/bin/dependency-check.sh -n \
+            --project "Dappas" \
+            --format HTML --prettyPrint --enableExperimental \
+            --out /home/runner/SCA/ --scan $GITHUB_WORKSPACE || true
+
+      - name: Run SonarQube Scan
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+            -Dsonar.projectName=${SONAR_PROJECT_NAME} \
+            -Dsonar.host.url=https://secure.generalsoftwareinc.com \
+            -Dsonar.login=${SONAR_LOGIN} \
+            -Dsonar.sources=dappas/apps \
+            -Dsonar.exclusions=**/*.test.ts,**/*.test.js,node_modules/**,**/*_test.go \
+            -Dsonar.javascript.tsconfigPaths=dappas/apps/web/tsconfig.json,dappas/apps/dappas-web/tsconfig.json
+
+    #   - name: Send HTML report to Telegram
+    #     run: |
+    #       curl -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument" \
+    #         -F "chat_id=${TELEGRAM_CHAT}" \
+    #         -F "document=@/home/runner/SCA/dependency-check-report.html" \
+    #         -F "caption=YT-web Sonarqube scan on branch main https://secure.generalsoftwareinc.com/dashboard?id=Dappas" \
+    #         -F "message_thread_id=${TELEGRAM_MGS_TID}"
+
+      - name: Cleanup
+        run: rm -rf /home/runner/SCA
+
+    #   - name: Notify Telegram - Status
+    #     if: always()
+    #     run: |
+    #       if [ "${{ job.status }}" == "success" ]; then
+    #         EMOJI=✅
+    #       else
+    #         EMOJI=❌
+    #       fi
+    #       curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+    #         -d "chat_id=${TELEGRAM_CHAT}" \
+    #         -d "message_thread_id=${TELEGRAM_MGS_TID}" \
+    #         -d "text=${EMOJI} Pipeline for YT-web DEV Sonarqube scan status: ${{ job.status }}"

@@ -1,83 +1,42 @@
 import MainScene from '@/core/components/3d-designer/scene/main-scene';
-import { TextureGenerator } from '@/core/components/3d-designer/texture/texture-generator';
 import { downloadPdfBlob } from '@/core/lib/pdf';
-import { mmToPx } from '@/core/lib/units';
 import TextureCardList from '@/modules/chat/onboarding-chat/components/onboarding-preview/texture-card-list';
 import LoadingDesign from '@/modules/common/loading-design';
-import { AIBackgroundLayer, AITextureConfig, TextureBuilderConfig } from '@/server/models/texture';
 import { Button } from '@workspace/ui/components/button';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback } from 'react';
 import usePrintableProduct from '../../hooks/use-printable-product';
 import { useDesignerStore } from '../../store/designer';
 import { PrintableProduct } from '../../types/product';
 import { modelDictionary } from './models-dictionary';
 import PreviewControlPanel from './previer-control-panel';
+import useGenerateTexture from '../../hooks/use-generate-texture';
+import useAnimationController from '../../hooks/use-animation-controller';
 
 type Props = {
   product: PrintableProduct;
 };
 
 const DesignerPreview: React.FC<Props> = ({ product }) => {
-  const [variantTextures, setVariantTextures] = useState<
-    TextureBuilderConfig[]
-  >([]);
-  const [selectedTexture, setSelectedTexture] = useState<string>('');
-  const [activeTexture, setActiveTexture] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [playAnimation, setPlayAnimation] = useState<boolean>(false);
-  const [playRotation, setPlayRotation] = useState<boolean>(true);
-
+  const {
+    isLoading,
+    activeTexture,
+    selectedTexture,
+    variantTextures,
+    handleTextureChange,
+  } = useGenerateTexture();
+  const { playAnimation, playRotation, onPlayAnimation, onStopModelRotation } =
+    useAnimationController();
   const { getPrintableProductPdf } = usePrintableProduct();
 
   const isOnboardingReady = useDesignerStore(
     (state) => state.isOnBoardingReady,
   );
 
-  const brand = useDesignerStore((state) => state.brand);
-
-  const DEFAULT_JSON_CONFIG: AITextureConfig = useMemo(() => {
-    const layers = product.model.layers.map((layer, index) => ({
-      type: 'background',
-      color: '#fff',
-      width: mmToPx(layer.size.width),
-      height: mmToPx(layer.size.height),
-      position: layer.position || 'center',
-      zIndex: index,
-      visible: true,
-    } as AIBackgroundLayer));
-
-    return {
-      id: 'default',
-      width: 1920,
-      height: 1080,
-      layers,
-    };
-  }, [product.model.layers]);
   const downloadPrintablePdf = async () => {
     if (product && selectedTexture) {
       const pdf = await getPrintableProductPdf(product, selectedTexture);
       await downloadPdfBlob(pdf, `${product.id}.pdf`);
     }
-  };
-
-  const generateTextureFromConfig = async (
-    config: TextureBuilderConfig,
-  ): Promise<string> => {
-    const canvas = document.createElement('canvas');
-    canvas.width = config.width;
-    canvas.height = config.height;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      throw new Error('Failed to get canvas context');
-    }
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (const layer of config.layers) {
-      await TextureGenerator.renderLayer(ctx, layer);
-    }
-
-    return canvas.toDataURL('image/png');
   };
 
   const renderModel = useCallback(() => {
@@ -89,65 +48,6 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
       playAnimation,
     });
   }, [product, selectedTexture, playRotation, playAnimation]);
-
-  useEffect(() => {
-    const initializeTextures = async () => {
-      try {
-        setIsLoading(true);
-        if (!isOnboardingReady || !brand.colors || !brand.logo) {
-          const defaultTextureUrl = await generateTextureFromConfig(
-            DEFAULT_JSON_CONFIG as TextureBuilderConfig,
-          );
-          setSelectedTexture(defaultTextureUrl);
-          setIsLoading(false);
-          return;
-        }
-
-        const variantConfigs = await TextureGenerator.generateVariantsByParams(
-          DEFAULT_JSON_CONFIG,
-          brand.colors ?? [],
-          brand.logo ? [URL.createObjectURL(brand.logo)] : [],
-          3,
-        );
-        setVariantTextures(variantConfigs);
-
-        const defaultTextureUrl = await generateTextureFromConfig(
-          variantConfigs[0] as TextureBuilderConfig,
-        );
-
-        setActiveTexture(variantConfigs[0].id);
-        setSelectedTexture(defaultTextureUrl);
-
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error initializing the texture', error);
-        setIsLoading(false);
-      }
-    };
-
-    initializeTextures();
-  }, [isOnboardingReady, DEFAULT_JSON_CONFIG, brand.colors, brand.logo]);
-
-  const handleTextureChange = async (config: TextureBuilderConfig) => {
-    try {
-      const url = await generateTextureFromConfig(
-        config as TextureBuilderConfig,
-      );
-
-      setSelectedTexture(url);
-      setActiveTexture(config.id);
-    } catch (error) {
-      console.error('Error changing texture:', error);
-    }
-  };
-
-  const onPlayAnimation = useCallback(() => {
-    setPlayAnimation((prev) => !prev);
-  }, []);
-
-  const onStopModelRotation = useCallback(() => {
-    setPlayRotation((prev) => !prev);
-  }, []);
 
   if (isLoading) {
     return (

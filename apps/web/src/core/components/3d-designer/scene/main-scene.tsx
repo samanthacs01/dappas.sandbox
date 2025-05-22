@@ -4,7 +4,8 @@ import {
   OrbitControls,
   PerspectiveCamera,
   BakeShadows,
-  CameraControls, Html
+  CameraControls,
+  Html,
 } from '@react-three/drei';
 import CameraPresets from './camera-preset';
 import CameraInfo from '@/core/components/3d-designer/scene/camera-info';
@@ -23,7 +24,7 @@ const MainScene: FC<MainSceneProps> = ({
   const cameraControlsRef = useRef<CameraControls>(null);
 
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-b from-gray-50 to-gray-200 relative">
+    <div className="bg-white relative overflow-hidden h-full">
       {/* Camera presets overlay - OUTSIDE Canvas */}
       {enableCameraControls && (
         <CameraPresets
@@ -108,19 +109,19 @@ const MainScene: FC<MainSceneProps> = ({
           }
         >
           {children}
-
-          {/* Add some basic lighting for better visualization */}
-          <ambientLight intensity={0.4} />
-          <directionalLight
-            position={[10, 10, 5]}
-            intensity={1}
-            castShadow
-            shadow-mapSize-width={2048}
-            shadow-mapSize-height={2048}
-          />
-
-          <BakeShadows />
         </Suspense>
+
+        {/* Add some basic lighting for better visualization */}
+        <ambientLight intensity={0.4} />
+        <directionalLight
+          position={[10, 10, 5]}
+          intensity={1}
+          castShadow
+          shadow-mapSize-width={2048}
+          shadow-mapSize-height={2048}
+        />
+
+        <BakeShadows />
       </Canvas>
     </div>
   );

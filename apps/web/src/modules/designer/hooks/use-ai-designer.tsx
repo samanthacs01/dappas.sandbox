@@ -70,8 +70,8 @@ const useAIDesigner = () => {
       const logoUrl = URL.createObjectURL(logo);
       const size = await getImageDimensions(logo);
       const aspectRatio = size.width / size.height;
-      const targetWidth = width / 4;
-      const targetHeight = height / 4;
+      const targetWidth = width / 3;
+      const targetHeight = height / 3;
       let imgWidth = targetWidth;
       let imgHeight = targetHeight;
       if (aspectRatio > 1) {
@@ -114,16 +114,10 @@ const getPatternsPrompt = (
   resolution: string,
 ) => {
   return `
-Act as a graphic designer specialized in packaging. Generate visual decorators in SVG or PNG format for flat rectangular packaging (some may also be used on curved surfaces like cups, but you don’t need to apply any distortion).
-
-Design Rules:
-- Select a background color from this list ${colors.join(', ')}
-- Not add any text or logos to the design.
-- The design must consist only of a visual pattern or decorative geometric figure (such as lines, diagonals, chevrons, bands, zigzags, frames, etc.) in a single accent color from this list ${colors.join(', ')}
-- The style must be clean, professional, and modern—suitable for products like cups, boxes, or bags.
-- The user brand styles are ${styles.join(', ')}.
-- The output format must be SVG (preferred) or PNG with a transparent background and a minimum resolution of ${resolution} px.
-    `;
+Act as a graphic designer specialized in packaging. Create a high-quality PNG image to be used as a visual decorator for flat rectangular packaging surfaces like cups, boxes, or bags. The image must fill the entire canvas uniformly, without borders, padding, or unused space.
+Choose one background color from the following: ${colors.join(', ')}. Then choose one accent color from the same list (but different from the background) to use for a decorative geometric pattern. Use only one accent color per image. Ensure strong visual contrast between background and accent.
+Do not include text, logos, or typography. The design must consist only of clean, consistent, modern geometric elements like lines, diagonals, chevrons, zigzags, bands, grids, or frames. Make sure the pattern is continuous, balanced across the image, and fully fills the canvas horizontally and vertically.
+The style should align with the following brand attributes: ${styles.join(', ')}. The output should be a PNG image with a minimum resolution of ${resolution}px`;
 };
 
 export default useAIDesigner;

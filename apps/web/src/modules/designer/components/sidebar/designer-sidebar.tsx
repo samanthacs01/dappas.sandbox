@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useDesignerStore } from '../../store/designer';
 import { OnBoardingSteps } from '../../store/types';
 import ManualOnboardingFormContainer from './steps/manual/manual-form-container';
@@ -9,7 +10,13 @@ const DesignerSidebar = () => {
   const setOnBoardingStep = useDesignerStore(
     (state) => state.setOnBoardingStep,
   );
+  const resetOnboarding = useDesignerStore((state) => state.resetOnboarding);
 
+  useEffect(() => {
+    return () => {
+      resetOnboarding();
+    };
+  }, []);
 
   const getStepComponent = () => {
     switch (onboardingStep) {

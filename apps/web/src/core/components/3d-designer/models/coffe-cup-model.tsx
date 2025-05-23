@@ -1,6 +1,6 @@
 import { useGLTF, useTexture, useAnimations } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import {
   Bone,
   Group,
@@ -8,6 +8,7 @@ import {
   MeshStandardMaterial,
   SkinnedMesh,
   SRGBColorSpace,
+  CanvasTexture,
 } from 'three';
 import type { GLTF } from 'three-stdlib';
 
@@ -30,7 +31,7 @@ interface CoffeeCupModelProps {
 }
 
 export function CoffeeCupModel({
-  textureUrl = '/images/textures/texture1.png',
+  textureUrl,
   playRotation = true,
   playAnimation = false,
   ...props
@@ -42,47 +43,81 @@ export function CoffeeCupModel({
     '/models/CoffeeCup.glb',
   ) as unknown as GLTFResult;
 
+  // ————— Smooth shading: recalcular normales y desactivar flatShading —————
+  useEffect(() => {
+    // Circle mesh
+    nodes.Circle.geometry.computeVertexNormals();
+    materials['Material.001'].flatShading = false;
+    materials['Material.001'].needsUpdate = true;
+
+    // Skinned mesh
+    nodes.Circle001.geometry.computeVertexNormals();
+    materials['Material.001'].flatShading = false;
+    materials['Material.001'].needsUpdate = true;
+  }, [nodes, materials]);
+  // ————————————————————————————————————————————————————————————————
+
   const { actions, names } = useAnimations(animations, group);
-  const texture = useTexture(textureUrl);
 
-  useEffect(() => {
-    if (texture) {
-      texture.flipY = true;
-      texture.colorSpace = SRGBColorSpace;
-
-      texture.rotation = Math.PI;
-      texture.center.set(0.5, 0.5);
-
-      if (materials.Material) {
-        materials.Material.map = texture;
-        materials.Material.needsUpdate = true;
-        materials.Material.toneMapped = false;
-      }
+  const defaultTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const context = canvas.getContext('2d');
+    if (context) {
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
     }
-  }, [texture, materials]);
+    const texture = new CanvasTexture(canvas);
+    texture.colorSpace = SRGBColorSpace;
+    return texture;
+  }, []);
 
-  // Handle animation playback control
+  if (textureUrl) {
+    useTexture.preload(textureUrl);
+  }
+
+  // Always call useTexture unconditionally to comply with React Hooks rules
+  const externalTexture = useTexture(textureUrl || '');
+  const hasExternalTexture = Boolean(textureUrl);
+  const activeTexture =
+    hasExternalTexture && externalTexture ? externalTexture : defaultTexture;
+
   useEffect(() => {
-    if (animations && animations.length > 0 && actions) {
+    if (!activeTexture) return;
+    if (textureUrl && externalTexture) {
+      activeTexture.flipY = true;
+      activeTexture.rotation = Math.PI;
+      activeTexture.center.set(0.5, 0.5);
+    }
+    activeTexture.colorSpace = SRGBColorSpace;
+    Object.entries(materials).forEach(([key, mat]) => {
+      if (key.startsWith('Material.001')) {
+        mat.map = activeTexture;
+        mat.needsUpdate = true;
+        mat.toneMapped = false;
+        mat.transparent = false;
+        mat.opacity = 1;
+      }
+    });
+  }, [activeTexture, materials, textureUrl, externalTexture]);
+
+  useEffect(() => {
+    if (animations.length > 0 && actions) {
       if (playAnimation) {
-        // Play the first animation (or specify which one you want)
-        const firstAnimationName = names[0];
-        if (firstAnimationName && actions[firstAnimationName]) {
-          actions[firstAnimationName].reset().fadeIn(0.5).play();
+        const firstAnimation = names[0];
+        if (actions[firstAnimation]) {
+          actions[firstAnimation].reset().fadeIn(0.5).play();
         }
       } else {
-        // Stop all animations with fade out
-        Object.values(actions).forEach((action) => {
-          if (action) {
-            action.fadeOut(0.5);
-          }
+        Object.values(actions).forEach((a) => {
+          if (a) a.fadeOut(0.5);
         });
       }
     }
   }, [playAnimation, actions, names, animations]);
 
   useFrame((state) => {
-    // Handle rotation control
     if (group.current && playRotation) {
       group.current.rotation.y = state.clock.getElapsedTime() * 0.2;
     }
@@ -96,7 +131,7 @@ export function CoffeeCupModel({
           castShadow
           receiveShadow
           geometry={nodes.Circle.geometry}
-          material={materials.Material}
+          material={materials['Material.001']}
         />
         <group
           name="Armature"
@@ -108,7 +143,7 @@ export function CoffeeCupModel({
             ref={skinnedMeshRef}
             name="Circle001"
             geometry={nodes.Circle001.geometry}
-            material={materials['Material.001']}
+            material={materials.Material}
             skeleton={nodes.Circle001.skeleton}
           />
           <primitive object={nodes.Bone} />

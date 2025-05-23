@@ -34,7 +34,7 @@ const MainScene: FC<MainSceneProps> = ({
         />
       )}
 
-      <Canvas shadows gl={{ preserveDrawingBuffer: true, toneMapping: 0 }}>
+      <Canvas shadows gl={{ preserveDrawingBuffer: true, toneMapping: 1 }}>
         <PerspectiveCamera
           makeDefault
           position={[4, 2, 4]}
@@ -67,7 +67,7 @@ const MainScene: FC<MainSceneProps> = ({
             maxDistance={10}
           />
         )}
-        <ambientLight intensity={0.4} color="#ffffff" />
+        <ambientLight intensity={0.9} color="#ffffff" />
 
         <directionalLight
           position={[5, 5, 5]}
@@ -86,12 +86,12 @@ const MainScene: FC<MainSceneProps> = ({
 
         <directionalLight
           position={[-5, -2, -5]}
-          intensity={0.5}
-          color="#b3daff"
+          intensity={0.8}
+          color="#ffff"
         />
 
-        <pointLight position={[-5, 5, -5]} intensity={0.6} color="#fff" />
-        <pointLight position={[3, 3, 3]} intensity={0.2} color="#ffe0b3" />
+        <pointLight position={[-5, 5, -5]} intensity={0.9} color="#fff" />
+        <pointLight position={[3, 3, 2]} intensity={0.8} color="#ffe0b3" />
 
         <hemisphereLight
           args={['#sky', '#ground', 0.5]}

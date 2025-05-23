@@ -99,7 +99,7 @@ export const RHFBadgeOverflow: React.FC<BadgeOverflowProps> = ({
                 <Badge
                   key={opt.value}
                   onClick={() => toggle(opt.value)}
-                  className="cursor-pointer px-2 py-1 text-sm"
+                  className="cursor-pointer px-2 py-1 text-xs"
                 >
                   {opt.label}
                 </Badge>

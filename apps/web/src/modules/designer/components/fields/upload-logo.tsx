@@ -90,7 +90,7 @@ const UploadLogo: FunctionComponent<UploadBoxProps> = ({
             >
               <div
                 className={cn(
-                  'flex flex-col gap-4 border-2 border-dashed border-zinc-300 cursor-pointer rounded-lg p-8 w-full h-auto',
+                  'flex flex-col gap-4 border-2 border-dashed border-zinc-300 cursor-pointer rounded-lg p-4 w-full h-auto',
                   isDragActive && 'bg-secondary',
                   isDragReject && 'border-destructive/40 border-2',
                 )}

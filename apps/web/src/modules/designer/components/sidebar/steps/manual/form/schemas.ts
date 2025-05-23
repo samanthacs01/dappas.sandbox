@@ -1,6 +1,12 @@
 import { z } from 'zod';
 
-const ColorsLogoSchema = z.object({
+const ManualInfoSchema = z.object({
+    name: z.string().min(1, {
+    message: 'Name is required',
+  }),
+  industry: z.string().min(1, {
+    message: 'Industry is required',
+  }),
   colors: z
     .array(z.string(), { required_error: 'The colors field is required' })
     .min(1, {
@@ -19,23 +25,6 @@ const ColorsLogoSchema = z.object({
   styles: z.array(z.string()).optional(),
 });
 
-const BrandBasicInfoSchema = z.object({
-  name: z.string().min(1, {
-    message: 'Name is required',
-  }),
-  industry: z.string().min(1, {
-    message: 'Industry is required',
-  }),
-  website: z
-    .string()
-    .min(1, { message: 'Website is required' })
-    .refine((val) => /\.[a-zA-Z]{2,}$/.test(val), {
-      message: 'Website must contain a valid domain (e.g., google.com)',
-    }),
-  location: z.string().min(1, {
-    message: 'Location is required',
-  }),
-});
 
 const CartInfoSchema = z.object({
   quantity: z.number({
@@ -43,9 +32,8 @@ const CartInfoSchema = z.object({
   }),
 });
 
-export type ColorsLogoType = z.infer<typeof ColorsLogoSchema>;
-export type BrandBasicInfoType = z.infer<typeof BrandBasicInfoSchema>;
+export type ManualInfoType = z.infer<typeof ManualInfoSchema>;
 export type CartInfoType = z.infer<typeof CartInfoSchema>;
 
-export { BrandBasicInfoSchema, CartInfoSchema, ColorsLogoSchema };
+export { CartInfoSchema, ManualInfoSchema as ColorsLogoSchema };
 

@@ -15,6 +15,8 @@ export const generateImage = async (prompt: string): Promise<GeneratedFile> => {
       prompt
     });
 
+    console.log('result', result);
+
     const image = getImageFromResponse(result);
     if (!image) {
       throw new Error('No image found in response');

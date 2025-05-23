@@ -2,7 +2,7 @@ import MainScene from '@/core/components/3d-designer/scene/main-scene';
 import { downloadPdfBlob } from '@/core/lib/pdf';
 import LoadingDesign from '@/modules/common/loading-design';
 import { Button } from '@workspace/ui/components/button';
-import { ArrowRight, DownloadCloudIcon } from 'lucide-react';
+import { DownloadCloudIcon } from 'lucide-react';
 import React, { useCallback } from 'react';
 import useAnimationController from '../../hooks/use-animation-controller';
 import useGenerateTexture from '../../hooks/use-generate-texture';
@@ -26,13 +26,6 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
   const { getPrintableProductPdf } = usePrintableProduct();
   const isDesigning = useDesignerStore((state) => state.isDesigning);
 
-  const setOnBoardingStep = useDesignerStore(
-    (state) => state.setOnBoardingStep,
-  );
-
-  const isOnboardingReady = useDesignerStore(
-    (state) => state.isOnBoardingReady,
-  );
 
   const onBoardingStep = useDesignerStore((state) => state.onBoardingStep);
 
@@ -43,9 +36,6 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
     }
   };
 
-  const addToCart = () => {
-    setOnBoardingStep(OnBoardingSteps.ADD_TO_CART);
-  };
 
   const renderModel = useCallback(() => {
     if (!product) return null;
@@ -69,17 +59,14 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
 
   return (
     <div className="w-full bg-white relative max-h-[calc(100vh_-_64px)]">
-      {activeTexture && isOnboardingReady && onBoardingStep !== OnBoardingSteps.ADD_TO_CART && (
+      {activeTexture && onBoardingStep === OnBoardingSteps.REFINE_DESIGN && (
         <div className="absolute bottom-5 transform  left-1/2  -translate-x-1/2 -translate-y-1/2 bg-white z-20 flex gap-4">
           <Button
             variant="default"
             className="cursor-pointer rounded-none"
             onClick={downloadPrintablePdf}
           >
-            <DownloadCloudIcon />
-          </Button>
-          <Button onClick={addToCart} className="rounded-none">
-            Select design <ArrowRight/>
+            Download PDF <DownloadCloudIcon />
           </Button>
         </div>
       )}
@@ -87,7 +74,7 @@ const DesignerPreview: React.FC<Props> = ({ product }) => {
         {renderModel()}
       </MainScene>
 
-      {isOnboardingReady && onBoardingStep !== OnBoardingSteps.ADD_TO_CART && (
+      {onBoardingStep === OnBoardingSteps.REFINE_DESIGN && (
         <TextureCardList
           textures={variantTextures}
           onSelect={handleTextureChange}

@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import { useDesignerStore } from '../../store/designer';
 import { OnBoardingSteps } from '../../store/types';
+import useGenerateDesigns from './hooks/use-generate-designs';
 import AddToCartContainer from './steps/add-to-cart/add-to-cart-container';
+import InteractiveGeneration from './steps/interactive/interactive';
 import ManualOnboardingFormContainer from './steps/manual/manual-form-container';
 import OnBoardingWelcome from './steps/welcome/welcome';
 
@@ -11,13 +13,19 @@ const DesignerSidebar = () => {
   const setOnBoardingStep = useDesignerStore(
     (state) => state.setOnBoardingStep,
   );
+  const brand = useDesignerStore((state) => state.brand);
   const resetOnboarding = useDesignerStore((state) => state.resetOnboarding);
+  const { generateDesign } = useGenerateDesigns();
 
   useEffect(() => {
     return () => {
       resetOnboarding();
     };
   }, []);
+
+  const onGenerateNewDesigns = async () => {
+    await generateDesign(brand);
+  };
 
   const getStepComponent = () => {
     switch (onboardingStep) {
@@ -35,7 +43,11 @@ const DesignerSidebar = () => {
       case OnBoardingSteps.MANUAL:
         return <ManualOnboardingFormContainer />;
       case OnBoardingSteps.ADD_TO_CART:
-         return <AddToCartContainer/>  
+        return <AddToCartContainer />;
+      case OnBoardingSteps.REFINE_DESIGN:
+        return (
+          <InteractiveGeneration onGenerateNewDesigns={onGenerateNewDesigns} />
+        );
       case OnBoardingSteps.CONFIRM:
         return <p>Confirm your design!</p>;
       default:
@@ -44,7 +56,7 @@ const DesignerSidebar = () => {
   };
 
   return (
-    <div className="flex flex-col h-full mb-4  px-14 py-12 bg-white min-w-[40%] max-w-[40%] ">
+    <div className="flex flex-col h-full mb-4  px-12 py-8 bg-white min-w-[40%] max-w-[40%] ">
       {getStepComponent()}
     </div>
   );

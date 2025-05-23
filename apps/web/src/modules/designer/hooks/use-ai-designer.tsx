@@ -37,7 +37,7 @@ const useAIDesigner = () => {
         const prompt = getPatternsPrompt(colors, styles, `${width}x${height}`);
 
         const image = await generateImage(prompt);
-
+        console.log('image', image);
         if (image) {
           pattern.layers.push({
             id: `image-pattern-${key}`,

@@ -3,7 +3,7 @@ name: SonarQube Scan
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 19 * * *'
+    - cron: '0 13 * * 1'
 
 jobs:
   sonar_test:

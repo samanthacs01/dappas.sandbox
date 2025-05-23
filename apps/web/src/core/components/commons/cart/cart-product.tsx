@@ -1,24 +1,24 @@
-import { ImageWithFallback } from '../image/image-with-fallback';
-import { Trash2 } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@workspace/ui/components/select';
+import { useCartStore } from '@/core/store/cart/store';
 import { CartProduct } from '@/core/store/cart/type';
-import { useDesignerStore } from '@/core/store/cart/store';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@workspace/ui/components/select';
+import { Trash2 } from 'lucide-react';
+import { ImageWithFallback } from '../image/image-with-fallback';
 
 interface CartProductProps {
   product: CartProduct;
 }
 
 const CartProductComponent: React.FC<CartProductProps> = ({ product }) => {
-  const updateProductQuantity = useDesignerStore(
+  const updateProductQuantity = useCartStore(
     (state) => state.updateProductQuantity,
   );
-  const removeProduct = useDesignerStore((state) => state.removeProduct);
+  const removeProduct = useCartStore((state) => state.removeProduct);
   const quantityList = [
     '50',
     '100',

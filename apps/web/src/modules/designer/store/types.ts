@@ -4,7 +4,8 @@ export const enum OnBoardingSteps {
   WELCOME = 0,
   CHAT = 1,
   MANUAL = 2,
-  CONFIRM = 3,
+  ADD_TO_CART = 3,
+  CONFIRM = 4,
 }
 
 export type BrandInfo = {

@@ -68,7 +68,7 @@ const WelcomeChatInput = () => {
               className="py-3 rounded-none m-1 border border-zinc-300"
               onClick={(e) => {
                 e.preventDefault();
-                navigate('/designer?productType=coffee%20cup');
+                navigate('/designer?product=coffee%20cup');
               }}
             >
               {product}

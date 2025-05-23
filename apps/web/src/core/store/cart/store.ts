@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { CartStoreType } from './type';
 
-export const useDesignerStore = create<CartStoreType>((set) => ({
+export const useCartStore = create<CartStoreType>((set) => ({
   showCart: false,
   products: [],
   totalPrice: 0,

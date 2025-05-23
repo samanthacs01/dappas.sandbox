@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDesignerStore } from '../../store/designer';
 import { OnBoardingSteps } from '../../store/types';
+import AddToCartContainer from './steps/add-to-cart/add-to-cart-container';
 import ManualOnboardingFormContainer from './steps/manual/manual-form-container';
 import OnBoardingWelcome from './steps/welcome/welcome';
 
@@ -33,6 +34,8 @@ const DesignerSidebar = () => {
         return <p>Chat with the Assistant!</p>;
       case OnBoardingSteps.MANUAL:
         return <ManualOnboardingFormContainer />;
+      case OnBoardingSteps.ADD_TO_CART:
+         return <AddToCartContainer/>  
       case OnBoardingSteps.CONFIRM:
         return <p>Confirm your design!</p>;
       default:

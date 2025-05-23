@@ -19,6 +19,7 @@ const ManualOnboardingFormContainer = () => {
   const { initTexturesConfig } = useGenerateTexture();
   const brand = useDesignerStore((state) => state.brand);
 
+
   const { generateAITextures } = useAIDesigner();
 
   const onGenerateDesign = async () => {

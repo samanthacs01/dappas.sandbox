@@ -1,25 +1,30 @@
+import RHFSelect from '@/core/components/commons/form-inputs/rhf-select';
+import { ImageWithFallback } from '@/core/components/commons/image/image-with-fallback';
+import { useCartStore } from '@/core/store/cart/store.js';
+import { CartProduct } from '@/core/store/cart/type.js';
+import { useDesignerStore } from '@/modules/designer/store/designer';
+import { OnBoardingSteps } from '@/modules/designer/store/types';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@workspace/ui/components/button';
 import { Separator } from '@workspace/ui/components/separator';
 import { ArrowLeft, Truck } from 'lucide-react';
-import { Link } from 'react-router';
-import ImageWithFallback from '../../../../../../../core/components/commons/image-with-fallback.js';
-import RHFSelect from '@/core/components/commons/form-inputs/rhf-select';
 import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { CartInfoSchema, CartInfoType } from './schemas';
-import { useDesignerStore } from '@/core/store/cart/store.js';
-import { CartProduct } from '@/core/store/cart/type.js';
 
 interface AddCartFormProps {
   product: CartProduct;
 }
 
 const AddCartForm: React.FC<AddCartFormProps> = ({ product }) => {
-  const addProduct = useDesignerStore((state) => state.addProduct);
-  const updateProductQuantity = useDesignerStore(
+  const addProduct = useCartStore((state) => state.addProduct);
+  const updateProductQuantity = useCartStore(
     (state) => state.updateProductQuantity,
   );
-  const setShowCart = useDesignerStore((state) => state.setShowCart);
+  const setShowCart = useCartStore((state) => state.setShowCart);
+  const setOnBoardingStep = useDesignerStore(
+    (state) => state.setOnBoardingStep,
+  );
+
   const methods = useForm<CartInfoType>({
     defaultValues: {
       quantity: 0,
@@ -27,7 +32,7 @@ const AddCartForm: React.FC<AddCartFormProps> = ({ product }) => {
     resolver: zodResolver(CartInfoSchema),
   });
 
-  const quenatityList = [
+  const quantityList = [
     { label: '50', value: '50' },
     { label: '100', value: '100' },
     { label: '150', value: '150' },
@@ -52,11 +57,15 @@ const AddCartForm: React.FC<AddCartFormProps> = ({ product }) => {
         className="w-full h-full flex flex-col items-center justify-between"
       >
         <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            className="flex items-center gap-2 justify-start rounded-none"
+            onClick={() => setOnBoardingStep(OnBoardingSteps.MANUAL)}
+          >
             <ArrowLeft />
-            <Link to={'/designer'}>Back to designs</Link>
-          </div>
-          <Separator className="bg-zinc-400" />
+            Back to designs
+          </Button>
+          <Separator  />
           <div className="flex items-start gap-6">
             <ImageWithFallback
               src={'/assistant-logo.svg'}
@@ -72,7 +81,7 @@ const AddCartForm: React.FC<AddCartFormProps> = ({ product }) => {
           <RHFSelect
             name="quantity"
             placeholder="Select quantity"
-            options={quenatityList}
+            options={quantityList}
             labelOrientation="horizontal"
             className="rounded-none border-0 border-b"
             value={product.quantity.toString()}
@@ -102,7 +111,11 @@ const AddCartForm: React.FC<AddCartFormProps> = ({ product }) => {
               <span>${product.price * product.quantity}</span>
             </div>
           </div>
-          <Button className="w-full rounded-none" onClick={addProductToCart}>
+          <Button
+            type="button"
+            className="w-full rounded-none"
+            onClick={addProductToCart}
+          >
             Add to cart
           </Button>
         </div>

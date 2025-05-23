@@ -1,4 +1,4 @@
-# Base image    	
+# Base image    	 
 #FROM node:23.11.0-alpine AS base
 FROM us-docker.pkg.dev/dappas-459214/base-images/node:23.11.0-alpine AS base
 ENV PNPM_HOME="/pnpm"

@@ -1,11 +1,11 @@
 import React from 'react';
-import Header from '../components/common/header/header';
+import Header from '../components/commons/header/header';
 
 const BaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <section className="bg-gray-200 min-h-screen flex flex-col">
       <Header />
-      <div className="flex-grow mx-4 mb-4 h-[calc(100vh-8rem)]">{children}</div>
+      <div className="flex-grow h-[calc(100vh-8rem)]">{children}</div>
     </section>
   );
 };

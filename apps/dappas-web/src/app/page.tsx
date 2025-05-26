@@ -1,5 +1,5 @@
-import OnBoardingPreviewContainer from '@/modules/onboarding/containers/onboarding-preview-container';
+import LandingContainer from '@/modules/landing/containers/landing-container';
 
 export default async function Home() {
-  return <OnBoardingPreviewContainer />;
+  return <LandingContainer />;
 }

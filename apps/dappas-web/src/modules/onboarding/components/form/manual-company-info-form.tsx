@@ -1,7 +1,6 @@
-import RHFSelect from '@/core/components/common/form-inputs/rhf-select';
-import RHFTextField from '@/core/components/common/form-inputs/rhf-text-field';
+import RHFSelect from '@/core/components/commons/form-inputs/rhf-select';
+import RHFTextField from '@/core/components/commons/form-inputs/rhf-text-field';
 import Image from 'next/image';
-import React from 'react';
 
 const ManualCompanyInfoForm = () => {
   return (

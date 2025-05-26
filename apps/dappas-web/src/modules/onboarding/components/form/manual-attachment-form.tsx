@@ -1,7 +1,6 @@
-import React from 'react';
+import RHFColorPicker from '@/core/components/commons/form-inputs/rhf-color-picker';
+import RHFUploadButton from '@/core/components/commons/form-inputs/rhf-upload-button';
 import Image from 'next/image';
-import RHFColorPicker from '@/core/components/common/form-inputs/rhf-color-picker';
-import RHFUploadButton from '@/core/components/common/form-inputs/rhf-upload-button';
 
 const ManualAttachmentForm = () => {
   return (

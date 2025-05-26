@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
-import { TextureBuilder } from '@/core/components/common/texture/texture-builder';
+import { TextureBuilder } from '@/core/components/commons/texture/texture-builder';
 import { TextureBuilderConfig } from '@/server/3d/texture';
+import { FC } from 'react';
 
 type TextureCardProps = {
   baseConfig: TextureBuilderConfig;

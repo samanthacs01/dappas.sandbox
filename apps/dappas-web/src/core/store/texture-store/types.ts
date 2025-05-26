@@ -1,0 +1,17 @@
+export const CURRENT_MODEL = 'CURRENT_MODEL';
+export type CURRENT_MODEL = typeof CURRENT_MODEL;
+
+export const AVAILABLE_TEXTURES = 'AVAILABLE_TEXTURES';
+export type AVAILABLE_TEXTURES = typeof AVAILABLE_TEXTURES;
+
+export const CURRENT_TEXTURE = 'CURRENT_TEXTURE';
+export type CURRENT_TEXTURE = typeof CURRENT_TEXTURE;
+
+export const CURRENT_DIMENSIONS = 'CURRENT_DIMENSIONS';
+export type CURRENT_DIMENSIONS = typeof CURRENT_DIMENSIONS;
+
+export const TEXT_ZONES = 'TEXT_ZONES';
+export type TEXT_ZONES = typeof TEXT_ZONES;
+
+export const ACTIVE_ZONE = 'ACTIVE_ZONE';
+export type ACTIVE_ZONE = typeof ACTIVE_ZONE;

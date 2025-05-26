@@ -1,12 +1,12 @@
 'use client';
 
-import MainScene from '@/core/components/common/scene/main-scene';
+import MainScene from '@/core/components/commons/scene/main-scene';
+import { TextureConverter } from '@/core/components/commons/texture/texture-converter';
+import { TextureGenerator } from '@/core/components/commons/texture/texture-generator';
 import { CoffeeCupModel } from '@/core/components/models/coffe-cup-model';
-import React, { useState, useEffect } from 'react';
-import TextureCardList from './texture-card-list';
-import { TextureGenerator } from '@/core/components/common/texture/texture-generator';
 import { TextureBuilderConfig } from '@/server/3d/texture';
-import { TextureConverter } from '@/core/components/common/texture/texture-converter';
+import { useEffect, useState } from 'react';
+import TextureCardList from './texture-card-list';
 
 const DEFAULT_JSON_CONFIG = `{
   "width": 512,

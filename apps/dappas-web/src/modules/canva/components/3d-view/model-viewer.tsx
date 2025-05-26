@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
-import {
-  OrbitControls,
-  PerspectiveCamera,
-  ContactShadows,
-} from '@react-three/drei';
-import Loader from '../../../../core/components/common/loader/loader';
 import Box3DModel from '@/core/components/models/box-3d-model';
+import {
+    ContactShadows,
+    OrbitControls,
+    PerspectiveCamera,
+} from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import React, { useEffect, useState } from 'react';
+import Loader from '../../../../core/components/commons/loader/loader';
 
 const ModelViewer: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);

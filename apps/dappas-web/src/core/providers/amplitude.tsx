@@ -1,11 +1,11 @@
 'use client';
-import { init, track } from '@amplitude/analytics-browser';
+import { init, track as trackAmplitude } from '@amplitude/analytics-browser';
 import { createContext, useEffect } from 'react';
 
 const AMPLITUDE_API_KEY = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY ?? '';
 
 export const AmplitudeContext = createContext({
-  trackAmplitudeEvent: (
+  track: (
     eventName: string,
     eventProperties: Record<string, string>
   ) => {
@@ -24,14 +24,14 @@ const AmplitudeContextProvider = ({
     });
   }, []);
 
-  const trackAmplitudeEvent = (
+  const track = (
     eventName: string,
     eventProperties: Record<string, string>
   ) => {
-    track(eventName, eventProperties);
+    trackAmplitude(eventName, eventProperties);
   };
 
-  const value = { trackAmplitudeEvent };
+  const value = { track };
 
   return <AmplitudeContext value={value}>{children}</AmplitudeContext>;
 };

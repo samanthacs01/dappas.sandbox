@@ -1,6 +1,6 @@
 'use client';
 
-import UploadButton from '@/core/components/common/upload/upload-button';
+import UploadButton from '@/core/components/commons/upload/upload-button';
 
 type Props = {
   onUpload: (file: File) => void;

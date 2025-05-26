@@ -1,0 +1,13 @@
+services:
+  dappas-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+      - /app/tmp
+      - /app/bucket
+    ports:
+      - '8080:8080'
+      - '40000:40000'
+    command: ["air"]

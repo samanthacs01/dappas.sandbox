@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	security "selector.dev/security/config"
 )
@@ -24,7 +25,72 @@ type IAppConfig interface {
 	GetEnvironment() Environment
 }
 
+type IShopifyConfig interface {
+	GetSharedSecret() string
+	GetApiKey() string
+	GetSecret() string
+	GetShopName() string
+	GetAccessToken() string
+	GetScopes() string
+	GetRedirectUri() string
+}
+
 type config struct {
+}
+
+// GetRedirectUri implements IShopifyConfig.
+func (c *config) GetRedirectUri() string {
+	return getEnv("SHOPIFY_API_REDIRECT_URI", "")
+}
+
+// GetScopes implements IShopifyConfig.
+func (c *config) GetScopes() string {
+	return getEnv("SHOPIFY_API_SCOPES", "")
+}
+
+// GetShopifyApiKey implements IAppConfig.
+func (c *config) GetApiKey() string {
+	return getEnv("SHOPIFY_API_KEY", "")
+}
+
+// GetShopifyApiKey implements IAppConfig.
+func (c *config) GetShopName() string {
+	return getEnv("SHOPIFY_SHOP_NAME", "")
+}
+
+// GetShopifyApiKey implements IAppConfig.
+func (c *config) GetAccessToken() string {
+	return getEnv("SHOPIFY_SHOP_ACCESS_TOKEN", "")
+}
+
+// GetShopifyApiKey implements IAppConfig.
+func (c *config) GetSecret() string {
+	return getEnv("SHOPIFY_API_SECRET", "")
+}
+
+// GetShopifySharedSecret implements IAppConfig.
+func (c *config) GetSharedSecret() string {
+	return getEnv("SHOPIFY_SHARED_SECRET", "")
+}
+
+// GetClientId implements config.IGoogleConfig.
+func (c *config) GetClientId() string {
+	return getEnv("GOOGLE_CLIENT_ID", "")
+}
+
+// GetClientSecret implements config.IGoogleConfig.
+func (c *config) GetClientSecret() string {
+	return getEnv("GOOGLE_CLIENT_SECRET", "")
+}
+
+// GetRedirectUrl implements config.IGoogleConfig.
+func (c *config) GetRedirectUrl() string {
+	return getEnv("GOOGLE_REDIRECT_URL", "")
+}
+
+// GetUserInfoEndpoint implements config.IGoogleConfig.
+func (c *config) GetUserInfoEndpoint() string {
+	return getEnv("GOOGLE_USER_INFO_ENDPOINT", "")
 }
 
 // GetEnvironment implements IAppConfig.
@@ -63,12 +129,20 @@ func (c *config) GetConnectionString() string {
 
 // GetSecretKey implements config.ISecurityConfig.
 func (c *config) GetSecretKey() string {
-	return "S3cr3tK3y"
+	return getEnv("SECRET_KEY", "")
 }
 
 // GetTokenDuration implements config.ISecurityConfig.
 func (c *config) GetTokenDuration() int {
-	return 60
+	tokenDuration := getEnv("JWT_DURATION", "300")
+	if len(tokenDuration) > 0 || tokenDuration == "0" {
+		return 300
+	}
+	duration, err := strconv.Atoi(tokenDuration)
+	if err != nil {
+		return 300
+	}
+	return duration
 }
 
 func NewSecurityConfig() security.ISecurityConfig {
@@ -76,6 +150,14 @@ func NewSecurityConfig() security.ISecurityConfig {
 }
 
 func NewAppConfig() IAppConfig {
+	return &config{}
+}
+
+func NewShopifyConfig() IShopifyConfig {
+	return &config{}
+}
+
+func NewGoogleConfig() security.IGoogleConfig {
 	return &config{}
 }
 

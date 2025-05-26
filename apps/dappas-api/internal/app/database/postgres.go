@@ -10,49 +10,32 @@ import (
 )
 
 func providePostgres(ctx context.Context, c config.IAppConfig) *database.Conn {
-	conn, err := database.InitDBPool(ctx, c.GetConnectionString())
+	conn, err := database.InitGormConnection(ctx, c.GetConnectionString())
 	if err != nil {
 		panic(err)
 	}
 	return conn
 }
 
-func provideUnitOfWork(conn *database.Conn, ctx context.Context) database.UnitOfWork {
-	return database.NewUnitOfWor(conn, ctx)
-}
-
-func invokeCloseDb(lc fx.Lifecycle, db *database.Conn) {
-	lc.Append(fx.Hook{
-		OnStop: func(ctx context.Context) error {
-			db.Close()
-			return nil
-		},
-	})
-}
-
 func ProvidePostgresMigratorDatabase() fx.Option {
 	return fx.Options(
+		fx.Provide(database.NewSelectorMigrator),
 		fx.Provide(providePostgres),
-		fx.Provide(provideUnitOfWork),
-		fx.Invoke(invokeCloseDb),
 		fx.Invoke(runMigration),
 	)
 }
 
-func runMigration(c config.IAppConfig, logger *zap.Logger) {
+func runMigration(c config.IAppConfig, migrator database.Migrator, logger *zap.Logger) {
 	logger.Info("Running migrations")
-	migrations := []string{
-		"./pkg/security/migrations",
-		"./internal/modules/vendors/migrations",
+	if err := migrator.Up(); err != nil {
+		logger.Error("Failed to run migrations", zap.Error(err))
+		panic(err)
 	}
-	logger.Info("Migrations", zap.Strings("migrations", migrations))
-	database.ApplyMigrations(c.GetConnectionString(), migrations)
+	logger.Info("Migrations completed")
 }
 
 func ProvidePostgresDatabase() fx.Option {
 	return fx.Options(
 		fx.Provide(providePostgres),
-		fx.Provide(provideUnitOfWork),
-		fx.Invoke(invokeCloseDb),
 	)
 }

@@ -1,6 +1,6 @@
 package templates
 
-var ModelTmpl = `package model
+var ModelTmpl = `package models
 
 type {{.Name}}Input struct {
 } //@name {{.Name}}Input

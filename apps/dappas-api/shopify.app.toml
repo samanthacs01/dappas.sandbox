@@ -1,0 +1,23 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "6a7e77c25e50cc700cb06a1353bddbb4"
+name = "Dappas Local Dev"
+handle = "dappas-local-dev"
+application_url = "http://localhost:8080"
+embedded = true
+
+[webhooks]
+api_version = "2025-04"
+
+[auth]
+redirect_urls = [ "http://localhost:8080/v1/ecommerce/shopify/auth-callback" ]
+
+[pos]
+embedded = false
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_products,write_products"
+
+[build]
+include_config_on_deploy = true

@@ -2,14 +2,19 @@ package providers
 
 import (
 	"go.uber.org/fx"
+	"selector.dev/security/endpoints"
 	"selector.dev/security/repositories"
-	"selector.dev/security/use_cases"
+	router "selector.dev/security/route"
+	"selector.dev/security/usecases"
 )
 
 func SecurityModule() fx.Option {
 	return fx.Module(
 		"security",
-		fx.Provide(use_cases.NewLoginUseCase),
+		fx.Provide(usecases.NewLoginUseCase),
+		fx.Provide(repositories.NewGoogleUserRepository),
 		fx.Provide(repositories.NewUserRepository),
+		fx.Provide(endpoints.NewAuthUserEndpoint),
+		fx.Invoke(router.Route),
 	)
 }

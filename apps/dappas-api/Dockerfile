@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Download dependencies
-RUN go mod download
+RUN --mount=type=cache,target=/go/pkg/mod go mod download
 
 # Generate Swagger docs
 RUN go install github.com/swaggo/swag/cmd/swag@v1.8.12

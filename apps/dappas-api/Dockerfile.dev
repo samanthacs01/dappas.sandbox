@@ -17,7 +17,7 @@ WORKDIR /app
 COPY ./pkg ./pkg
 COPY go.mod go.sum ./
 # Download dependencies
-RUN go mod download
+RUN --mount=type=cache,target=/go/pkg/mod go mod download
 # Default entrypoint to run air
 CMD ["air"]
 

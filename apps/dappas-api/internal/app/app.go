@@ -8,9 +8,9 @@ import (
 	"go.uber.org/zap"
 	"selector.dev/dappas/internal/app/config"
 	"selector.dev/dappas/internal/app/database"
+	"selector.dev/dappas/internal/app/hooks"
 	"selector.dev/dappas/internal/app/router"
-	"selector.dev/dappas/internal/modules/lookups"
-	"selector.dev/dappas/internal/modules/users"
+	"selector.dev/dappas/internal/modules/ecommerce"
 	"selector.dev/dappas/internal/modules/vendors"
 	security "selector.dev/security/providers"
 )
@@ -26,11 +26,13 @@ func BuildApp() *fx.App {
 		fx.Provide(zap.NewDevelopment),
 		fx.Provide(config.NewSecurityConfig),
 		fx.Provide(config.NewAppConfig),
+		fx.Provide(config.NewGoogleConfig),
+		fx.Provide(config.NewShopifyConfig),
+		fx.Provide(hooks.NewUserSaveHooks),
 		database.ProvidePostgresDatabase(),
 		security.SecurityModule(),
-		users.ProvideUsers(),
-		lookups.ProvideLookups(),
 		vendors.ProvideVendors(),
+		ecommerce.ProvideECommerce(),
 		router.ProvideRouter(),
 		fx.Invoke(startServer),
 	)
